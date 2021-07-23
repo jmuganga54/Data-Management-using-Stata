@@ -1,23 +1,32 @@
-# Project Title
 
-Data Management using Stata
 
-## Description
+# Data Management Using Stata
 
-This dofile is all about learning data management using Stata. It contain some basic commands to perform data management using Stata. It was created for the basis of learning data management using Stata, but it is free for public use. All the knowledge come from Michael N. Mitchell Book, [Data management Using Stata, A Practical Handbook,Second Edition]
+> Data Management using Stata
 
-## Getting Started
+`Data Management using Stata` This project contain dofile which is all about learning data management using Stata. It contain some basic commands to perform data management using Stata. It was created for the basis of learning data management using Stata, but it is free for public use. All the commands are from Michael N. Mitchell Book, [Data management Using Stata, A Practical Handbook,Second Edition]
 
-### Dependencies
+## Goals
 
-### Installing
+-Experimenting with Data Management using Stata
+## Structure
 
-* You can download a Stata Program from [https://www.stata.com/products/]
-* Note:Stata is not a free program
-* The version I use is version 14.2
+- `/data_management_with_stata.do`  Dofile which contain all the commands with comments,
+- `/data` Folder which contains all the data to use as practice data
 
-## Help
 
-Any advise for common problems or issues let me know
+## Dependencies
+
+| Program   | Home Page                    |
+| --------- | ---------------------------- |
+| Stata | <https://www.stata.com/products/> |
+
+## Contributing
+
+- Open issue, discuss proposal
+- Fork and clone repository
+- Change code and update tests
+- Send pull request
+
 ```
 
