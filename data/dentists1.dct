@@ -1,0 +1,3 @@
+infix dictionary {
+  str name 1-17 years 18-22 fulltime 23 recom 24
+}

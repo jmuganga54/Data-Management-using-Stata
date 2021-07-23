@@ -1,0 +1,5 @@
+infix dictionary using dentists8.txt {
+  2 lines
+  1: str name 1-17 years 18-22 
+  2: fulltime 1 recom 2
+}

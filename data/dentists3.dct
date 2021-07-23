@@ -1,0 +1,6 @@
+infile dictionary using dentists7.txt {
+  str17 name     %17s  "Name of dentist"
+        years    %5f   "Years in practice"
+        fulltime %1f   "Full time?"
+        recom    %1f   "Recommend Quaddent?"
+}
