@@ -1472,7 +1472,7 @@ If you specify one or more variables, the codebook information is limited to jus
 *the variable you specify
 *For example the [codebook] command below shows codebook information for race
 *variable.This output shows us that race ranges from 1 to 5, it has five uniques values,
-*and none of its values are missing.The output also shows tabulation of hte values for race
+*and none of its values are missing.The output also shows tabulation of the values for race
 * and the labels associated with those values(that is, values labels).
 */
 
@@ -1689,11 +1689,11 @@ codebook havechild
 *Using the [codebook] command, we can see the labelled values.Note that the value of .u(unknown)
 *does not appera in the outpu below.This values simply never appeared among the eight
 *observation in our dataset. If this values had appeared, it would have been properly labeled.
-*Even if a vlaid value does not appear in the dataset, it is still prudent to provide the label for it
+*Even if a vaid value does not appear in the dataset, it is still prudent to provide the label for it
 */
 
 /**
-*Let's have a look at the output producrd by the tabulate race command
+*Let's have a look at the output product by the tabulate race command
 */
 
 tabulate race
@@ -2338,3 +2338,150 @@ save survey7,replace
 *variables to the end of the dataset.
 */
 
+
+****************************************************CHAPTER 6:CREATING VARIABLES *******************************************
+
+/**
+*This chapter covers may ways that you can created variables in Stata.
+*I start by introducting the [generate] and [replace] commands for creating new variables
+*and changing the content of existing variables.
+*
+*The next two sections decribe how you can use numeric expressions and function when
+*creating variables.
+*
+*and how you can use string expresssion and functions when creating variables
+*
+*The other section illustrate tools to recode variables
+*/
+
+/**
+*CREATING AND CHANGING VARIABLES
+*/
+
+/**
+*The two most common commands used for creating and modifying variables are the [generate]
+*and [replace] commands.These commands are identical except that [generate] creates a new
+*variable, while [replace] alters the values of existing variable.
+*
+*/
+use wws2.dta //which contains demographic and labor force information regarding 2,246 women.
+
+summarize wage //wage, which contains the woman's hourly wage
+
+/**
+*Say that we want to compute a weekly wage for these women based on a 40hour work week
+*We use the [generate] commands to create the new variable called [wageweek], which 
+*contains the value of [wage] multiplied by 40
+*/
+
+generate wageweek = wage*40
+
+summarize wageweek
+
+/**
+*This dataset also contains a variable named [hours], which is the typical number of hours
+*the woman works per week.Let's create [wageweek] again but use [hours] in place of 40.
+*Because [wageweek] already exists, we must use the [replace] commands to indicate that
+*we want to replace the contents of the existing variable.Note that because [hours] has 4 missing 
+*observation, the [wageweek] variable now has 4 additional missing observations, having only
+*2,240 valid observation insted of 2,244
+*/
+
+replace wageweek = wage * hours
+
+/**
+*TIP! Ordering variables with the generate command
+*When creating a new variable using the generate command, you can use the [before()] or [after()]
+*option to specify where the new variable will be positoned within the dataset.
+*For example, we could have used the [generate] command as follows to create [wageweek]
+*positioning it after the variable [wage]
+*
+*/
+*generate wageweek = wage*40, after(wage)
+
+tabulate married nevermarried
+
+/**
+*Say that we want to create a variable that reflects whether a woman is 1) single and has 
+* never married(n=234),2) currently married (n=1440),3)single but previously married (n=570).
+*Those who are (nonsensically) currently married and have never been (married (n=2) will
+*be assigned a value of missing. 
+*
+*This can be done as shown below.The first [generate] command creates the variable
+*[smd](for single, married , or divorce or widowed) and assign a value of 1 if
+*the woman meets the criteria for being single (and never married).The [replace]
+*command assign value of 2 if the woman meets the criteria for being currently married.
+*The second [replace] command assign a value of 3 if the woman meets the criteria
+*for being divorced for widowed.The third [replace] command is superfluous but clearly shows
+*that smd is missing for those nonsense cases where the woman is currently married and 
+* has never been married.
+*/
+
+*if the woman meet the criteria for being single and nevermarried
+generate smd = 1 if (married == 0) & (nevermarried == 1)
+
+*being currently married.
+replace smd = 2 if (married == 1) & (nevermarried ==0)
+
+*woman meets the criteria for being divorced for widowed
+replace smd = 3 if (married == 0) & (nevermarried == 0) 
+
+*nonsense case where the woman is currently married and nevermarried
+replace smd = . if (married == 1) & (nevermarried == 1)
+
+/**
+*We can double-check this in two ways.First, we can tabulate [smd] and see the frequencies for [smd]
+*match the frequencies of the two-way table created above
+*/
+
+tabulate smd, missing
+
+
+/**
+*A more directy way to check the creation of this variable is to use
+*the [table] command to make a three-way table of [smd] by [married] by [nevermarried].
+*As shown below, this also confirms that the values of [smd] properly correspond to the values
+*of [married] and [nevermarried]
+*/
+
+table smd married nevermarried
+
+/**
+*We can combine the [generate] and [replace] commands to create a new dummy(0/1) variable
+*based on the values of a continuous variable.For example, let's create a dummy variable
+*called [over40hours] that will be 1 if a woman works over 40 hours and 0 if she works
+*40 or fewer hours.The [generate] command create the over40hours variable and assign a value of 0 when
+*the woman works 40 or fewer hours.Then,the [replace] command assign a value of 1
+*when the woman works more than 40 hours.
+*/
+
+generate over40hours = 0 if (hours <=40)
+
+replace over40hours = 1 if (hours >40) & !missing(hours)
+
+/*Note the [replace] command specifies that over40hours is 1 if hours is over 40 and if hours
+*is not missing.Without the second qualifier, people who had missing data on hours would be treated
+*as though they had worked over 40 hours(because missing values are treated as positive infinity)
+*/
+
+/**
+*We can double-check the creating of dummpy variable with the [tabstat] command, as shown below,
+*When over40hours is 0, the values of [hours] range from 1 to 40(as it should); when 
+*over40hours is 1, the value of hours range from 41 to 80
+*/
+
+tabstat hours, by(over40hours) statistics( min max)
+
+/**
+*Below, we use this one-step strategy to create [over40hours].Women who worked 40 or fewer hours
+*get a 0 (because the expression is false), and women who worked more than 40 hours get a 1(because the expression is true)
+*Women with missing values on hours worked get a missing value because they are excluded on the if qualifier
+*/
+
+generate over40hours = (hours >40) if !missing(hours)
+
+/**
+*The [tabstat] result below confirm that this variable was created correctly
+*/
+
+tabstat hours, by(over40hours) statistics(min max)
