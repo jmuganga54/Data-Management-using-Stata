@@ -1,5 +1,5 @@
 /*
-*This file will contain all the commands used when reading a book 
+*This file contain all the commands used when reading  
 *[Mitchell M. Data Management Using Stata. A Practical Handbook 2ed 2021]
 */
 
@@ -2485,3 +2485,274 @@ generate over40hours = (hours >40) if !missing(hours)
 */
 
 tabstat hours, by(over40hours) statistics(min max)
+
+/**
+*NUMERIC EXPRESSION AND FUNCTIONS
+*
+*This sexction illustrated more complex expression and some useful function that can be used
+*with the generate and replace commands
+*
+*/
+
+use wws2,clear
+generate nonsense = (age*2 + 10)^2 - (grade/10)
+
+/**
+*Stata also has many mathematical functions that you can include in your [generate] and [replace]
+*The examples below illustrate the [int()] function (which removes any values after the decimal place)
+*the round() function (which rounds a number to the desired number of decimal places), the ln()
+*function (which yields the natural log), the log10(function (which compute the based 10 logarithm)
+*and sqrt() (which computes the square root).
+*
+*The first five values are then listed to show the results of using these functions
+*/
+
+generate intwage = int(wage)
+
+generate rnwage = round(wage, 1)
+
+generate lnwage = ln(wage)
+
+generate logwage = log10(wage)
+
+generate sqrtwage = sqrt(wage)
+
+list intwage lnwage logwage sqrtwage in 1/5
+
+/**
+*Stata has many function for creating random variable.For example, you can use the [runiform()]
+*(random uniform) function o create a varible with a random number ranging from 0 to 1.
+*Below, I set the seed of the random function generator to a number picked from thin air, 
+*and then use the [generate] command to create a new variable, r, that is a random number
+*between 0 and 1.
+*/
+
+set seed 83271
+/**
+*Setting the seed guarantees that we get the same series of random numbers every time we
+*run the commands making results taht use random number reproducible
+*/
+
+generate r = runiform()
+
+summarize r
+
+/**
+*The rnomal() (random normal) functin allows us to drawe random value from a normal distribution
+*with a mean of 0 and a standard deviation of 1, as illustrated below with the variable randz.
+*The variable randiq is created, drawwn from a normal distribution with a mean of 100 and a standard
+*deviation of 15(which is the same distribution as some IQ tests)
+*/
+
+generate randz = rnormal()
+
+generate randiq = rnormal(100,15)
+
+summarize randz randiq
+
+/**
+*You can even use the rchi2() (random chi-squared) function to create a variable 
+*representing a random value from a chi-squared distribution.For example
+*below I create [randchi2], which draws random values from a chi-squared distribution with 5
+*degrees of freedom
+*/
+
+generate randchi2 = rchi2(5)
+summarize randchi2
+
+/**
+*STRING EXPRESSION AND FUNCTIONS
+*/
+
+/**The previous section focused on numeric expression and functions, while this section focuses on 
+*string expression and functions
+*We will use the [authors.dta] to illustrate string functions(shown below).We first 
+*[name] so that it is displayed using left-justification
+*/
+
+use authors,clear
+
+format name %-17s
+
+/**There are inconsistencies in the capitlization of the autor's name. Below, I use the [ustrtitle()]
+*function to "titlecase" the names.(that is, make the first letter of each world in uppercase).
+*This uses Unicode definitions of what constitutes a world.I use the [ustrlower()] and [ustrupper()]
+*function to convert the names into all lowercase and all uppercase, respectively, acccording to the 
+*Unicode rules of capitilization
+*/
+
+*first letter to uppercase
+generate name2 = ustrtitle(name)
+
+*change all letter to lowercase
+generate lowname = ustrlower(name)
+
+*change all letter to uppercase
+generate upname = ustrupper(name)
+
+*format names to left-justified
+format name2 lowname upname %-23s
+
+list name2 lowname upname
+
+/**
+*We can trim off the leading blanks, like the one infront of Ruth's name, usign the 
+*[ustrtrim()] function, like this
+*/
+
+generate name3 = ustrltrim(name2)
+
+/**
+*To see the result of the ustrltrim() function,we need to left-justify name2 and name3 
+*before we list the results
+*/
+
+format name2 name3 %-17s
+list name name2 name3
+
+/**
+*Let's identify the names that start with an initial rather than with a full name.When
+*you look at those names, their second charaters is either a period or a space.We need a way to 
+*extract a piece of the name, starting with the second character and extracting that one character
+*The [usubstr()] function used with the [generate] command below does exactly this,
+*creating the variable [secondchar].
+*
+*Then, the values of [firstinit] gets the value of the logical expression that test it if
+*[secondchar] is a space or a period, yiedling a 1 if this expression is true and 0 if false.
+*/
+drop seconchar
+generate secondchar = usubstr(name3,2,1)
+
+generate firstinit = (secondchar == " " | secondchar == ".") if !missing(secondchar)
+
+list name3 secondchar firstinit, abb(20)
+
+
+/**
+*We might want to take the full name and break it up into first, middle and last name
+*Becasue some of the authors have only two names, we first need to count the number of names.
+*The Unicode-aware version of this function is called ustrwordcount().
+*This is used to count the number of names, using the word -boundary rules of Unicde strings
+*/
+
+generate namecnt = ustrwordcount(name3)
+
+list name3 namecnt
+
+/**
+*Note how the ustrwordcount() function report four words in the name of the second author.
+*To help understand this better, I use the [ustrword()] function to extract the first, second, third and fouth
+*word from [name].These are called uname1, uname2, uname3 and uname4.
+*The [list] command thenn showsn the full names along with the first, second, third and fourth word
+*of the name
+*/
+
+generate uname1 = ustrword(name3,1)
+
+generate uname2 = ustrword(name3,2)
+
+generate uname3 = ustrword(name3,3)
+
+generate uname4 = ustrword(name3, 4)
+
+list name3 uname1 uname2 uname3 uname4
+
+
+/**
+*Now, it is clear why author 2 is counted as having four words in the 
+*name.According to the Unicode word-boundary rules, the single period is being
+*counted as a separate word
+*
+*To handle this, I am going to create a new variable anemd [name4]
+*where the . has been removed from [name3].The output of the [list]
+*command below confirms that [name4] is the same as [name3] except for the removal
+*of the periods from the name
+*/
+
+generate name4 = usubinstr(name3,".","",.)
+
+list name3 name4
+
+/**
+*Now, I am going to use the [replace] command to create a new version of [namecnt] that 
+*counts the numver of words in this new verion of name, [name4]
+*/
+
+replace namecnt = ustrwordcount(name4)
+
+list name4 namecnt
+
+/**
+*The count of the number of names matched what I would expect
+*/
+
+/**
+*Now, we can split [name4] into first, middle and last names using the [ustword()] function.
+*The first name is the first word shown in the name4(that is, ustword(name4,1)).The second name
+*is the second word if there are three words in name4(that is, ustword(name4,2) if namecnt==3).
+*The last name is based on teh number of names the dentist has (that is, ustrword (name4, namecnt)).
+*/
+
+generate fname = ustrword(name4,1)
+
+generate mname = ustrword(name4,2) if namecnt == 3
+
+generate lname = ustrword(name4,namecnt)
+
+/**
+*Now, I format the first, middle and last names using a width of 15 with left-justification and then
+*list hte first, middle and last names
+*/
+
+format fname mname lname %-15s
+
+list name4 fname mname lname
+
+/**
+*Let's make all the initals have a period after them.In this first [replace] command
+*below, the [ustrlen()] function is used to identify observation where the first name is one character
+*.In such instances, the [fname] variable is replaced with [fname] with period appended to it (showing that
+*the plus sign can be used to combine string together).The same strategy is applied to the middle
+*names in the next [replace] command
+*/
+
+replace fname = fname + "." if ustrlen(fname) == 1
+
+replace mname = mname + "." if ustrlen(mname) == 1
+
+/**
+*Below, we see that the first and middle names always have a period after them if they are one initial
+*/
+
+list fname mname
+
+/**
+*Now that we have repared the first and middle names, we can join the first, middle and last
+*names together to form a full name.I then use the [format] command to left-justify the full name
+*/
+
+generate fullname = fname + " " + lname if namecnt == 2
+
+replace fullname = fname + " " + mname + " " + lname if namecnt ==3
+
+format fullname %-30s
+
+/**
+*The output of the list command below display the first, middle, and last name as
+*well as the full name
+*/
+
+list fname mname lname fullname
+
+/**
+*The output of the [list] command below shows only the original name and the verision of the name we 
+*cleaned up
+*/
+
+list name fullname
+
+/**
+*Tip!Long Strings
+*This variable type can be more frugal than a standard string variable, and it can be 
+*hold large string, up to 2-billion bytes.
+*/
