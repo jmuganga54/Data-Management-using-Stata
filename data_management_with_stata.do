@@ -2752,7 +2752,13 @@ list fname mname lname fullname
 list name fullname
 
 /**
-*Tip!Long Strings
-*This variable type can be more frugal than a standard string variable, and it can be 
-*hold large string, up to 2-billion bytes.
+*RECODING
+*
+*Sometimes, you want to recode the values of an existing variable to make a new variable
+*mapping the extisting values for the existing variable to new values for the new variable
+*For example consider the variable [occupation] from the [ww2lab.dta]
 */
+
+use wws2lab
+
+
