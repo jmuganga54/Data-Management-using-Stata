@@ -2340,6 +2340,7 @@ save survey7,replace
 
 
 ****************************************************CHAPTER 6:CREATING VARIABLES *******************************************
+cd "/Users/macbook/Dropbox/My Mac (Macbook’s MacBook Pro)/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/data"
 
 /**
 *This chapter covers may ways that you can created variables in Stata.
@@ -2754,11 +2755,183 @@ list name fullname
 /**
 *RECODING
 *
-*Sometimes, you want to recode the values of an existing variable to make a new variable
+*Sometimes, you want to recode the values of an existing variable to make a new variable,
 *mapping the extisting values for the existing variable to new values for the new variable
 *For example consider the variable [occupation] from the [ww2lab.dta]
 */
 
 use wws2lab
 
+codebook occupation, tabulate(20)
 
+/**
+*Let's recode [occupation] into three categories: white collar, blue collar
+*and other.Say that we decide that occupation 1-3 will be white collar, 5-8 will be blue collar
+*and 4 and 9-13 will be other.
+*We recode the variable below, creating a new variable called [occ3]
+*/
+
+recode occupation (1/3=1) (5/8=2) (4 9/13=3), generate(occ3)
+
+/**
+*We use the [table] command to double check that the variable occ was properly recoded into [occ3]
+*/
+
+table occupation occ3
+
+/**
+*This is pretty handy, but it would be nice if the values of [occ3]
+*were labeled.Although we could use the [label define and label values]
+commands to label the values of [occ3] (as illustrated in section above),
+*the example below shows a shortcut that labels the values as part ot the recoding process.
+*Value label are given after the new values in the [recode] command.(Continuation comments
+are used to make the long command more readable)
+*/
+
+drop occ3
+
+recode occupation (1/3=1 "White Collar") (5/8=2 "Blue Collar") (4 9/13=3 "Other"), generate (occ3)
+
+label variable occ3 "Occupation in 3 groups"
+
+table occupation occ3
+
+/**
+*The [recode] command can also be useful when applied to continuous variable.
+*Say that we wanted to recode the woman's hourly wage (wage) into four categories 
+*using the following rules: ) 0 upto 10 be coded 1, over 10 to 20 would be coded 2, over
+*20 to 30 would be coded 3, and over 30 would be coded 4.So when we specify [recode wage (0/10=1)
+*(10/20=2), 10 is included in both of these rules. In such cases, the first rule encountered take 
+*precedence, so 10 is recoded to having a value of 1.
+*/
+
+recode wage (0/10=1 "0 to 10") (10/20=2 ">10 to 20") (20/30=3 ">20 to 30") (30/max=4 ">30 and up"), generate (wage4)
+
+/**
+*We can check this using the [tabstat] command below.The results confirm that [wage4] was created
+*correctly.For example, for category 2 (over 10 up to 20), the minimum is slightly larger than 10 *and maximum is 20.
+*/
+
+tabstat wage, by(wage4) stat(min max)
+
+/**
+*We might want to use a rule that 0 up to (but not including) 10 would be coded 1,
+*10 up to (but not including 20) would be coded 2, 20 up to (but not including ) 30
+*would be coded 3, and 30 and over would be coded 4.By switching the order of the rule, for example
+*,we can move 10 to belong to category 2 because that rule appears first
+*/
+
+recode wage (30/max=4 "30 and up") (20/30=3 "20 to <30") (10/20=2 "10 to <20") (0/10=1 "0 to <10"), generate(wage4a)
+
+/**
+*The result of the [tabstat] command below confirm that [wage4a] was recoded properly.
+*/
+
+tabstat wage,by(wage4a) stat(min max)
+
+/**
+*The [recode] command is not only way to recode variables.Stata has several functions that we 
+*can use for recoding.We can use the [irecode()] function to recode a continuous variable into
+*group based on a series of cutpoints that you supply.For example, below,the wages are cut into
+*four groups based on the cutpoints 10, 20 and 30.Those with wages up to 10 are coded 0, 
+*Over 10 up to 20 are coded 1, over 20 up to 30 are coded 3, and over 30 are coded 3
+*/
+
+generate mywage1 = irecode(wage, 10,20,30)
+
+tabstat wage, by (mywage1) stat(min max)
+
+/**
+*The [autocode()] function recodes continuous variable into equally spaced groups.
+*Below, we recode [wage] to form three equally spaced groups that span from 0 to 42.
+*The groups are numbered according to the highest value in the group, so 14 represents 0 to 14,
+*then 28 represent over 14 to 28, and finally 42 represents over 28 up to 42.The [tabstat]
+*command confirms the recoding
+*/
+
+generate mywage2 = autocode(wage,3,0, 42)
+
+tabstat wage, by(mywage2) stat(min max)
+
+/**
+*Although the [autocode()] function seeks to equalize the spacing of the groups, the group()
+*option of the egen command seeks to equalize the number of observation in each group.
+*Below, we create mywage3 using the group() option to create three equally sized group
+*/
+
+egen mywage3 = cut(wage), group(3)
+
+/**
+*The values of [mywage3] are numbered 0, 1 and 2.The lower and upper limit of [wage]
+*for each group are selected to attempt to equalize size of groups, so the values choosen are not
+*round numbers.The [tabstat] command below shows the lower and upper limit of wages for each of the
+*three groups.The first group ranges from 0 to 4.904, the second group range from 4.911 to 8.6068, 
+* and the third group range from 8.075 to 40.747.
+*/
+
+tabstat wage, by(mywage3) stat(min max n)
+
+/**
+Note: it is also possible to use the xtile command to create equally
+*sized groupings.For example, the command [xtile wage3 = wage, nq(3)]
+*creates three equally sized groupings of the variable [wage] storing those grouping as [wage3]
+*/
+
+/**
+*CODING MISSING VALUES
+*STATA Supports 27 missing-values codes, including ., .a,...,.z.This section illustrated how you *can assign such missing -values coded in your data.Consider this example dataset with missing value
+*/
+
+use cardio2miss,clear
+
+list
+
+/**
+*Note how this dataset has ome missing values and uses different missing value to indicate different
+*reason for missing values.Here the value of [.a] is used to signify a missing value because
+*of a recording error and [.b] is used to signify a missing value because the subject dropped out.
+*But how did these values get assigned? Let start with the original raw data
+*/
+
+infile id wage pl1-pl5 bp1-bp5 using cardio2miss.txt,clear
+
+list
+
+/**
+*The value of -1 indicates misssing value because of recording error, and -2 indicates missing *values because the subject dropped out of the study.The [recode] command can be used to convert
+*these values into the appropriate missing-value codes, as shown below.(Note the bp* stands for *any variable that begins with bp;)
+*/
+
+recode bp* pl* (-1=.a) (-2=.b)
+
+list
+
+/**
+*Another way to convert the values of missing-values codes would be to use the [mvdecode]
+*command, which converts regular numbers into missing values.As the example below shows, the 
+*mv() option specifies that the values of -1 should be converted to .a and the value of -2 
+*should be converted to .b
+*/
+
+mvdecode bp* pl*, mv(-1=.a \ -2=.b)
+
+list
+
+/**
+*If you just wanted the value of -1 and -2 tobe assigned to the general missing-value code(.),
+*then you can do as shown below:
+*/
+
+mvdecode bp*, mv(-1 -2)
+
+list
+
+/**
+*The [mvencode] command has a companion command called [mvencode], which converts missing values *into regular numbers.In the example below, we convert the missing values for all the blood *pressure and pulse scores to be -1
+*/
+
+use cardio2miss
+
+mvencode bp* pl*, mv(.a=-1 \ .b=-2)
+
+list
