@@ -2935,3 +2935,97 @@ use cardio2miss
 mvencode bp* pl*, mv(.a=-1 \ .b=-2)
 
 list
+
+/**
+*Dummy variables
+*When you have categorical variable, you can easily incorporated such variables in your analysis
+*by specifying the i. prefix.By appliying the .i prefix, the variable is treated as a "factor *variable".Consider the variable [grade4], which represent education level with four levels
+*/
+
+use wws2lab,clear
+
+codebook grade4
+
+/**
+*The variable [grade4] is a categorical variable, and by specifying [i.graded4] in regression *analyis below, grade4 will be treated as a factor variable
+*/
+
+regress wage i.grade4
+
+/**
+*Stata intrinsicallay understands that applying the i.prefix to grade4 means to 
+*convert it into [k-1] dummy variable (where k is the number of levels of grade4)
+*.By default, first group is the omitted(base) group.
+*
+*The [regress] command is not the only command that understands how to work with
+*factor variables.In fact, most Stata commmands understand how to work with the factor *variables, including data management commands like [list] and [generate].For example
+*below we list the first five observations for wage, grade4 and i.grade4.The
+*(no label option shows the numeric values of [grade4] instead of the labeled values.).
+*/
+
+list wage grade4 i.grade4 in 1/5, nolabel
+
+/**
+*When we type i.grade4, this was expanded into the names of four virtual dummy variable
+*the last three of which were used when the regression analysis was run.The dummy *variable 1.grade4 is a dummy variable that is 1 if the value of grade4 is 1 and 0
+*otherwise.Likewise 2.grade4 is a dummy variable that is 1 if the value of grade4 is 2
+*and is 0 otherwise, and so forth up to 4.grade4.
+*
+*Although #.grade4 is not added to your dataset (typing [describe] will confirm this),
+*, you can refer to #.grade4 just as you would any other variable in your dataset.
+*
+*The [grenerate] commands below create our dummy variables corresponding to the levels 
+*of grade4.
+*/
+
+generate noths = 1.grade4
+
+generate hs = 2.grade4
+
+generate smc1 = 3.grade4
+
+generate clgr = 4.grade4
+
+list grade4 noths hs smc1 clgr in 1/5, nolabel
+
+/**
+*The above example illustrate that the virtual variable 1.grade4 refers to the dummy
+*variable associated with the value of 1 for grade4 and 2.grade4 refers to the dummy
+*variable associated with the value of 2 for grade4 and so forth.When referring to 
+*these values individually, as we did in the [generate] command, there is not
+*baseline or omitted value.As you can see, the value of 0 if it is not 1(except if
+*[grade4] is missing, and then 1.grade4 is also missing)
+*
+*You can change which group is considered the base(omitted) group using the i.prefix
+*.In the previous examples, where we specified i.grade4 with the [regress] command,
+*first group was used as the omitted group; this is the default.If it instead we 
+*specify ib2.grade4, the group where grade4 equals 2 will be the omitted group, as shown below
+*
+*/
+
+regress wage ib2.grade4
+
+/**
+*You could also specify ib(first).graded4 to make the first group the omitted group
+*or ib(last).grade4 to make the last group the omitted group
+*
+*
+*Tip!Intercation terms
+*Stata simplifies the inclusion of interation terms in your model.For example, you can 
+*include the main effects and interaction of two categorical variables(for example,
+*[grade4] and married), as shown below.
+
+.regress wage i.grade4##i.married
+
+*You can include an intercation of a categorical variables (like grade4) and a continuous variable (like age), as shown below.Note that the continuous variable is 
+*prefixed with c...
+
+.regress wage i.grade4##c.age
+
+*You can even include in the model c.age##c.age, which specifies the linear and *quadratic effect of age
+
+.regress wage C.age##c.age
+
+*Knowing these tricks for your analysis can save you the effort of creating these
+*variable as part of your data management
+*/
