@@ -2340,6 +2340,8 @@ save survey7,replace
 
 
 ****************************************************CHAPTER 6:CREATING VARIABLES *******************************************
+clear
+
 cd "/Users/macbook/Dropbox/My Mac (Macbook’s MacBook Pro)/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/data"
 
 /**
@@ -2479,7 +2481,7 @@ tabstat hours, by(over40hours) statistics( min max)
 *Women with missing values on hours worked get a missing value because they are excluded on the if qualifier
 */
 
-generate over40hours = (hours >40) if !missing(hours)
+replace over40hours = (hours >40) if !missing(hours)
 
 /**
 *The [tabstat] result below confirm that this variable was created correctly
@@ -2760,7 +2762,7 @@ list name fullname
 *For example consider the variable [occupation] from the [ww2lab.dta]
 */
 
-use wws2lab
+use wws2lab,clear
 
 codebook occupation, tabulate(20)
 
@@ -2930,7 +2932,7 @@ list
 *The [mvencode] command has a companion command called [mvencode], which converts missing values *into regular numbers.In the example below, we convert the missing values for all the blood *pressure and pulse scores to be -1
 */
 
-use cardio2miss
+use cardio2miss,clear
 
 mvencode bp* pl*, mv(.a=-1 \ .b=-2)
 
@@ -3028,4 +3030,266 @@ regress wage ib2.grade4
 
 *Knowing these tricks for your analysis can save you the effort of creating these
 *variable as part of your data management
+*/
+
+
+/**
+*DATE VARIABLES
+*
+*Ths section covers how to read raw datasets with date information, how to create and format dates
+*,how to perform computations with date variables, and how to perform comparisons on dates.
+*Let's use as an example a file named [monkid1.csv], which contains information about fourms mons,
+*their birthdays, and the birthdays of each mom's first kid.
+*/
+
+type momkid1.csv
+
+/**
+*This illustrates two common formats that can be used for storing dates in raw data files.
+*The second, third and fourth variable in the file are the month, day and year, respectively, of 
+*the mom's birthday as three separate variable.The fifth variable contains the month, day and year 
+*of the kid's birthday as one variable.The fifth varaible contain the month, day and year of the kid's 
+*birthday as one variable.
+*
+*When we read these variables into Stata using the [import delimited] command(shown below), the month, day and
+*year of the mom's birthday are stored as three separate numeric variables, and the kid's birthday is stored
+*as one string variable
+*/
+
+import delimited using momkid1.csv,clear
+
+list
+
+/**
+*Once we have the variables read into Stata, we can convert them into date variables.
+*We can use the [mdy()] function to create a date variable containing the mon's birthday.
+*The month, day and year are then converted into the date variable [mombdate].Including 
+*[after(momy)] position the new variable, mombdate, after [momy] in the dataset
+*/
+
+generate mombdate = mdy(momm, momd, momy), after(momy),
+
+/**
+*The kid's birthday was read into the string variable [kidbday].
+*Below, we convert this string variable into a date variable named [kidbdate] by using date()
+*function.We told the [date()] function that the date was in "MDY" format, meaning that first comes the
+*after(kidbday) option to position the new variable after [kidbday] in the dataset.
+*/
+
+generate kidbdate = date(kidbday, "MDY"), after(kidbday)
+
+list
+
+/**
+*The [mombdate] and [kidbdate] variables seem like they are stored as a strange number that does
+*not make any sense.Looking at the fourth mom, we notice that her value for [mombdate] is 4 and 
+*her birthday is Jan 5, 1960.This helps illustrates that Stata stores each date as the number of days
+*from Jan 1, 1960 (a completely aribituary value).Imagine that all the dates are on a number line where
+*a date of 0 is Jan 1, 1960, 1 is Jan 2, 1960, 4 is Jan 5, 1960, and so forth.Like a number line,
+*there are can be negative values; for example, Dec 31,1959, would be -1, and Dec 30, 1959, would be -2
+*
+*To make the date easier to read, we can use the format command, which request that mombdate and kidbdate be
+*displayed using the [%td] format.The underlying contents of these variables remain unchanged, but the 
+*are displayed showing the two-digit day, three-letter month, and four-digit year.
+*/
+
+format mombdate kidbdate %td
+
+list momm momd momy mombdate kidbday kidbdate
+
+/**
+*Stata supports an elaborate mixture of formatting codes that you can add to the %td format to customize
+*the display of date variables.Below,the mom's birthdays are displayed using the numeric month(nn),
+*the day(dd), and two-digit year (YY)
+*/
+
+format mombdate %tdnn/dd/YY
+
+list momm momd momy mombdate
+
+/**
+*The kid's birthdays are shown below using the name of the day (Dayname), the name of the month(month),
+*the day of the month(dd), and two-digit century combined with the two-digit year (ccYY).After the %td,
+*a comma inserts a comma,a forward slash inserts a forward slash, and an underscore insets a space in the 
+*display of variables
+*/
+
+format kidbdate %tdDayname_Month_dd,ccYY
+list kidbday kidbdate
+
+/**
+*No matter how you change the display format of a date, this does not change the way the dates are stored
+*internally.This internal representation of dates facilitates calculation of the amount of time that has
+*elapsed between two dates.For example,, we can compute the mothers age (in days) when she had her first
+*kid by subtracting [mombdate] from [kidbdate] to create a variable called [momagefb], as shown below
+*/
+
+generate momagefb = kidbdate - mombdate
+list mombdate kidbdate momagefb
+
+/**
+*We normally think of ages in terms of years rather than days.We can divide the age in days 
+*by 365.25 to create [momagefbyr] which is the age of the mom in years when she had her first kid.
+*/
+
+generate momagefbyr = momagefb/365.25
+list momid momagefb momagefbyr, abb(20)
+
+/**
+*We might want to know how old the mom is as of a particular date, say, Aprill 3,1994.We can subtract *[mombdate] from [mdy(4,3,1994)] and divide that by 365.25 to obtain the age of the mom in years as of April *3, 1994.Note that [mdy(4,3,1994)] is an example of the way that you can specify a particular date to Stata.
+*/
+
+generate momage = (mdy(4,3,1994) - mombdate)/365.25
+
+list momid mombdate momage
+
+/**
+*Say that we wanted to list the mohters who were born on or after January 20,1970.We can do this by listing
+*the cases where the mom's birthdate is at least mdy(1,20,1970).
+*/
+
+list momid mombdate if (mombdate >= mdy(1,20,1970)) & !missing(mombdate)
+
+/**
+*You might want to extract month, day or year from a date.
+*The day(), month(), and year() functions make this easy, as shown below.
+*/
+
+generate momday = day(mombdate)
+generate mommonth = month(mombdate)
+generate momyear = year(mombdate)
+
+list momid mombdate momday mommonth momyear
+
+/**
+*There are many other date functions we can use with date variable.For example, the [dow()] function
+*identifies the day of the week (coded as 0 =Sunday, 1=Monday, 2=Thursday, ..., 6 = Saturday).
+*The [doy()] function returns the day of the year.The [weeek()] and [quarter()] function return
+*the week and quarter (respectively) of the year.Using these functions, we see that the first mom
+*was born on a Tuesday that was the 33rd day of the 48th week in the 4th quarter of the year
+*/
+
+generate momdow = dow(mombdate)
+generate momdoy = doy(mombdate)
+generate momweek = week(mombdate)
+generate momqtr = quarter(mombdate)
+
+list momid mombdate momdow momdoy momweek momqtr
+
+/**
+*Let's conclude this section by considering issues that arise when dates are stored using two digit years
+*instead of four-digit year.Consider the file [momkid2.csv], as shown below.Note how the years
+*for both the kid's and the moms' birthday are stored using two digit years
+*/
+
+type momkid2.csv
+
+/**
+*Let's read this file and try to convert the birthdays for the moms and kids into date variables
+*/
+
+import delimited using momkid2.csv,clear
+
+generate mombdate = mdy(momm, momd, momy)
+
+generate kidbdate = date(kidbday, "MDY")
+
+/**
+*This does not look promising.Each [generate] command gave the message (4 missing values generate), suggesting
+*that all values were missing.Nevertheles, let's apply the date format to the date variables and list the 
+*variables
+*/
+
+format mombdate kidbdate %td
+list
+
+/**
+*As we expected, all the dates are missing.Let's see why this is so by considering the birthdates for moms.
+*When we told Stata mdy(momm,momd,momy), the values for momy were values like 72,68 or 60.Stata takes
+*this to literally mean the year 72,68,or 60; however, Stata can only handle dates from January 1,100, to
+*December 31,9999, so the year 72 is outside of the limits that Stata understands, leading to a missing value
+*The [mdy] functions expects the year to be a full four-digit year.Because all the moms were born in 1900s,
+*we can simply add 1900 to all thier years of birth, as shown below
+*/
+
+
+generate mombdate = mdy(momm, momd, momy+1900)
+
+format mombdate %td
+
+list
+
+/**
+*For the kid's birthdates, we had the same problem.We could instruct Stata to treat all *the birth years as though they came from the 1900s, as shown below
+*/
+
+generate kidbdate = date(kidbday, "MD19Y")
+
+format kidbdate %td
+
+list
+
+/**
+*This would have worked fine if all the kids were born in the 1900s (and if they had
+*all been born in the 2000s, we could have specified "MD20Y").What we need is a method
+*for telling Stata when to treat the two-digit year as being from the 1900s versus
+*being from the 2000s
+*
+*The [date()] functions allows you to do just this by giving a cutoff year that *distinguishes dates in the 1900s from dates in the 2000s.In the example below, any
+*kid with a year of birth from 00 t0 20 would be treated as from the 2000s, and any kid
+*with a year of birth over 20(21 to 99) would be treatd as from the 1900s.
+*/
+
+
+
+generate kidbdate = date(kidbday, "MDY",2020)
+
+format kidbdate %td
+
+list
+
+/**
+*What if the kid's birthdates (which cross the boundary of 2000) were stored like the 
+*moms' birthdates: as a separate month, day, and year? I illustrate such a file in
+*[momkid3.csv]
+*/
+
+type momkid3.csv
+
+/**
+*We first read in the month, day and year of birth for both the moms and the kids
+*/
+
+import delimited using momkid3.csv,clear
+
+list
+
+/**
+*The for the kids, we use the [generate] command to create the variable [kidbdate]
+*by adding 1900 to the year if the year if the year of birth was over20.
+*We then use the [replace] command to replace the contents of [kidbdate] with
+*2000 added to the year if the year of birth was 20 or below
+*/
+
+generate kidbdate = mdy(kidm, kidd,kidy+1900) if kidy >20
+
+replace kidbdate = mdy(kidm, kidd, kidy+2000) if kidy <= 20
+
+/**
+*We can see below that the birthdays of the kids are now properly stored as 
+*date variables
+*/
+
+format kidbdate %td
+
+list momid kidm kidd kidy kidbdate
+
+/**
+*This concludes this section on dates in Stata. The following 
+*section builds upon this section, illustrating how to handle date and time values.
+*For more information, see [help dates and times]
+*/
+
+/**
+*This is an approximation and could be slightly off depending on leap years; however, *this simple approximation is likely sufficient for data analysis purposes
 */
