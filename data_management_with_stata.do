@@ -3293,3 +3293,54 @@ list momid kidm kidd kidy kidbdate
 /**
 *This is an approximation and could be slightly off depending on leap years; however, *this simple approximation is likely sufficient for data analysis purposes
 */
+
+
+/**
+*DATE AND TIME VARIABLES
+*/
+
+/**
+*The previous section illustrated how to create and work with date variables.This 
+*section considers variables that are commposed of both a date and a time
+*This section builds upon and is patterend after but instead focuses on data and time *values.In this section, you will learn how to read raw data files with values,
+*how to perfom computations with date and time variables, and how to perform comparisons
+*on date and time values.We first read in a file named [momkid1.csv], which contains *inforation about four moms with their date and time of birth and the date and time of *birth of thier kid.
+*/
+
+type momkid1a.csv
+
+/**
+*this data file shows the two common formatas that can be used for date-and-time
+*values in a rea data file.The second, third and fourth variables in the filea are
+*month, day and year of the variables are the hour(using a 24-hour clock),
+*minue and second of the mom's birth, respectively.
+*The eighth variable contains the kid's date and time of birth
+*When this file is read using the [import delimited] command, the month, day, year,
+*hour, minute and second of the mom's birthday are stored as six separate numeric
+*variables. The kid's birthdate and time are stored as one string variable, as shown *below
+*/
+
+import delimited using momkid1a.csv,clear
+
+list
+
+
+/**
+*Once we have the variables read into Stata, we can convert them into date-and-time 
+*variables.Below, we use the [mdyhms()] function to create the date and time variable
+*named [momdt] based on the month, day, year, hour, minute and second of birth for
+*each mom.Because date-and-time variables can contain very large values, it is 
+*imperative that they be stored as type [double];
+*otherwise, precision can be lost
+*/
+
+generate double momdt = mdyhms(momm,momd,momy,momh,mommin,moms)
+
+/**
+*Let's apply the %t format to [momdt] to display it as the date and time values
+*and then list the observations.We can see that the values of [momdt] exactly
+*represent the values of the date-and-time variables that were used to create it.
+*/
+
+format momdt %tc
+list id momm momd momy momh mommin moms momdt
