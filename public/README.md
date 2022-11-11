@@ -22,5 +22,20 @@ There is a gap between raw data and statistical analysis. That gap, called data 
 
 
 ## Keywords and Notes
+### Listing observation in this book
+I frequently use the `list` command to illustrate the effect of commands. Sometimes, I add options to the `list` command to maximize the clarity of the output.
 
+For files with many observations, it can be useful to list a subset of observations. I frequently use the `in` specification to show selected observation from a dataset. 
+
+For example
+```
+list idcode age hour wage in 1/5
+``
+Sometimes variables names are so long that they ge abbreviated by the `list` command. This can make the listings more compact but also make the abbreviated heading harder to understand.
+
+For example, the listing below shows the variables `idcode, married, marriedyrs and nevermarried` for the first five observation. Note how `marriedyrs` and `nevermarried` are abbreviated. 
+
+```
+list idcode married marriedyrs nevermarried in 1/5
+```
 
