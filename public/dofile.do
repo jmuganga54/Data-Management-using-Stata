@@ -1,9 +1,10 @@
 /*
 *This file contain all the commands used when reading  
 *[Mitchell M. Data Management Using Stata. A Practical Handbook 2ed 2021]
+* RECAP 2022
 */
 
-cd "/Users/macbook/Dropbox/My Mac (Macbook’s MacBook Pro)/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/data"
+cd "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/data"
 use wws //file contain hypothetical observation about women and their work
 
 ***************************************CHAPTER ONE:OVERVIEW OF THIS BOOK*****************************************************************************************************************
