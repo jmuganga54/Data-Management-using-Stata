@@ -11,8 +11,8 @@
 -Experimenting with Data Management using Stata
 ## Structure
 
-- `/data_management_with_stata.do`  Dofile which contain all the commands with comments,
-- `/data` Folder which contains all the data to use as practice data
+- `/public/dofile.do`  Dofile which contain all commands,
+- `/public/data` Folder which contains all the data to use as practice data
 
 
 ## Dependencies
