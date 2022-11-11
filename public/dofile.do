@@ -4,7 +4,9 @@
 * RECAP 2022
 */
 
-cd "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/data"
+global pathData "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/data"
+
+cd $pathData
 use wws //file contain hypothetical observation about women and their work
 
 ***************************************CHAPTER ONE:OVERVIEW OF THIS BOOK*****************************************************************************************************************
