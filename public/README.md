@@ -89,3 +89,32 @@ help videos
 * [Statalist](https://www.statalist.org/.)
 * [Stata Journal](https://www.stata-journal.com/)
 * [Stata Blog](https://blog.stata.com/)
+
+### Chapter 2 | Reading and importing data files
+
+>> Stata rhymes with data 
+An old Stata FAQ
+
+#### Introduction
+Before you can analyze the data in Stata, you must first read the data into Stata.This section describes how you can read several common types of data files into Stata.
+
+##### Changing directories
+To read a data file, you first nee to know the directory or folder in which it is located and how to get there.
+
+Say that you are using Windows and you have a folder names `mydata` that is located in your `Documents` folder. Using `cd` command shown below changes the current working directory to the `mydata` folder withing your `Documents` folder
+
+```
+cd /Documents/mydata
+```
+
+Say that you are using Unix (for example Linux or macOs) and your data files are stored in a directory named `~/statadata`. You could go to that directory by typing
+
+```
+cd /statadata
+```
+
+Consider the partially complete `cd` command shown below
+```
+cd "/
+```
+After typing the forward slash, we can pres the Tab key to activate tab completion, showing a list of possible folders that can be chosen via keystrokes or mouse clicks
