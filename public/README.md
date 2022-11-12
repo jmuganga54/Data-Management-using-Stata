@@ -78,4 +78,14 @@ list,sepby(kidid)
 For more help type
 ```
 help internet
+help videos
 ```
+
+>> More online resources
+* [Stata resources and support](https://www.stata.com/support/)
+* [Resources for learning Stata](https://www.stata.com/links/resources-for-%20learning-stata/)
+* [Stata Videos](https://www.youtube.com/user/statacorp)
+* [Stata FAQs](https://www.stata.com/support/faqs/)
+* [Statalist](https://www.statalist.org/.)
+* [Stata Journal](https://www.stata-journal.com/)
+* [Stata Blog](https://blog.stata.com/)
