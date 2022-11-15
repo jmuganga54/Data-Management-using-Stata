@@ -1,7 +1,12 @@
 /*
 *This file contain all the commands used when reading  
 *[Mitchell M. Data Management Using Stata. A Practical Handbook 2ed 2021]
+
 */
+
+net from https://www.stata-press.com/data/dmu2
+net get dmus1
+net get dmus2
 
 global pathData  "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/data"
 
@@ -52,4 +57,111 @@ list,sep(0)
 Multiple observation per kid, and we can add the `sepby(kidid)` option to request that a separator be included between each level of `kidid`
 */
 list,sepby(kidid)
+
+/*
+CHAPTER 2 | READING AND IMPORTING DATA FILES
+
+*/
+
+//cd "User/macbook/Documents/Learning_center/DataScience/"
+
+/*
+2.2 Reading Stata datasets
+*/
+
+/* Tis dataset contain information from a survey of five dentists, including
+whether they recommed Quaddent gum to their patients who chew gum.
+*/
+use dentists
+list
+
+* reading stata data from remote location
+use "https://www.stata-press.com/data/dmus2/dentists.dta"
+list
+
+* reading ony the subset of observation 
+use dentists if years >=10
+list
+
+
+* combine use and reading two variables
+use name years using dentists if years >= 10
+list
+
+* Reading dataset that comes with Stata
+sysuse auto
+
+* See all the datasets that comes with stata-press
+sysuse dir
+
+* Other datasets used in Stata manuals but not shipped with Stata
+help dta contents
+
+* Reading the dataset specify over the Internet
+
+/*
+Importing Excel spreadsheets
+*/
+
+import excel dentists.xls, firstrow
+
+* Specifying the worksheet you want to import
+import excel dentists2.xls, firstrow sheet('dentists')
+list
+
+clear
+* Importing data from excell file by specifying the cell range
+import excel dentists3, firstrow cellrange(A1:D6)
+
+/*
+2.7 Importing raw data files
+*/
+
+* comma-separated-file
+type dentists1.txt
+
+* tab-separated file
+type dentists2.txt
+
+* space separated file
+type dentists5.txt
+
+* fixed-column file
+type dentists7.txt
+
+/*
+2.71. Importing comma-separated and tab-separated files
+*/
+
+* comma-separated file
+type dentists1.txt
+import delimited using dentists1.txt
+list
+
+* tab-separated files
+clear
+type dentists2.txt
+import delimited using dentists2.txt
+list
+
+* file without have variable names at the top row of the data files
+type dentists3.txt
+
+* import the data and let Stata define the variable on top, v1,v2,v3..
+clear
+import delimited using dentists3.txt
+list
+
+/*
+2.7.2 Importing space-separated files
+*/
+
+x
+* file with space-separated
+type dentists7.txt
+
+clear
+* name the column based on the location of observation
+infix str name 1-17 years 18-22 fulltime 23 recom 24 using dentists7.txt
+list
 
