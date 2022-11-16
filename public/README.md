@@ -351,3 +351,55 @@ infix years 18-22 fulltime 23 using dentists7.txt in 1/3
 infix years 18-22 fulltime 23 using dentists7.txt if fulltime == 1
 ```
 
+To be  continued ...
+
+##### 2.8 Common errors when reading and importing files
+This section describes and explains two common error messages you may see when reading or importing data into Stata. These error messages are `no; datasets in memory has changes since last saved` and `you must start with an empty dataset`.
+
+To understand these error message better, let's first briefly explore the mode that Stata uses for reading, modifying and saving datasets.
+
+Stata datasets can be read into memory and modified, and if you like the changes, they can be saved. The dataset in memory is called the `working dataset`. The changes to the working dataset are temporary until saved. If you were careless, you could lose the changes you made. Fortunately, stata helps you avoid this.
+
+> The `no; dataset in memory has changed since last saved` error message
+When you seek to use or import a dataset into Stata that will `replace` the working dataset in memory and you have unsaved changes made to the working dataset, reading a new file would cause you to lose your unsaved changes. Stata wants to help you avoid losing unsaved changes by displaying the error message.
+
+If you try to `use` Stata dataset while you have unsaved changes to the working dataset, you will receive the following error message:
+
+```
+use dentists
+no; dataset in memory has changed since last saved
+```
+
+This error message is saying that you would lose the changes to the dataset in memory if the new dataset were to be read into memory, so stata refused to read the new dataset.
+
+If you care about the dataset in memory, use the `save` command to save your dataset. If you do not care about the working dataset, you can throw it away using the `clear` command.
+
+> Tip The clear command versus the clear option
+Rather than using the `clear` command, most (if not all) commands permit you to specify the `clear` option. For example, you can type
+
+```
+use dentist, clear
+```
+instead of typing 
+
+```
+clear
+use dentists
+```
+Likewise, you can add the `clear` to other commands like `infile`, `infix` and import. The choice of which to use is up to you.
+
+> The `you must start with an empty dataset` error message
+When importing a raw dataset (using, for example, the `infile`, `infix`, or `import delimited` command), there cannot be a working dataset in memory in the currently selected data frame.
+
+if you have data in the current frame(saved or not), issuing one of these commands will give you the following error message.
+
+```
+import delimited using dentists1.txt
+you must start with an empty dataset
+```
+
+This error message is saying that you first need to clear the data currently in memory in the current data frame before you may issue the command.Being sure that you have saved the dataset in memory if you care about it, you would the issue the `clear` command. That clear any data currently in memory.
+
+> Tip! missing data in raw data file
+
+Raw data files frequently use numeric codes for missing data. For example, `-7` might be the code for `don't know`, `-8`, the code for `refused` and `-9`, the code for `not applicable`

@@ -198,3 +198,11 @@ list
 * reading some few variable fixed column files
 infix str name 1-17 fulltime 23 using dentists7.txt
 list
+
+/*
+2.8 Common erros when reading and importing files
+*/
+
+use dentists
+
+import delimited using dentists1.txt, clear
