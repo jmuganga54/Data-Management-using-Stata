@@ -156,12 +156,45 @@ list
 2.7.2 Importing space-separated files
 */
 
-x
+
 * file with space-separated
-type dentists7.txt
+type dentists5.txt
+
+* infile command to read files
+infile str17 name years full rec using dentists5.txt
+list
 
 clear
+* reading the file, which is space separated-file
+import delimited using dentists5.txt, delimiters(" ")
+
 * name the column based on the location of observation
 infix str name 1-17 years 18-22 fulltime 23 recom 24 using dentists7.txt
 list
 
+* skip variable when reading space separated files
+infile a _skip(22) x _skip(2) using abc.txt
+
+* skipping variable using using infile and if
+infile a _skip(22) x _skip(2) using abc.txt if (a<=5>)
+
+
+* reading consecutive variables in a datafile using infile
+infile id age bp1 bp2 bp3 bp4 bp5 pu1 pu2 pu3 pu4 pu5 using cardio1.txt
+list
+* the following command is the shortcut of the above
+infile id age bp1-bp5 pu1-pu5 using cario1.txt
+
+/*
+2.7.2 Importing fixed -column files
+*/
+
+type dentists7.txt
+
+* reading fixed-column files using infix
+infix str name 1-17 years 18-22 fulltime 23 recom 24 using dentists7.txt
+list
+
+* reading some few variable fixed column files
+infix str name 1-17 fulltime 23 using dentists7.txt
+list

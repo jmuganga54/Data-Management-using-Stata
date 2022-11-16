@@ -297,9 +297,57 @@ Another common format for storing raw data is a space-separated file. In such a 
 ```
 type dentists5.txt
 ```
-In this file, the `name of the dentist` occupies `columns 1-17`, the `years` in practice occupies `column 18-22`, whether the dentist is `full time` is in `column 23`, whether the dentist `recommends Quaddent` is in `column 24`. Knowing the column locations, you can read this file using the `infix` command like this:
+You can use the `infile` command to read this file. Because the file did not include variable names, you need to specify the variable names with `infile` command.In addition, because the variable `name` is a string variable, you need to tell Stata that this file is a string variable by prefacing `name` with `str17`, which informs Stata that this is a sting variable that may be as wide as 17 characters. 
+
 ```
-infix str name 1-17 years 18-22 fulltime 23 recom 24 using dentists7.txt
+* infile command to read files
+infile str17 name years full rec using dentists5.txt
+list
+```
+The `infile` command does not read files with the variable names in the first row. To read the file we use `import delimited` command, adding option `delimiter("")`
+
+```
+import delimited using dentists5.txt, delimiters(" ")
+```
+Sometimes, you might need to read a space-separated file that has dozens or even hundreds of variables, but you are interested only in some of those variables. Reading some of the variable and skip other variables to save time when reading datasets using `infile`
+
+```
+* skip variable when reading space separated files
+infile a _skip(22) x _skip(2) using abc.txt
+```
+Using `if` and `infile` to read some of the observations you want
+
+```
+infile a _skip(22) x _skip(2) using abc.txt if (a<=5>)
+```
+> TIp | Reading consecutive variables
+```
+infile id age bp1 bp2 bp3 bp4 bp5 pu1 pu2 pu3 pu4 pu5 using cardio1.txt
+* the following command is the shortcut of the above
+infile id age bp1-bp5 pu1-pu5 using cario1.txt
+
 ```
 
+##### 2.7.3 Importing fixed -column files
+Fixed-column files can be confusing because the variables are pushed togethr without spaces, commas, or tabs separated them.
+
+In this file, the `name of the dentist` occupies `columns 1-17`, the `years` in practice occupies `column 18-22`, whether the dentist is `full time` is in `column 23`, whether the dentist `recommends Quaddent` is in `column 24`. Knowing the column locations, you can read this file using the `infix` command like this:
+
+```
+infix str name 1-17 years 18-22 fulltime 23 recom 24 using dentists7.txt
+list
+```
+You do not have to read all the variables in a `fixed-column data` file. You can read just some few variable as shown on the command below
+
+```
+infix str name 1-17 fulltime 23 using dentists7.txt
+list
+```
+
+Likewise, you  do not have to read all the observation in the data file. You can specify an `in` qualifier or an `if` qualifier to read just a subset of the observation
+
+```
+infix years 18-22 fulltime 23 using dentists7.txt in 1/3
+infix years 18-22 fulltime 23 using dentists7.txt if fulltime == 1
+```
 
