@@ -353,7 +353,7 @@ infix years 18-22 fulltime 23 using dentists7.txt if fulltime == 1
 
 To be  continued ...
 
-##### 2.8 Common errors when reading and importing files
+#### 2.8 Common errors when reading and importing files
 This section describes and explains two common error messages you may see when reading or importing data into Stata. These error messages are `no; datasets in memory has changes since last saved` and `you must start with an empty dataset`.
 
 To understand these error message better, let's first briefly explore the mode that Stata uses for reading, modifying and saving datasets.
