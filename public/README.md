@@ -361,6 +361,7 @@ To understand these error message better, let's first briefly explore the mode t
 Stata datasets can be read into memory and modified, and if you like the changes, they can be saved. The dataset in memory is called the `working dataset`. The changes to the working dataset are temporary until saved. If you were careless, you could lose the changes you made. Fortunately, stata helps you avoid this.
 
 > The `no; dataset in memory has changed since last saved` error message
+
 When you seek to use or import a dataset into Stata that will `replace` the working dataset in memory and you have unsaved changes made to the working dataset, reading a new file would cause you to lose your unsaved changes. Stata wants to help you avoid losing unsaved changes by displaying the error message.
 
 If you try to `use` Stata dataset while you have unsaved changes to the working dataset, you will receive the following error message:
@@ -389,6 +390,7 @@ use dentists
 Likewise, you can add the `clear` to other commands like `infile`, `infix` and import. The choice of which to use is up to you.
 
 > The `you must start with an empty dataset` error message
+
 When importing a raw dataset (using, for example, the `infile`, `infix`, or `import delimited` command), there cannot be a working dataset in memory in the currently selected data frame.
 
 if you have data in the current frame(saved or not), issuing one of these commands will give you the following error message.
