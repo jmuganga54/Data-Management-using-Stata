@@ -426,6 +426,7 @@ The process of entering data into the Data Editor is a four step process. This i
 Before we can start, we need to `clear` the working dataset with the `clear` command.
 
 > Step 1: `Enter the data for the first observation`
+
 Open the Stata Data Editor with `edit` command, then start entering data, the first row without its variable, just the data.
 
 ```
@@ -435,6 +436,7 @@ edit
 ```
 
 > Step 2 : `Label the variables`
+
 The second step is to label the variables based on the information shown on the codebook. You can open the Variables Manager window from the main menu by clicking `Data` then `Variable Manager` (or by clicking on the `Variables Manager` icon from the toolbar)
 
 The first variable `var1`, should already be selected (if not, click on it). We will use the Variable properties pane (at the right) to supply the information contained in the codebook. Focusing on the first variable, change `Name` to be `id` and `Label` to be `Unique Identifier`. Click on the Apply button, and the left pane reflects these changes, continue with the rest of the variable
@@ -442,6 +444,7 @@ The first variable `var1`, should already be selected (if not, click on it). We 
 Note: `type : str10`, specify that this variable is a string variable that can hold as many as 10 characters. `Format: %30s` a variable will be displayed as a string with width up to `30`.
 
 > Label values
+
 Before doing anything(even before specify the name or label for this variable race), let's enter the information for the coding scheme `racelab`. We can do this by clicking on `Manage` button next to `value label`. Then in the Manage value labels dialog box, click on `Create label`. For the `Label name`, enter `racelab` and then enter a value of `1` and `Label` of `White`; then, click on Add.Enter the values and labels for three remaining race groups, click on `Add` after each group.
 
 
