@@ -445,9 +445,70 @@ Note: `type : str10`, specify that this variable is a string variable that can h
 
 > Label values
 
-Before doing anything(even before specify the name or label for this variable race), let's enter the information for the coding scheme `racelab`. We can do this by clicking on `Manage` button next to `value label`. Then in the Manage value labels dialog box, click on `Create label`. For the `Label name`, enter `racelab` and then enter a value of `1` and `Label` of `White`; then, click on Add.Enter the values and labels for three remaining race groups, click on `Add` after each group.
+Before doing anything(even before specify the name or label for this variable race), let's enter the information for the coding scheme `racelab`. We can do this by clicking on `Manage` button next to `value label`. Then in the Manage value labels dialog box, click on `Create label`. For the `Label name`, enter `racelab` and then enter a value of `1` and `Label` of `White`; then, click on Add. Enter the values and labels for three remaining race groups, click on `Add` after each group.
 
 
+> Format of dob
+
+Now we have arrived at date of birth `(dob)`. (Remember that we entered a temporary value of 1 for this variable and will fix it in step 3). For `Name`, enter `dob` and for `label`, enter `Date of birth`. To the right of `Format`, click on the `Create` button. Under `Type of data`, choose `Daily` (because this a date variable). The `samples` box at the right shows examples of how this date variable can be displayed. You can choose whichever format you prefer; I will choose `April 7, 2021`. Then, click on `OK` to chose the Create format dialog box.
+
+```
+format %tdMon_DD,_CCYY var6
+```
+After I entered all the information for all the variable, my Variable Manager and Data Editor will looks as a below
+
+> Variable Manager
+
+![Variable Manager](./img/variable_manager.png)
+
+> Data Editor
+
+![Data Editor](./img/data_editor.png)
+
+> Note! `Yellow and blue values`
+
+In the Data Editor, the values of student name are shown in `yellow`, that is to emphasize that `stunname` is a string variable.
+
+Note how the variales `race, happy, and glad` display labelled values in blue. The color `blue` signifies that the variables is `numeric`.
+
+`If you prefer to see the actual values`, then you can go to the main menu and choose `View` and then `Data Editor` and then `Value label` then `Hide all value labels`.
+
+
+> Step 3: `Fix date variables`
+In the Data Editor, click on the column for `dob`. At the right, you can select the format in which you would like to type dates into the Data Editor.
+The `Format` is like what you set it in `Step 2`.
+
+After investing all this effort, now is a great time to save these data. Data Editor, go to the main menu and click on `File` and then `save as...`and save the file as `studentsurvey`
+
+
+```
+list 
+describe
+```
+`describe` command shows the names, variable labels, and value labels specified in step 2.
+
+Now that we have successfully entered the first observation for this dataset and labelled this dataset, we are ready for the fourth step, entering the rest of the observations.
+
+> Step 4 : `Enter the data for rest of the observations`
+You can return to the Data Editor and continue entering data for the rest of the students in the survey.
+
+Once you are done entering the data for all the students, you can `save` the file and close the Data Editor and the Variable Manager. You can then later retrieve the file by going to the main menu, selecting `File` and then `Open`, navigating to the folder in which you saved the file, and then choosing the file you saved.
+
+You can, of course, also read the data with `use` command. You can resume entering data using the `edit` command. Just like a spreadsheet, the data typed into Editor  are not saved until you save them.
+
+> For more help entering data using the Stata `Data Editor` see
+
+```
+help edit
+```
+
+> Tips
+
+1. It is better that the name of the variable and the name of the value label to be different.
+
+2. Stata will automatically will increase the size of a string variable to accommodate larger values as the are entered.
+
+3. Note that you can tab from field to field and press Enter after each value tag pair gets entered.
 
 
 

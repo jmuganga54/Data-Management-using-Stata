@@ -206,3 +206,12 @@ list
 use dentists
 
 import delimited using dentists1.txt, clear
+
+/**
+2.9 Entering data directly into the Stata Data Editor
+*/
+
+* open Data Editor
+clear
+edit
+
