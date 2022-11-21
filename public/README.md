@@ -523,17 +523,50 @@ You can use the `export excel` command to export the dataset currently in memory
 Both instances, you are taking the dataset currently in memory and storing it into an external file. In general, I will talk about saving a Stata dataset and exporting data into other file format (such as Excel, SAS, dBase, or raw data files)
 
 ````
-
-````
 * exporting SAS XPORT Version 8 file 
 export sasxport8
 * exporting SAS XPORT Version 5 file
 export sasxport5
 * exporting dBase file
 export dbase
+````
+#### Saving Stata datasets
 
+```
+* importing file
+import delimited using dentists1.txt,clear
 
+* saving the files
+save mydentists
+```
+If the file already exists, then you can add the `replace` option to indicate that it is okay to overwrite the existing file, as shown below
 
+```
+* saving the files, if the file exists
+save mydentists, replace
+```
+Saving file for to be open by other older versions of Stata, `saveold` command, also adding an option `version(12)` which specify the verison.
+```
+saveold dentisold, version(12)
+```
+
+You can use `keep` or `drop` command to select the variables you want to retain and use the the `keep if` or `drop if` command to select the observations to retain. 
+
+Say that we want to save a dataset with just the dentists who recommend Quaddent (if `recom` is `1`) and just the variable `name` and `years`. We can do this as illustrated below
+
+```
+use dentists
+list
+keep if recom == 1
+keep name years
+save dentist_subset
+```
+
+Using the `keep if` command selected the observations we wanted to keep. (We also could ahve used `drop if` to select the observations to drop). The `keep` command selected the variables we wanted to keep. (We also could have used the `drop` command to select the observation to drop)
+
+> Tip! Compress before save
+
+Before you save a Stata dataset, you might want to first use the `compress` command. The `compress` command stores each variable in the current dataset using the most parsimonious data type possible, which assuring that you never lose precision.
 
 
 
