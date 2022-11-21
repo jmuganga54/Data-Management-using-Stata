@@ -510,6 +510,30 @@ help edit
 
 3. Note that you can tab from field to field and press Enter after each value tag pair gets entered.
 
+### Chapter 3 | Saving and exporting data files
+#### 3. Introduction
+Within Stata, you can save data in many formats. The most common command for saving data is the `save` command, which saves the datasets currently in memory as a Stata dataset.
+
+The resulting dataset is saved using `.dta` format for the current version of Stata.
+
+You can use the `export excel` command to export the dataset currently in memory as an Excel file. The `export excel` command can save `.xls` files or `.xlsx` files. 
+
+> Note! Saving versus exporting
+
+Both instances, you are taking the dataset currently in memory and storing it into an external file. In general, I will talk about saving a Stata dataset and exporting data into other file format (such as Excel, SAS, dBase, or raw data files)
+
+````
+
+````
+* exporting SAS XPORT Version 8 file 
+export sasxport8
+* exporting SAS XPORT Version 5 file
+export sasxport5
+* exporting dBase file
+export dbase
+
+
+
 
 
 

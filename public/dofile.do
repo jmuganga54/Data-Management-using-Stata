@@ -215,3 +215,7 @@ import delimited using dentists1.txt, clear
 clear
 edit
 
+
+* after step 3
+list
+describe
