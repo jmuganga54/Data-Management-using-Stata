@@ -568,5 +568,54 @@ Using the `keep if` command selected the observations we wanted to keep. (We als
 
 Before you save a Stata dataset, you might want to first use the `compress` command. The `compress` command stores each variable in the current dataset using the most parsimonious data type possible, which assuring that you never lose precision.
 
+#### 3.3 Exporting Excel files
 
+```
+* reading Stata file
+use dentlab,clear
+*exporting file
+export excel dentlab.xls
+```
 
+The `export excel` command indicates that the file `dentlab.xlsx` has been saved. By default, `export excel` does not export the variables names in the first row.
+
+You must add the `firstrow(variables)` options to the `export excel` command. If the file already existed, you must add an option `replace`
+
+```
+use dentlab,clear
+list
+export excel dentlab.xlsx, firstrow(variables) replace
+```
+
+Looking at the Excel file, I realize that Stata exported the labeled values for `fulltime` and `recom`. This is the default behavior for the `export excel` command. I would prefer to display the unlabelled value for `fulltime` and `recom`. By adding the `nolabel` option, as shown below, the `export excel` command will export the unlabelled values of variables that have value labels.
+
+```
+export excel dentlab.xlsx, firstrow(variables) nolabel replace
+```
+So now I have decided that I actually would like to export both the unlabeled version and the labelled version of the data.I would like to add a new sheet to that file that contains the labeled version of the data, and I want that sheet to be named 'labeled'. 
+
+I add the `sheet("Labeled")` option to the `export excel` command. Note that I removed the `replace` option. If I include the `replace` option, the entire Excel file will be replaced, losing the contents of `sheet1`.
+
+```
+* Note the omission of the replace option
+export excel dentlab.xlsx, firstrow(variables) sheet("Labeled")
+```
+
+After looking at the sheet named `Labeled`, I decide that I want do not want that version to include the variable in the first row. I omit the `firstrow(variables)` and repeat the command below. However, I receive an error message
+
+```
+export excel dentlab.xlsx, sheet("labeled")
+//worksheet Labeled alread exists, must specify sheet(...,modify) or sheet(...,replace)
+```
+This error messge is informative. It says that the sheet names `labeled` already exists. I need to add either the `modify` or the `replace` suboption within the `sheet()` option. Because I want to replace that sheet, I will add `replace`.
+
+```
+export excel dentlab.xlsx, sheet("labeled",replace)
+
+//Expected output: file dentlab.xlsx saved
+
+```
+> Note! Worksheet limits of .xls versus .xlsx files
+When exporting dta to Excel, remember the worksheet size limits of `.xls` versus `.xlsx` files. For an `.xls` file, the worksheet size limit is 65,536 rows by 256 columns.
+
+By contrast, for an `.xlsx` file, the worksheet size limit is 1,048,576 rows by 16,384 columns. Furthermore, strings are limited to 255 characters in an `.xls` file versus 32,767 in an `.xlsx` file.

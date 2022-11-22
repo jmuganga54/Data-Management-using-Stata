@@ -219,3 +219,44 @@ edit
 * after step 3
 list
 describe
+
+
+/**
+Chapter 3 | Saving and exporting data files
+3.2 Saving Stata datasets
+*/
+
+import delimited using dentists1.txt,clear
+
+* saving the files
+save mydentists
+
+//file mydentists.dta saved
+
+
+
+use dentists
+list
+keep if recom == 1
+list
+keep name years
+list
+save dentist_subset
+
+/*
+3.3 Exporting Excel files
+*/
+
+* reading Stata file
+use dentlab,clear
+list
+*exporting file
+export excel dentlab.xls
+
+
+use dentlab,clear
+list
+export excel dentlab.xlsx, firstrow(variables) replace
+
+import excel dentlab.xlsx, firstrow clear
+list
