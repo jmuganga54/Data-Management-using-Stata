@@ -8,7 +8,7 @@ net from https://www.stata-press.com/data/dmu2
 net get dmus1
 net get dmus2
 
-global pathData  "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/data"
+global pathData  /Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/data
 
 cd "${pathData}"
 
@@ -260,3 +260,5 @@ export excel dentlab.xlsx, firstrow(variables) replace
 
 import excel dentlab.xlsx, firstrow clear
 list
+
+export excel dentlab.xlsx, firstrow(variables) nolabel replace

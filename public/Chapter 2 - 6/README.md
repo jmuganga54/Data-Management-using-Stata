@@ -602,3 +602,9 @@ export excel dentlab.xlsx, sheet("labeled",replace)
 When exporting dta to Excel, remember the worksheet size limits of `.xls` versus `.xlsx` files. For an `.xls` file, the worksheet size limit is 65,536 rows by 256 columns.
 
 By contrast, for an `.xlsx` file, the worksheet size limit is 1,048,576 rows by 16,384 columns. Furthermore, strings are limited to 255 characters in an `.xls` file versus 32,767 in an `.xlsx` file.
+
+#### 3.4 Exporting SAS XPORT Version 8 files
+#### 3.5 Exporting SAS XPORT Version 5 files
+#### 3.6 Exporting dBase files
+#### 3.7 Exporting comma-separated and tab-sepearated files
+Sometimes, you may want to save a dataset as comma-separated or tab-separated file. Such files can be read by many other programs, including spreadsheets.
