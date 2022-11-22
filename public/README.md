@@ -3,7 +3,7 @@
 * Chapter 2 - 6
 >  Cover nuts and bolts topics that are common to every dta management project: reading and importing data, saving and exporting data, data cleaning, labelling datasets and creating variables.
 
-* Chapter 3 - 6
+* Chapter 7 - 9
 > Cover tasks that occur in many (but not all) data management projects: combining datasets, processing observations accross subgroups, and changing the shape of your data
 
 * Chapter 10 and chapter 11
