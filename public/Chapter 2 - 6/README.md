@@ -608,3 +608,62 @@ By contrast, for an `.xlsx` file, the worksheet size limit is 1,048,576 rows by 
 #### 3.6 Exporting dBase files
 #### 3.7 Exporting comma-separated and tab-sepearated files
 Sometimes, you may want to save a dataset as comma-separated or tab-separated file. Such files can be read by many other programs, including spreadsheets.
+
+The `export delimited` command is used below to write a comma-separated file called `dentists_comma.csv` (the default extension is `.csv`). Note that the labels for `fulltime` and `recom` are output, not their values
+
+```
+use dentlab
+list
+export delimited using dentists_comma
+//file dentists_comma.csv saved
+
+* reading the export file
+type dentiststs_comma.csv
+```
+
+To see values of the variables, not the labels, the `no label` option is added. I also add the `replace` option because I am overwritting the same file I wrote above.
+
+```
+export delimited using dentists_comma, nolabel replace
+// (note: file dentists_comma.csv not found)
+//file dentists_comma.csv saved
+
+type dentists_comma.csv
+```
+If quotes are wanted around the names of the dentists, I could add the `quotes` option. This would be advisable if the names could have commas in them.
+
+```
+export delimited using dentists_comma, nolabel quote replace
+//(note file dentists_comma.csv not found)
+//file dentists_comma.csv saved
+
+type dentists_comma.csv
+```
+
+By default, the names of variables are written in the first row of the raw data file. Sometimes you might want to omit the names from the raw data file. Specifying the `novarnames` option omits the names from the first row of the data file.
+
+```
+export delimited using dentists_comma, nolabel quote novarnames replace
+//note : file dentists_comma.csv not found
+//file dentists_comma.csv saved
+
+type dentists_comma.csv
+```
+Setting a fixed format for a variable before exporting it to avoid confusion.
+In the example below, I have applied a display `format` to `years` saing that it should be displayed using a fixed format with a total width of 5 and 2 decimal places. 
+
+The, on the `export delimited` command, I added the `datafmt` option to indicate that the data should be exported according to the formatted values.
+```
+* 
+format years %5.2f
+export delimited using dentists_comma, quote replace datafmt
+type dentists_comma.csv
+```
+
+in these example, the option were illustrated in the context of creating comma-separated files. These options work equally well when creating `tab-separated` files. 
+
+> For more about about `export delimited`
+```
+help export delimited
+
+```
