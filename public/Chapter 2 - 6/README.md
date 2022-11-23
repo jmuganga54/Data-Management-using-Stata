@@ -667,3 +667,39 @@ in these example, the option were illustrated in the context of creating comma-s
 help export delimited
 
 ```
+
+#### 3.8 Exporting space-separated files
+There may be times that you want to save a dataset from Stata as a `space-separated` file. Such files are sometimes referred to as free-format files and can be read by many programs.
+
+```
+use dentlab
+list
+```
+The `outfile` command shown below writes a space-separated file called `dentists_space.raw` (the default extension is `.raw`). Note how the labels for `fulltime` and `recom` are output, not their values.
+
+```
+outfile using dentists_space
+type dentists_space.raw
+```
+
+To display the values, not the labels, for `fulltime` and `recom`, we can add the `nolabel` option. We aslo add the `replace` option because we are overwritting the file from above.
+
+```
+outfile using dentists_space, nolabel replace
+type dentists_space.raw
+```
+Suppose we aslo have `years2` (years squared) and `years3` (years cubed) in the dataset. In this case, when we write the raw data file, it will exceed 80 columns, and Stata wraps the file to make sure that no lines exceed 80 columns.
+
+```
+outfile using dentists_space, nolabel replace
+type dentists_space.raw
+```
+To avoid this wrapping, we could use the `wide` option. When using the `wide` option, one line of raw data is written in the space-separated file for every observation in the working dataset.
+
+```
+outfile using dentists_space, nolabel replace wide
+```
+> Note ! For more about `outfile`
+```
+help outfile
+```
