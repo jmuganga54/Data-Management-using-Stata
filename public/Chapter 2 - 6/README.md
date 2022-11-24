@@ -703,3 +703,41 @@ outfile using dentists_space, nolabel replace wide
 ```
 help outfile
 ```
+
+#### 3.9 Exporting Excel files revisted: Creating reports
+### Chapter 4 | Data Cleaning
+
+GIGO - Garbage In; Garbage Out
+
+#### 4.1 Introduction
+Once you have read a dataset into Stata, it is tempting to immediately start analyzing the data. But the data are not ready to be analyzed until you have taken reasonable steps to clean them (you know the old saying: garbage in, garbage out). Even when you are given a dataset that is supposed to have been cleaned, it is useful to examine and check the variables.
+
+This chapter divides up the process of `data cleaning` into two components: checking data (searching for possible errors in the data) and correcting data (applying corrections based on confirmed errors).
+
+Data checking is a thought-intensive process in which you imagine ways to test the integrity of your data beyond simple tabulations of frequencies. This chapter emphasizes this thought-intensive process, encouraging you to be creative in the ways that you check your data for implausible values.
+
+Checking for some implausible values and implausible combinations of values in the data. You may find in the data, some of the parents were as young as 7 years old, men who had given birth to children.Children who were older than their mothers. Parents who were 14 years old, recorded as having graduated college and so forth.
+
+Types of problem that you can find in the dataset, some problems concerned implausible values (for example, parents who where 7 years old)
+
+Some problems may be discovered only by checking variables against each other, which revealed impossible (or improbable) combinations of values. For example, mens who had given birth in the dataset.
+
+`section 4.2` The first data-cleaning strategy I will illustrate is dobule data entry. This proactive method of cleaning identifies data entry errors by entering the data twice and then comparing the two datasets. Conflicts between the two datasets indicate likely data entry errors, which can be identified and corrected by referring to the original source of the data. If you are entering data you have collected yourself, this is an excellent way to combine data entry and data cleaning into one step.
+
+`section 4.3` Covers techniques for checking invdividual variables for implausible values (for example, parents who are 7 years old).
+
+`section 4.4` covers checking categorical by categorical variables, such as gender aganist whether one has given birth.
+
+`section 4.5` covers checking categorical by continuous variable (for example, checking age broken down by whether one is a college graduate)
+
+`section 4.6` covers checking continuous by continuous variables (for example, mom's age compared with child age)
+
+`section 4.7` shows some of the nuts and bolts of how to correct problems, after identifying some problems in your data.
+
+`section 4.8` shows some of the Stata tools for identifying duplicates in your dataset and describes how to eliminate them.
+
+`section 4.9` final thoughts on data cleaning.
+
+`seciton 10.4` illustrates how the data-checking tasks describes in this chapter can be automated.
+
+

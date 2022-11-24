@@ -262,3 +262,14 @@ import excel dentlab.xlsx, firstrow clear
 list
 
 export excel dentlab.xlsx, firstrow(variables) nolabel replace
+
+
+
+/**
+3.7 Exporting comma-separated and tab-separated files
+*/
+
+use dentlab
+list
+export delimited using dentists_comma
+//file dentists_comma.csv saved
