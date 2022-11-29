@@ -552,7 +552,6 @@ Using the `keep if` command selected the observations we wanted to keep. (We als
 Before you save a Stata dataset, you might want to first use the `compress` command. The `compress` command stores each variable in the current dataset using the most parsimonious data type possible, which assuring that you never lose precision.
 
 #### 3.3 Exporting Excel files
-
 ```
 * reading Stata file
 use dentlab,clear
@@ -708,7 +707,6 @@ help outfile
 ### Chapter 4 | Data Cleaning
 
 GIGO - Garbage In; Garbage Out
-
 #### 4.1 Introduction
 Once you have read a dataset into Stata, it is tempting to immediately start analyzing the data. But the data are not ready to be analyzed until you have taken reasonable steps to clean them (you know the old saying: garbage in, garbage out). Even when you are given a dataset that is supposed to have been cleaned, it is useful to examine and check the variables.
 
@@ -740,4 +738,79 @@ Some problems may be discovered only by checking variables against each other, w
 
 `seciton 10.4` illustrates how the data-checking tasks describes in this chapter can be automated.
 
+#### 4.2 Double data entry
 
+Double data entry is like paying a small price now (expend extra effort to clean data as part of the data entry process), rather than doing single data entry and paying a much bigger price later (check all the variables for errors and inconsistencies).
+
+If you are doing your own entry for a questionnaire or other original data that you ahve collected, I higly recommend double data entry. This section describes how you can do double data entry using Stata.
+
+>> Tip ! Bypassing data entry.
+
+The double data entry paradigm assumes that data are collected and stored on a paper form and then the responses on the paper form are later typed into the computer. The responses need to be typed twice to account for data entry errors.
+
+An alternative to this is to directly record responses during data collection. For example, you can use a mobile app (like REDCap) that allows data collection or entry on an iPhone, iPad, or Android phone or tablet.
+
+>>
+
+As the name implies, the data are typed twice into two datasets. The datasets are then compared aganist each other. Discrepancies between the datasets identify error in the data entry that can be resolved by examining the original data (for example, the original questinnaire form) to determine the correct value. The absence of discrepancies does not necessarily prove that the data are correct; it is possible that the data were entered in error the same way both times.
+
+In most cases, the idea that an error occurred the same way two times borders on the ridiculous, but this is not always the case. A number 4 might be misread as a number 9 the first time, and then upon seeing that same written value, the smape person might again be inclined to read it as a 9. This points to a couple of practices for double data entry that can reduce the chances of repeated data entry errors.
+
+The questionnaires should be reviewd before data entry to remove all possible ambiguites. The job of the person doing data entry is not to interpret but simply and solely to type in the data.
+
+Ambiguites in paper questionnaires can arise from poor handwritting, multiple answers being selected, stray marks, and so forth. One or more people should first review all the original forms to identify and resolve any ambiguites so there is no discreation left to the person doing the data entry.
+
+Even after this process has been completed, it still may be prudent to avoid having the same person do the double data entry because that person may have one interpretation of the data, while a second person may have a different interpretation.
+
+The `first step` in the double data entry process is to enter the data. First, even if you have an existing ID variable (1,2,3, etc) that numbers each questionnaire form. This supplements (not replaces) any existing Id variable assinged to each questionnaire form. This sequentional ID should be directly written onto the questionnaire forms before data entry begins.
+
+`Second`, enter the data for first observation and label the data as descibed in steps 1, 2, and 3 in `section 2.9`. After this is completed, save two copies of hte dataset. If two people were doing the data entry, you would then give one person one of the datasets and the ohter person the other dataset. Each person would enter the data until completion.
+
+Once the data entry is completed, the verfication process begins by checking that each dataset has the same number of observations.
+
+> If the two datasets have differeing number of observations, the likely cuprit is eithr an observation that was entered twice or an observation that was overlooked and not entered.
+
+Duplicattes are found most easily by seaching based on your ID variables. For example, if you have an ID variable named `studentid`, you can list plicates on thi variable with commmand.
+
+```
+* list duplicates based on studentid
+duplicates list studentid
+```
+
+if you expect to find many duplicates, you may prefer to use the `duplicates tag` command (which goes into more detail about identifying duplicates)
+
+Suppose you find that observation numbers 13 and 25 are duplicates of each other. You can first view the data with the Data Editor to see if there is one observation that you prefer to drop (perhaps one case was a duplicate because it was never full entered). Say that you decide to drop observation qe. You can then type
+
+```
+drop in 13
+```
+
+and that observation is removed from the dataset. You can repeat this process to eliminate all duplicates observations.
+
+Finding an omitted observation is much trickier. This is why I recommended also including a sequential ID. Say that you named this variable `seqid`. You can identify any gaps in `seqid` with these commands:
+
+```
+sort seqid
+list sequid if sequid != (sequid[_n-1] + 1) in 2/L
+```
+
+If all values are in sequence, the current values of `seqid` will be the same as the previous value of `seqid` with 1 added to it.This command list the observations in which the current value of `seqid` is not equal to the previous value of `seqid + 1`. Even if this command is a bit confusing, it will quickly list any observation where there are gaps in `seqid`. Once you identify gaps, the omitted observaton can be added using the Stata Data Editor.
+
+Once you have successfully eliminated any duplicate observation and filled in any gaps, you two datasets should have the same number of observation. Now, you are ready to compare the datasets. The `cf` (compare files) command compares two Stata datasets observation by observation and shows any discrepancies it finds. Because the datasets are compared for each observation, the datasets should first be sorted so that the observations are in the same order. Suppose that your datasets are `survey1.dta` and `survey2.dta` and that the observations are identified by `studentid`. I would first sort the two datasets on studentid and save them.
+
+```
+use survery 1, clear
+sort studentid
+save survery 1, replace
+
+use survey2, clear
+sort studentid
+save survery2, replace
+```
+
+Now, we are ready to compare the two datasets. I would start by ensuring that the `studentid` variable is the same across the two datasets. We can do this by using `cf` (compare files) command, like this:
+
+```
+use survery1, clear
+cf studentid using survey2, verbose
+```
