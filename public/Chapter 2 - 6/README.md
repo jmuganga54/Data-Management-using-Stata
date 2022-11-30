@@ -814,3 +814,37 @@ Now, we are ready to compare the two datasets. I would start by ensuring that th
 use survery1, clear
 cf studentid using survey2, verbose
 ```
+
+The firs command uses `survey1.dta`. Then, the `cf` command compares the values of the `studentid` variable in the current dataset with the values of `studentid` in `survey2.dta`. The value of `studentid` for the first observation from the current dataset is compared with the value of `studentid` for the first observation `survey2.dta`. This process is repeated untill all observation have been compared. 
+
+Because we included the `verbose` option, the `cf` command will display message for each observation where a discrepancy is found. This message shows the observation number in the discrepancy, followed by the values from the master dataset (for example, `survey1.dta`) and the value from the using dataset (for example, `survey2.dta`)
+
+You an note any disscrepancies and use the Data Editor to view the datasetts and resolve any discrepancies. If all values of `studentid` are the same Stata will display the word `match` to indicate that all values match.
+
+> Tip! Comparing datasets with frames
+
+There is another way that you can compares values entered from the two datasets that arose from double data Entry. `Explain more on section 12.3`, the advantage of this method is that if accomodates datasets with differing numbers of observations.
+
+After resolving any discrepancies based on the ID variables, we are ready to examine all the variables for discrepancies using `cf` command
+
+```
+use survey1, clear
+cf _all using survey2, all verbose
+
+```
+
+In contrast with the previous example, where we just compared the `studentid` variables, this command specifies that we want to compare all variables (indicated by `_all`) between `survey1.dta` and `survey2.dta`.
+
+Stata will list the name of each varialbe. If all the values for variable match, it will display the word `match`. Otherwise, for each discrepancy found for the variable, Stata will list the observation number along with the value from the master dataset(for example `survey1.dta`) and the value from the using dataset (for example, `survey2.dta`)
+
+You can then take this list of discrepancies and refer back to the original data forms to identify correct values. You can select the dataset (among the two) that you feel is more accurate and apply the corrections based on the origninal data forms. Or if you wish to be completely fastidious, you can corrent both datasets and then use the `cf` command to demonstrate that the two corrected datasets are completely equivalent.
+
+Once you have completed this process of double data entry, you can feel confident that your dataset has few, if any, data entry errors. Of course, your dataset could still prossibly have inconsistent or bizarre responses. For example, a man could have indicated that he has given birth to three children.
+
+Double data entry does not prevent people from giving bizarre or inconsistent answers, but id does help you to know that such answers are likely because of factors other than errors in data entry.
+
+Following sections discuss data cleaning(that is, checking your data for problems and correcting problems that you identify)
+
+> Shout - out! Stata Cheat sheets!
+
+[Excellent Cheat Sheets by data pracitioners Dr. Tim Essam and Dr. Laura Hughes](https://www.stata.com/bookstore/stata-cheat-sheets/)
