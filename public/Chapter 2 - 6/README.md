@@ -848,3 +848,61 @@ Following sections discuss data cleaning(that is, checking your data for problem
 > Shout - out! Stata Cheat sheets!
 
 [Excellent Cheat Sheets by data pracitioners Dr. Tim Essam and Dr. Laura Hughes](https://www.stata.com/bookstore/stata-cheat-sheets/)
+
+
+#### 4.3 Checking individual variables
+This section will illustraate how you can check the values of individual variables searching for possible errors or problems in your data. 
+
+This and the following section will use a dataset called `wws.dta` (Working Women Survey), which is a purely hypothetical dataset with 2,246 observation. Let first read in this dataset
+
+```
+use wws
+```
+We use the `describe` command to list the variables in the dataset.
+
+```
+describe
+```
+This dataset contains several demographic variables about these womeone and information about their work life. Let's start checking the variables, focusing on variables that are `categorical`. The easiest way to check categorical variable is by using the `tabulate` command (including the `missing` option to include missing values as part of the tabulation)
+
+Let check the variable `collgrad` which is a dummy variable indication whether the woman graducated from college. The `tabulate` command shows, as we would expect, that all values are either `0` or `1`. We can also see that is variable has no missing values.
+
+```
+tabulate collgrad, missing
+```
+![tabulate collgrad.missing](./img/tabulate.png)
+
+The variable `race` should range from `1 to 3`, but below we see that there is one woman who is coded with a 4.
+
+```
+tabulate race, missing
+```
+
+![race](./img/race.png)
+
+We see that is erroneous value for `race` belongs to the woman with an `idcode` value of `543`. We could then try and determine what her read value of `race` should be 
+
+```
+list idcode race if race == 4
+```
+![idcode race](./img/idcode%20race.png)
+
+The `summarize` command is useful for inspection continuous variable.
+
+Lets inspect the variable `unempins`, the amount of underempployment or unemployment insuarance the woman receive last wee. Suppose that prior knowledge tells us this variable should range from about 0 to 300 dollars. The results below are consistent with our expectations.
+
+```
+summarize unempins
+```
+
+![summarize](./img/unempins.png)
+
+The `summarize` command (below) is used to inspect variable `wage` which contain the hourly wage for the previous week.
+
+```
+summarize wage
+```
+
+![sumarize wage](./img/wages.png)
+
+The maximum for this was `380,000`, which seems a little bit high, so we can add the `detail` option to get more information.
