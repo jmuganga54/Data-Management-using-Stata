@@ -863,7 +863,8 @@ We use the `describe` command to list the variables in the dataset.
 ```
 describe
 ```
-This dataset contains several demographic variables about these womeone and information about their work life. Let's start checking the variables, focusing on variables that are `categorical`. The easiest way to check categorical variable is by using the `tabulate` command (including the `missing` option to include missing values as part of the tabulation)
+This dataset contains several demographic variables about these women
+ and information about their work life. Let's start checking the variables, focusing on variables that are `categorical`. The easiest way to check categorical variable is by using the `tabulate` command (including the `missing` option to include missing values as part of the tabulation)
 
 Let check the variable `collgrad` which is a dummy variable indication whether the woman graducated from college. The `tabulate` command shows, as we would expect, that all values are either `0` or `1`. We can also see that is variable has no missing values.
 
@@ -889,7 +890,7 @@ list idcode race if race == 4
 
 The `summarize` command is useful for inspection continuous variable.
 
-Lets inspect the variable `unempins`, the amount of underempployment or unemployment insuarance the woman receive last wee. Suppose that prior knowledge tells us this variable should range from about 0 to 300 dollars. The results below are consistent with our expectations.
+Lets inspect the variable `unempins`, the amount of underempployment or unemployment insuarance the woman receive last week. Suppose that prior knowledge tells us this variable should range from about 0 to 300 dollars. The results below are consistent with our expectations.
 
 ```
 summarize unempins
@@ -906,3 +907,48 @@ summarize wage
 ![sumarize wage](./img/wages.png)
 
 The maximum for this was `380,000`, which seems a little bit high, so we can add the `detail` option to get more information.
+
+```
+summarize wage, detail
+```
+
+![summarize, detail](./img/sum%20details.png)
+
+It seems that the two largeest values were enterented erroneously; perhaps the respondent gave an annual wage instead of an hourly wage. Below, we identify these women by showing observations with wages over 100,000. We could try to ascertain what their hourly wage should have been 
+
+```
+list idcode wage if wage > 100000
+```
+![idcode wage](./img/idcode_wage.png)
+
+Suppose that, based on prior knowledge, we know that the ages for this sample shound range from `21 to about 50`. We can use the `summarize` command to check this.
+
+```
+summarize age
+```
+
+![summarize age](./img/sum_age.png)
+
+Seeing that the maximum age is `83`, we can get more information using the `tabulate` command. But rather than tabulating all values, we create a tabulation of ages for those who are 45 and older.
+
+```
+tabulate age if age >= 45
+```
+![tabulate age](./img/tabu%20age.png)
+
+The age of `54` and `83` seem suspicious. Below, we list the `idcode` for thse cases
+
+```
+list idcode age if age > 50
+```
+![idcode age](./img/idcode_age.png)
+
+We could then look up the original data for these two observations to verify their values of `age`.
+
+As shown in the section, the `tabulate` and `summarize` commands are useful for searching for out of range values in dataset.
+
+Once out of range valus is found, the `list` command can be used to identify the actual observation with the out of range values so that we can further investigate the suspicious data. 
+
+Section `4.7` illustrate how to correct values taht are found to be in error.
+
+

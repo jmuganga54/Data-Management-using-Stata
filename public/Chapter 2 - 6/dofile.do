@@ -273,3 +273,28 @@ use dentlab
 list
 export delimited using dentists_comma
 //file dentists_comma.csv saved
+
+
+/**
+4.3 Checking individual variables
+*/
+
+use wws
+
+describe
+
+tabulate collgrad, missing
+
+tabulate race, missing
+
+list idcode race if race == 4
+
+summarize unempins
+
+summarize wage
+
+summarize wage, detail
+
+list idcode wage if wage > 100000
+
+summarize age
