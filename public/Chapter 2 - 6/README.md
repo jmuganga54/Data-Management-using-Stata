@@ -12,7 +12,7 @@ net get dmus1
 net get dmus2
 ```
 ## Keywords and Notes
-### Listing observation in this book
+## Listing observation in this book
 I frequently use the `list` command to illustrate the effect of commands. Sometimes, I add options to the `list` command to maximize the clarity of the output.
 
 For files with many observations, it can be useful to list a subset of observations. I frequently use the `in` specification to show selected observation from a dataset. 
@@ -85,10 +85,10 @@ help videos
 >> Stata rhymes with data 
 An old Stata FAQ
 
-#### Introduction
+### Introduction
 Before you can analyze the data in Stata, you must first read the data into Stata.This section describes how you can read several common types of data files into Stata.
 
-##### Changing directories
+#### Changing directories
 To read a data file, you first nee to know the directory or folder in which it is located and how to get there.
 
 Say that you are using Windows and you have a folder names `mydata` that is located in your `Documents` folder. Using `cd` command shown below changes the current working directory to the `mydata` folder withing your `Documents` folder
@@ -109,12 +109,12 @@ cd "/
 ```
 After typing the forward slash, we can pres the Tab key to activate tab completion, showing a list of possible folders that can be chosen via keystrokes or mouse clicks
 
-#### What kind of file are you reading?
+### What kind of file are you reading?
 There are several data files that you can read and import into Stata. Additionally, Stata can import data saved in other file formats, including, Excell files(`.xls` and `.xlsx`), SAS files, IBM SPSS files, and dBase files (`.dbf`).
 
 > `Reading versus importing`. In both instances, you are retrieving an external file and placing it into memory
 
-#### 2.2 Reading Stata datasets
+### 2.2 Reading Stata datasets
 This section illustrate how to read Stata datasets.
 
 ```
@@ -176,7 +176,7 @@ The `webuse` command reads the dataset you specify over the Internet.
 webuse fullauto
 ```
 
-#### 2.3 Importing Excel SpreadSheets
+### 2.3 Importing Excel SpreadSheets
 We can import Excel file using the `import excel` command as shown below. Note that I included the `firstrow` option, which indicates that the Excel spreadsheet contains the names of the variables in the firstrow
 
 ```
@@ -195,10 +195,10 @@ clear
 import excel dentists3, firstrow cellrange(A1:D6)
 
 ```
-#### 2.4  Importing SAS files
-#### 2.5 Importing SPSS files
-#### 2.6 Importing dBase files
-#### 2.7 Importing raw data files
+### 2.4  Importing SAS files
+### 2.5 Importing SPSS files
+### 2.6 Importing dBase files
+### 2.7 Importing raw data files
 Raw data come in many formats, including comma-separated, tab-separated, space-separated and fixed-format files.
 
 Comma-separated files, sometimes referred to as `CSV` (Comma-separated-values) files, are commonly used for storing raw data.Such files often originated from spreadsheet programs and may be given a filename extension of `.csv`.Below, we see an example of a comma-separated file named `dentists1.txt`
@@ -229,7 +229,7 @@ type dentists7.txt
 
 ```
 
-##### Importing comma-separated and tab-separated files
+#### Importing comma-separated and tab-separated files
 Raw data can be stored in several ways. If the variables are separated by commas, the file is called `comma-separated file`; if the variables are separated by tabs, the file is called `tab-separated file`.
 
 Such file can be read using the `import delimited` command.If the data file contains the names of the variables in the first row of teh data, Stata will detect and use them for naming the variables.
@@ -274,7 +274,7 @@ You can add the `delimiters(":")` option to the import `import delimited` comman
 import delimited using dentists4.txt, delimiters(":)
 ```
 
-##### 2.7.2 Importing space-separated files
+#### 2.7.2 Importing space-separated files
 Another common format for storing raw data is a space-separated file. In such a file, variables are separated by one (or more) spaces, and if a string variable contain spaces, it is enclosed in quotes. The file `dentists5.txt` is an example of such a file with information about five dentists
 
 ```
@@ -311,7 +311,7 @@ infile id age bp1-bp5 pu1-pu5 using cario1.txt
 
 ```
 
-##### 2.7.3 Importing fixed -column files
+#### 2.7.3 Importing fixed -column files
 Fixed-column files can be confusing because the variables are pushed togethr without spaces, commas, or tabs separated them.
 
 In this file, the `name of the dentist` occupies `columns 1-17`, the `years` in practice occupies `column 18-22`, whether the dentist is `full time` is in `column 23`, whether the dentist `recommends Quaddent` is in `column 24`. Knowing the column locations, you can read this file using the `infix` command like this:
@@ -336,7 +336,7 @@ infix years 18-22 fulltime 23 using dentists7.txt if fulltime == 1
 
 To be  continued ...
 
-#### 2.8 Common errors when reading and importing files
+### 2.8 Common errors when reading and importing files
 This section describes and explains two common error messages you may see when reading or importing data into Stata. These error messages are `no; datasets in memory has changes since last saved` and `you must start with an empty dataset`.
 
 To understand these error message better, let's first briefly explore the mode that Stata uses for reading, modifying and saving datasets.
@@ -389,7 +389,7 @@ This error message is saying that you first need to clear the data currently in 
 
 Raw data files frequently use numeric codes for missing data. For example, `-7` might be the code for `don't know`, `-8`, the code for `refused` and `-9`, the code for `not applicable`
 
-#### 2.9 Entering data directly into the Stata Data Editor
+### 2.9 Entering data directly into the Stata Data Editor
 When considering how to enter your data, I would encourage you to think about who how much work you invest in cleaning and preparing the data for analysis.
 
 Ideally, a data entry tool is used that allows only valid values to be entered for each row and column for data. For example, [REDCap](https://www.project-redcap.org/) offers many features for verifying the integrity of the data as they are entered. Or there are mobile apps (like REDCap) that allow data collection and entry in a mobile app on an iPhone, iPad, or Android phone or tablet.
@@ -493,7 +493,7 @@ help edit
 
 3. Note that you can tab from field to field and press Enter after each value tag pair gets entered.
 
-### Chapter 3 | Saving and exporting data files
+## Chapter 3 | Saving and exporting data files
 #### 3. Introduction
 Within Stata, you can save data in many formats. The most common command for saving data is the `save` command, which saves the datasets currently in memory as a Stata dataset.
 
@@ -551,7 +551,7 @@ Using the `keep if` command selected the observations we wanted to keep. (We als
 
 Before you save a Stata dataset, you might want to first use the `compress` command. The `compress` command stores each variable in the current dataset using the most parsimonious data type possible, which assuring that you never lose precision.
 
-#### 3.3 Exporting Excel files
+### 3.3 Exporting Excel files
 ```
 * reading Stata file
 use dentlab,clear
@@ -602,10 +602,10 @@ When exporting dta to Excel, remember the worksheet size limits of `.xls` versus
 
 By contrast, for an `.xlsx` file, the worksheet size limit is 1,048,576 rows by 16,384 columns. Furthermore, strings are limited to 255 characters in an `.xls` file versus 32,767 in an `.xlsx` file.
 
-#### 3.4 Exporting SAS XPORT Version 8 files
-#### 3.5 Exporting SAS XPORT Version 5 files
-#### 3.6 Exporting dBase files
-#### 3.7 Exporting comma-separated and tab-sepearated files
+### 3.4 Exporting SAS XPORT Version 8 files
+### 3.5 Exporting SAS XPORT Version 5 files
+### 3.6 Exporting dBase files
+### 3.7 Exporting comma-separated and tab-sepearated files
 Sometimes, you may want to save a dataset as comma-separated or tab-separated file. Such files can be read by many other programs, including spreadsheets.
 
 The `export delimited` command is used below to write a comma-separated file called `dentists_comma.csv` (the default extension is `.csv`). Note that the labels for `fulltime` and `recom` are output, not their values
@@ -667,7 +667,7 @@ help export delimited
 
 ```
 
-#### 3.8 Exporting space-separated files
+### 3.8 Exporting space-separated files
 There may be times that you want to save a dataset from Stata as a `space-separated` file. Such files are sometimes referred to as free-format files and can be read by many programs.
 
 ```
@@ -703,11 +703,11 @@ outfile using dentists_space, nolabel replace wide
 help outfile
 ```
 
-#### 3.9 Exporting Excel files revisted: Creating reports
-### Chapter 4 | Data Cleaning
+### 3.9 Exporting Excel files revisted: Creating reports
+## Chapter 4 | Data Cleaning
 
 GIGO - Garbage In; Garbage Out
-#### 4.1 Introduction
+### 4.1 Introduction
 Once you have read a dataset into Stata, it is tempting to immediately start analyzing the data. But the data are not ready to be analyzed until you have taken reasonable steps to clean them (you know the old saying: garbage in, garbage out). Even when you are given a dataset that is supposed to have been cleaned, it is useful to examine and check the variables.
 
 This chapter divides up the process of `data cleaning` into two components: checking data (searching for possible errors in the data) and correcting data (applying corrections based on confirmed errors).
@@ -738,7 +738,7 @@ Some problems may be discovered only by checking variables against each other, w
 
 `seciton 10.4` illustrates how the data-checking tasks describes in this chapter can be automated.
 
-#### 4.2 Double data entry
+### 4.2 Double data entry
 
 Double data entry is like paying a small price now (expend extra effort to clean data as part of the data entry process), rather than doing single data entry and paying a much bigger price later (check all the variables for errors and inconsistencies).
 
@@ -850,7 +850,7 @@ Following sections discuss data cleaning(that is, checking your data for problem
 [Excellent Cheat Sheets by data pracitioners Dr. Tim Essam and Dr. Laura Hughes](https://www.stata.com/bookstore/stata-cheat-sheets/)
 
 
-#### 4.3 Checking individual variables
+### 4.3 Checking individual variables
 This section will illustraate how you can check the values of individual variables searching for possible errors or problems in your data. 
 
 This and the following section will use a dataset called `wws.dta` (Working Women Survey), which is a purely hypothetical dataset with 2,246 observation. Let first read in this dataset
@@ -951,7 +951,7 @@ Once out of range valus is found, the `list` command can be used to identify the
 
 Section `4.7` illustrate how to correct values taht are found to be in error.
 
-#### 4.4 Checking categorical by categorical variables
+### 4.4 Checking categorical by categorical variables
 
 This section shows how you can check the values of `one categorical variable aganist another categorical variable`.
 
