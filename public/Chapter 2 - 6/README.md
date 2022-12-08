@@ -951,4 +951,62 @@ Once out of range valus is found, the `list` command can be used to identify the
 
 Section `4.7` illustrate how to correct values taht are found to be in error.
 
+#### 4.4 Checking categorical by categorical variables
 
+This section shows how you can check the values of `one categorical variable aganist another categorical variable`.
+
+This draws upon a skill that you are probably familiar with and often use: creating cross tabulations. We again use `wws.dta` for this section
+
+To check categorical variables againist each other, I look at my dataset and try to find implausible combinations among categorical variables.
+
+For example, conside the variable `metro` and `ccity`. The variable `metro` is a dummy variable taht is `1` if the woman lives in a `metropolitan area`, while the dummy variable `ccity` measures whether the womain lives in a `city center`.
+
+If a woman lives in a city center, then she must live inside a `metropolitan area`. We tabulate the variables and see this is indeed true in our data. So far, so good.
+
+```
+tabulate metro ccity, missing
+```
+![metro ccity](./img/metro_ccity.png)
+
+Another way that we could have approached this would have been to count up the number of cases where a woman lived in a `city center` but not in a metropolitan area and to have verified that this count was `0`.
+
+The `&` represent `and`, and the `==` represents is equal to 
+
+```
+count if metro == 0 & ccity == 1
+```
+![count metro ccity](./img/count_metro_ccity.png)
+
+Consider the variables `married` and `nevermarried`. Although it seems obvious, if you are currently married, your value for `nevermarried` should always be `0`. When we tabulate these variabls, we see that there are two cases that fail this test.
+
+```
+tabulate married nevermarried
+```
+![nevermarried](./img/nevermarried.png)
+
+Rather than using the `tabulate` command, we can use the `count` command to count up the number of problematic cases, as shown below
+
+```
+count if married == 1 & nevermarried == 1
+```
+![count nevermarried](./img/count_nevermarried.png)
+
+Below, we find the cases that fail this test by listing the cases where the person is married and has never been married. We see that women with `id` values of `22` and `1,758` have this problematic data pattern. We could then investigate these two cases to try to identify which variables may have been entered incorrectly.
+
+```
+list idcode married  nevermarried if married == 1 & nevermarried == 1
+```
+![list_n_married](./img/list_m_nevermarried.png)
+
+Lets conside one more example by checking the variable `collgrad` (did you graduate college?) aganist `yrschool` (how many years have you been in school?). The `table` command is used here because it produces more concise output than the `tabulate` command.
+
+```
+table collgrad yrschool
+```
+![table collgrad yrschool](./img/table_c_yrschool.png)
+
+Among the college graduate, `2` woment reported `13` years of school and `7` reported `14` years of school. These women may have skipped one or two grades or graduated hight school early: this these values might merit some further investigation, but they are not completely implausible.
+
+However, the woman with 8 years of education who graducated college either is the greatest genius or has an error on one of these variables.
+
+`Cross-tabulations` using the `tabulate` or the `table` command are useful for checking `categorical variables aganiist each other`. 
