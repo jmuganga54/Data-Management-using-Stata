@@ -298,3 +298,24 @@ summarize wage, detail
 list idcode wage if wage > 100000
 
 summarize age
+
+tabulate age if age >= 45
+
+list idcode age if age > 50
+
+/**
+* 4.4 Checking categorical by categorical variables
+*/
+
+tabulate metro ccity, missing
+
+count if metro == 0 & ccity == 1
+
+tabulate married nevermarried
+
+count if married == 1 & nevermarried == 1
+
+list idcode married  nevermarried if married == 1 & nevermarried == 1
+
+
+table collgrad yrschool

@@ -1010,3 +1010,92 @@ Among the college graduate, `2` woment reported `13` years of school and `7` rep
 However, the woman with 8 years of education who graducated college either is the greatest genius or has an error on one of these variables.
 
 `Cross-tabulations` using the `tabulate` or the `table` command are useful for checking `categorical variables aganiist each other`. 
+
+### 4.5 Checking categorical by continous variables
+
+When checking continous variables by categorical variables, `cross-tabulations` are less practical because the continuous variable likely contains many values. Instead, we will focus on creating `summary statics` for the continuous variable broken down by the categorical variables. Let's explore this with `wws.dta`.
+
+```
+use wws
+```
+
+This dataset has a categorical (dummy) variable named `union` that is `1` if the woman belongs to a union (and `0` otherwise). Theres is also a variable called `uniondues`, which is the amount of union dues paid by the woman in the last week. If a woman is in a uninon, they many not require union dues; however, if a woman is not in a union, it would not amke sense for her to be paying unino dues.
+
+One way to check for problems here is by using the `summarize` command to get `summary statistics` on `uniondues` for women who are not in a union.For women who are not in a uinon, I expect that the mean value of `uniondues` would be `0`. If the value is more than `0`, then it suggests that one or more `nonunion` women paid union dues. As the result below shows, one or more nonunion women paid dues.
+
+```
+summarize uniondues if union == 0
+```
+![summarize uniondues](./img/sum_uniodues.png)
+
+If we add `bysort union:` before the `summarize` command, we get summary statics for `uniondues` by each leve of `union`. This is another way of showing that some nonunion women paid union dues.
+
+```
+bysort union: summarize uniondues
+```
+![bysort union: summarize](./img/bysort_summarize.png)
+
+We can obtain the same output in a more concise fasion by using the `tabstat` comand, as shown below.
+
+```
+tabstat uniondues, by(union) statistics (n mean sd min max) missing
+```
+![tabstat](./img/tabstatistics.png)
+
+However we obtain the output, we see that there is at least one woman who was not in a union who paid some union dues. Let's use the `recode` command to create a dummy variable names `paysdues` that is `0` if a woman paid no union dues and `1` if she paid some dues.
+
+```
+recode uniondues (0=0) (1/max=1), generate(paysdues)
+```
+![recode](./img/recode.png)
+
+We can now create a table of `uninon` by `paysdues` to see the cross-tabulation of union membership by whether one paid union dues.
+
+```
+tabulate union paysdues, missing
+```
+![tabulate union paysdues](./img/tabulate_union.png)
+
+The `tabulate` command shows that six nonunion women paid union dues. We can display those cases, as shown below.
+
+```
+list idcode union uniondues if union == 0 & (uniondues > 0) & !missing(uniondues), abb(20)
+```
+![list uniondues](./img/list_uniondues.png)
+
+We included `! missing(unindues)` as part of our `if` qualifier that excluded missing values from the display.We could investigate further, tryting to determine the appropriate values for these two variables for these six observations.
+
+Let's turn to the variable `married` (coded 0 if not married, 1 if married) and `marriedyrs` ( how many years you have been married, rounded to the nearest year). If one has been married for less than half a year, the `marriedyrs` would be coded 0. Let's use the `tabstat` command to get summary statistics for `marriedyrs` for each level of `married` and see if these results makes sense.
+
+```
+tabstat marriedyrs, by(married) statistics (n mean sd min max) missing
+```
+![tabstat marriedyrs](./img/tabstat_marriedyrs.png)
+
+As we would hope, the `804` women who were not married all have the appropriate value of `marriedyrs`, they are all `0`. Among those who are married, some may have been married for less than six months and thus also have a value of `0`. These two variables appear to be consistent with each other.
+
+Let's checkt the variable `everworked` (`0` if never worked, `1` if worked) aganist the variable `currexp` (time at current job) and `prevexp` (tima at previous job). If one had never worked, the current and previous work experience should be `0`. We check this below for current experience and find this to be the case.
+
+```
+tabstat currexp, by(everworked) statistics(n mean sd min max) missing
+```
+![tabstat currexp](./img/tab_currexp.png)
+
+Also as we would expect, those who never worked have no previous work experience
+
+```
+tabstat prevexp, by(everworked) statistics(n mean sd min max) missing
+```
+![tabstat prevexp](./img/tabstat_prevexp.png)
+
+Let's check the `everworked` variable aganist the woman's total work experience. To do this, we can create a variable called `totexp`, which is a woman's total work experience, and then check that aganist `everworked`. As we see below, if a woman has never worked, her total work experience is always 0, and if the woman has worked, her minimun total work exprience is 1. This is exactly as we would expect
+
+```
+generate totexp = currexp + prevexp
+tabstat totexp , by(everworked) statistics(n mean sd min max) missing
+```
+![tabstat totexp](./img/tabstat%20totexp.png)
+
+This section illustrated how we can check `continuos variable` aganist `categorical variable` using the `bysort` prefix with the `summarize` command or using the `tabstat` command.
+
+We can also `recode` the continuous variable into categorical variable and then use the `cross-tabulations` for checking the categorical variable aganist the recoded version of the continuos variable. The next section illustrates how to check two continuos variabe.
