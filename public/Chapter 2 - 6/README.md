@@ -1099,3 +1099,35 @@ tabstat totexp , by(everworked) statistics(n mean sd min max) missing
 This section illustrated how we can check `continuos variable` aganist `categorical variable` using the `bysort` prefix with the `summarize` command or using the `tabstat` command.
 
 We can also `recode` the continuous variable into categorical variable and then use the `cross-tabulations` for checking the categorical variable aganist the recoded version of the continuos variable. The next section illustrates how to check two continuos variabe.
+
+
+
+### 4.5 Checking continuous by continuous variables
+
+This section explores how we can check one `continuous variable` aganist `continuous variable`. Like the previous section this section uses `wws.dta`
+
+Consider the variables `hours` (hours worked last week) and `unempins` (amount of under and unemployment insurance received last week). Suppose that only those who worked 30 or fewer hours per week would be eligible for under and unemployment insurance. If so, all values of `unempins` should be `0` when a woman works over 30 hours in a week.
+
+The `summarize` command below checks this by showing descriptive statistics for `unempins` for those who worked over 30 hours in a week and did not have amissing values for their work hours. If all women who worked more than 30 hours did not get under- and unemployment insurance, then mean and maximum for `unemins` in the output below would be `0`. 
+
+But as the result show, these values are not all 0, so at least one woman receive under and unemployment insurance payments when working over 30 hours.
+
+```
+summarize unempins if hours > 30 & !missing(hours)
+```
+![summarize unempins](./img/sum_unempins.png)
+
+Although the previous `summarize` command shows that there is at least one woman who receive unemployment insurance though she worked more than 30 hours, it does not show us how many women had such a pattern of data. We can use the `count` command to count up the number of women who worked over `30 hours` and received under- and unemployment insurance. This reveals that `19 women` fit this criteria.
+
+```
+count if (hours>30) & !missing(hours) & (unempins>0) & !missing(unempins)
+```
+![count unempins](./img/count_unempins.png)
+
+We can use the list command to identify the observations with these conflicting values so that we can investigate further. 
+
+```
+list idcode hours unempins if (hours > 30) & !missing(hours) & (unempins>0) & !missing(unempins)
+```
+![list idcode](./img/list_idcode.png)
+

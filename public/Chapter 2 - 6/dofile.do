@@ -304,8 +304,11 @@ tabulate age if age >= 45
 list idcode age if age > 50
 
 /**
-* 4.4 Checking categorical by categorical variables
+* 4.4 Checking categorical by categorical variables | cross-tabulation
 */
+
+
+use wws
 
 tabulate metro ccity, missing
 
@@ -319,3 +322,45 @@ list idcode married  nevermarried if married == 1 & nevermarried == 1
 
 
 table collgrad yrschool
+
+
+/**
+* 4.5 Checking categorical by continous variables | summary statitics
+*/
+
+
+use wws
+
+summarize uniondues if union == 0
+
+bysort union: summarize uniondues
+
+tabstat uniondues, by(union) statistics (n mean sd min max) missing
+
+recode uniondues (0=0) (1/max=1), generate(paysdues)
+
+tabulate union paysdues, missing
+
+list idcode union uniondues if union == 0 & (uniondues > 0) & !missing(uniondues), abb(20)
+
+tabstat marriedyrs, by(married) statistics (n mean sd min max) missing
+
+tabstat currexp, by(everworked) statistics(n mean sd min max) missing
+
+tabstat prevexp, by(everworked) statistics(n mean sd min max) missing
+
+generate totexp = currexp + prevexp
+tabstat totexp , by(everworked) statistics(n mean sd min max) missing
+
+
+/**
+* 4.5 Checking continuous by continuous variables
+*/
+
+use wws
+
+summarize unempins if hours > 30 & !missing(hours)
+
+count if (hours>30) & !missing(hours) & (unempins>0) & !missing(unempins)
+
+list idcode hours unempins if (hours > 30) & !missing(hours) & (unempins>0) & !missing(unempins)
