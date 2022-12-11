@@ -364,3 +364,21 @@ summarize unempins if hours > 30 & !missing(hours)
 count if (hours>30) & !missing(hours) & (unempins>0) & !missing(unempins)
 
 list idcode hours unempins if (hours > 30) & !missing(hours) & (unempins>0) & !missing(unempins)
+
+generate agewhenmarried = age - marriedyrs
+
+tab agewhenmarried  if agewhenmarried < 18
+
+generate agewhenstartwork = age - (prevexp + currexp)
+
+tab agewhenstartwork if agewhenstartwork < 18
+
+table kidage2 kidage3 if numkids == 3
+
+count if (kidage3 > kidage2) & (numkids == 3) & !missing(kidage3)
+
+count if (kidage2 > kidage1) & (numkids >= 2) & !missing(kidage2)
+
+generate agewhenfirstkid = age - kidage1
+
+tabulate agewhenfirstkid if agewhenfirstkid < 18
