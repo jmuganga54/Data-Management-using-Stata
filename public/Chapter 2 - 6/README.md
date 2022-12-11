@@ -1106,9 +1106,9 @@ We can also `recode` the continuous variable into categorical variable and then 
 
 This section explores how we can check one `continuous variable` aganist `continuous variable`. Like the previous section this section uses `wws.dta`
 
-Consider the variables `hours` (hours worked last week) and `unempins` (amount of under and unemployment insurance received last week). Suppose that only those who worked 30 or fewer hours per week would be eligible for under and unemployment insurance. If so, all values of `unempins` should be `0` when a woman works over 30 hours in a week.
+Consider the variables `hours` (hours worked last week) and `unempins` (amount of under and unemployment insurance received last week). Suppose that only those who worked 30 or fewer hours per week would be eligible for under and unemployment insurance. If so, all values of `unempins` should be `0` when a woman works over `30 hours` in a week.
 
-The `summarize` command below checks this by showing descriptive statistics for `unempins` for those who worked over 30 hours in a week and did not have amissing values for their work hours. If all women who worked more than 30 hours did not get under- and unemployment insurance, then mean and maximum for `unemins` in the output below would be `0`. 
+The `summarize` command below checks this by showing descriptive statistics for `unempins` for those who worked over 30 hours in a week and did not have missing values for their work hours. If all women who worked more than 30 hours did not get under- and unemployment insurance, then mean and maximum for `unemins` in the output below would be `0`. 
 
 But as the result show, these values are not all 0, so at least one woman receive under and unemployment insurance payments when working over 30 hours.
 
@@ -1131,3 +1131,53 @@ list idcode hours unempins if (hours > 30) & !missing(hours) & (unempins>0) & !m
 ```
 ![list idcode](./img/list_idcode.png)
 
+Let's say that e wanted to check the variable `age` aganist the amount of time married, `marriedyrs`. One way to compare these variables aganist each other is to create a new variable that is the age when the woman was married. This new variable can then be inspected for anomalous values. Below, the `generate` command create `agewhenmarried`.
+
+```
+generate agewhenmarried = age - marriedyrs
+```
+We can use the `tabulate` command to look for worrisome values in the new `agewhenmarried` variable. For the sake of space of values that might merit further investigate, such as the woman who was married when she was 13 years old.
+
+```
+tab agewhenmarried  if agewhenmarried < 18
+```
+![age less than 18](./img/age_less18.png)
+
+We can use the same strategy to check the woman's age aganist her total work experience. We can create a variable, `agewhenstartwork`, that is the woman's age minus her previous plus current work experience. Like the previous example, we can then `tabulate` these values and restrict it to values less than 18 to save space. This reveals three cases when implied age the women started working was at age 8, 9 and 12. These cases seem to merit further investigation.
+
+```
+generate agewhenstartwork = age - (prevexp + currexp)
+tab agewhenstartwork if agewhenstartwork < 18
+```
+![age start to work](./img/age_start_work.png)
+
+The dataset has a variable, `numkids`, that contains the number of children the woman has as well as the ages of the first, second, and third child stored in `kidage1`, `kidage2` and `kidage3`. For the women with three kids, lets compare the ages of the second and third using the `table` command below. As we would expect the third child is never older than the second child.
+
+```
+table kidage2 kidage3 if numkids == 3
+```
+![age of kids cross table](./img/age_of_kids.png)
+
+Although not as concrete, you can also use the `count` command to verify this. Below we count the number of times the age of the third child is greater than the age of the second child when there are three children, being sure to exclude observation where `kidage3` is missing. As we would expect based on the result of the `table` command above, there are no such children.
+```
+count if (kidage3 > kidage2) & (numkids == 3) & !missing(kidage3)
+```
+
+![age3 greater age2](./img/age3_greater.png)
+
+Likewise, we count the number os second childrent whose ages are greater than the age of the first child if the woman has two or more children, being sure to exclude observations where `kidage2` is missing. As we would hope, there are no such cases
+
+```
+count if (kidage2 > kidage1) & (numkids >= 2) & !missing(kidage2)
+```
+![age2 greater](./img/age2_greater.png)
+
+Another check we might perform is comparing the age of the woman with the age of her oldest child to determine the womans's age when she had her first child. We can create `agewhenfirstkid`, child. We then tabulate `agewhenfirstkid`. This reveals either cases that need further investigation or fodder for the tabloids about the girl who gave birth at age 3.
+
+```
+generate agewhenfirstkid = age - kidage1
+tabulate agewhenfirstkid if agewhenfirstkid < 18
+```
+![age first kid](./img/age_first_kid.png)
+
+Checking continuous variables aganist each othr can be challenging. It sometimes takes a little extra work and some creativity to come up with ways to check one continuous variable aganist another. But such checks can reveal inconsistencies between the variables that would not be revealed by checking each variable individually.
