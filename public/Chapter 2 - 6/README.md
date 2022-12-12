@@ -1180,4 +1180,82 @@ tabulate agewhenfirstkid if agewhenfirstkid < 18
 ```
 ![age first kid](./img/age_first_kid.png)
 
-Checking continuous variables aganist each othr can be challenging. It sometimes takes a little extra work and some creativity to come up with ways to check one continuous variable aganist another. But such checks can reveal inconsistencies between the variables that would not be revealed by checking each variable individually.
+Checking continuous variables aganist each other can be challenging. It sometimes takes a little extra work and some creativity to come up with ways to check one continuous variable aganist another. But such checks can reveal inconsistencies between the variables that would not be revealed by checking each variable individually.
+
+### 4.7 Correction errors in data
+
+The previous sections have shown how to check for problems in your data. Now, lets consider strategies you migh use to correct problems. This sections assumes that you entered the data yourself and that you have access to the original data, or that you some relationship with the people who provided you with the data where they could investigate anomalies in the data.
+
+In either case, providing clear information about the problem is key. Below are some examples of problems and how you migh document them.
+
+In section `4.3`, we saw that `race` was suppose to have the value `1, 2, 3,` but there was one case where `race` was `4`. We want to not only document that we found a case where `race` was `4` but also note the `idcode` and some other identifying demographic variables for this case. We can do this with simple `list` command
+
+```
+* women has race coded 4
+use www, clear
+list idcode age yrschool race wage if race == 4
+```
+![women has race coded 4](./img/race_coded4.png)
+
+In section `4.3` we also saw two cases where the values for hourly income seemed outrageously high. The same strategy we just employed can be used to document those possibly probelmatic cases.
+
+```
+* hourly income seems too high
+list idcode age yrschool race wage if wage > 50
+```
+![hourly income seems too high](./img/hourly_income_high.png)
+
+In sections `4.4-4.6`, we uncovered problems by checking variables aganist each other. In these cases, we did not find values that were intrinsically problematic, but we did find conflicts in the values among two or more variables.
+
+In these cases, documenting the problem involves noting how the values between the variables do not make sense.
+
+For example, insection `4.4` there was a woman who graduated college who had reported only eight years of school completed. This can be documented using a cross tabulation
+
+```
+* some conflicts between college graduate and years of school
+table collgrad yrschool
+```
+![yrschool](./img/yrschool.png)
+
+This documentation can be supplemented with a listing showing more information about the potentially problematic cases:
+
+```
+* college grad with 8 years of school completed, seems like a problem
+list idcode collgrad yrschool if yrschool == 8 & collgrad == 1
+```
+![yrschool problem](./img/yrschool_pr.png)
+
+```
+* college grad with 13, 14, 15 years of school completed, is this a problem?
+list idcode collgrad yrschool if inlist(yrschool,13, 14,15)
+```
+> output omitted, too long
+
+One important part about this process is distinguish between clearly incongruent values and values that simply merit some further investigation. I try to prioritize problems, creating terminology that distinguishes clear conflicts (for example, the college grad with eight years of education) from observation that merely might be worth looking into.For example, a college grad with 13 years of eduction could be a gifted woman who skipped several years of school.
+
+> Note
+
+Sometimes, resources for data checking are not infinite. It may be important to prioritize efforts to focus on data values that are likely to change the result of the analysis. such as the women with hourly income that exceed $300 an hour. If there is only a `finite amount` of time for `investigation problems`, imagine the `analyses you will be doing` and imagine the `impact various mistake will have on th data`.
+
+Once you discover corrections that need to be made to the data, it might be tempting to open up the Stata Data Editor and just start typing in corrections, but I highly recommend aganist this strategy for two reasons:
+
+It does not document the changes that you made to the data in a systematic way, and it does not integrate into a `data-checking` strategy. Once you mend a problem in the data, you want to then use the same procedures that uncovered the problem to verify that you have indeed remedied the problem.
+
+Instead of correcting problems using the Data Editor. I recommend using the command `replace` combined with an `if` qualifier that uniquely identifies the observation to be mended.
+
+For example, consider the problem with `race` described earlier in this section, where one values was coded as a `4`. After investigation, we learned that the observation in error had a unique `idcode` of `543` and that the value of `race` should have been `1`. You can change the value of `race` to `1` for `idcode 543` like this:
+
+```
+* correcting idcode 543 where race of 4 should have been 1
+replace race = 1 if idcode == 543
+tab race
+```
+![race is 1](./img/race_1.png)
+
+Note that the replacement was based on `if idcode == 543` and not if `race == 4`. When corrections are identified based on an observation, the replacement should also be based on a variable that uniquely identifies the observation(for example, `idcode`)
+
+It would be useful to add a note to the dataset to indicate that this value was corrected. We can do so by using the `note` command.
+
+```
+note race: race changed to 1 (from 4) for idcode 543
+```
