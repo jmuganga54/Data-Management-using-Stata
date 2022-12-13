@@ -1308,3 +1308,15 @@ notes
 
 After we made a `correction to the data`, we `checked` it again to ensure that the `correction did the trick`. In other words, `data cleaning and data correcting` are, ideally, an `integraded process`. To this end, this process is best done as part of a Stata do-file, where the commands for checking, and rechecking each variable are saved and an easily be executed. 
 
+### 4.8 Identifying duplicates
+
+This section shows how you can identify `duplicates in your dataset`. `Duplicates` can arise for many reasons, including the same obseration being entered `twice during data entry`.
+
+Because finding and eliminating duplicates observations is a `common problem`, Stata has an entire set of commands for `identifying`, `describing` and `elminating duplicates`. This section illustrates the use of these commands, first using a tiny dataset and then using a more realistic dataset.
+
+First let's consider a variation of `dentists.dta` called `dentists_dups.dta`. Looking at a listing of the observation in this dataset shows that there are duplicate observations.
+
+```
+use dentists_dups
+list
+```
