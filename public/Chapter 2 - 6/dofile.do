@@ -382,3 +382,31 @@ count if (kidage2 > kidage1) & (numkids >= 2) & !missing(kidage2)
 generate agewhenfirstkid = age - kidage1
 
 tabulate agewhenfirstkid if agewhenfirstkid < 18
+
+/**
+* 4.7 Correction errors in data
+*/
+use wws, clear
+
+* women has race coded 4
+list idcode age yrschool race wage if race == 4
+
+* correcting idcode 543 where race of 4 should have been 1
+replace race = 1 if idcode == 543
+tab race
+
+note race: race changed to 1 (from 4) for idcode 543
+
+* hourly income seems too high
+list idcode age yrschool race wage if wage > 50
+
+* some conflicts between college graduate and years of school
+table collgrad yrschool
+
+* college grad with 8 years of school completed, seems like a problem
+list idcode collgrad yrschool if yrschool == 8 & collgrad == 1
+
+* college grad with 13, 14, 15 years of school completed, is this a problem?
+list idcode collgrad yrschool if inlist(yrschool,13, 14,15)
+
+

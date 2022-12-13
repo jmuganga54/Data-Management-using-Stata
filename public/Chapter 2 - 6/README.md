@@ -1259,3 +1259,52 @@ It would be useful to add a note to the dataset to indicate that this value was 
 ```
 note race: race changed to 1 (from 4) for idcode 543
 ```
+
+Likewise, we might be told that `case 107`, with the woman who appeared to be a college graduate with only `eight years` of school, was not a college graduate; that was a typo. We make this correction and document it below.
+
+```
+replace collgrad = 0 if idcode == 107
+note collgrad: collgrad changed from 1 to 0 for idcode 107
+```
+After applying this correction, the cross-tabulation of `collgrad` by `yrschool` looks okay
+
+```
+table collgrad yrschool
+```
+![eight years](./img/eight_years.png)
+
+In `section 4.3` we saw two women whose ages were higher than expected (over 50) 
+
+```
+list idcode age if age > 50
+```
+![women over 50](./img/over_50.png)
+
+After further inquires, we found that the digits in these numbers were transposed. We can correct them and include notes of the corrections, as shown below
+
+```
+replace age = 38 if idcode == 80
+
+replace age = 45 if idcode = 80
+
+note age: the value of 83 was corrected to be 38 for idcode 51
+
+note age: the value of 54 was corrected to be 45 for idcode 80
+```
+
+Having corrected the values, we again list the women who are over 50 years old.
+
+```
+list idcode age if age > 50
+```
+![list idcode](./img/list_idcode.png)
+
+As we would hope, this output is now empty because there are no such women. We can see the notes of all the corrections that we made by using the `notes` command.
+
+```
+notes
+```
+![notes](./img/notes.png)
+
+After we made a `correction to the data`, we `checked` it again to ensure that the `correction did the trick`. In other words, `data cleaning and data correcting` are, ideally, an `integraded process`. To this end, this process is best done as part of a Stata do-file, where the commands for checking, and rechecking each variable are saved and an easily be executed. 
+
