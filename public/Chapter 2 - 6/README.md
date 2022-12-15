@@ -1320,3 +1320,91 @@ First let's consider a variation of `dentists.dta` called `dentists_dups.dta`. L
 use dentists_dups
 list
 ```
+![list duplicates](./img/list_duplicates.png)
+
+We can use the `duplicates list` command to list the duplicates contained in this dataset.
+
+```
+duplicates list
+```
+![list of duplicates found](./img/list_duplicates_found.png)
+
+The above command `shows every observation` that contains a duplicates. For example, `three observation` are shown for the dentist `Mike Avity`.
+
+Rather than listing every duplicate, we can list one instance of each duplicates by using the `duplicates examples` command. The column labeled `#` shows the `total number of duplicates` (for example, Mike Avity has three duplicate observations)
+
+```
+duplicates examples
+```
+![group of duplicates](./img/grouped_duplicates.png)
+
+The `duplicates report` command creates a report (like the `tabulate` command) that tabulates the number of copies for each observation.
+
+```
+duplicates report
+```
+![duplicates report](./img/duplicate_report.png)
+
+The output above shows that there are `four observation` in this dataset that are `unique` ( that is, have only one copy). 
+
+There are four observation in which there are `two copies of the observation`. These correspond to the observation for `Olive` and for `Ruth`, each of which had `two copies`. The report also shows that there are `three observations` that have `three copies;` these are the `three observations` for Mike
+
+This report shows useful information about the prevelance of duplicates in the dataset, but it does not `identify the duplicates`.
+
+This is where the `duplicates tag` command is useful. This command creates a variable that indicates for each observation how many dupliates that observation has. We use this command to create the variable `dup`
+
+```
+duplicates tag, generate(dup)
+```
+![duplicate tag](./img/duplicates%20tag.png)
+
+The listing below shows the number of duplicates(dup) for each observation
+
+```
+list, sep(0)
+```
+![list after duplicate tag](./img/list_tag.png)
+
+To make this output easier to follow, let's sort the data by `name` and `years` and then list the observations, separating them into groups based on `name` and `years`
+
+```
+sort name years
+list, sepby(name years)
+```
+![sort](./img/sort.png)
+
+Now, it is easier to understand the `dup` variable. For the observation that were unique (such as Issac or Y. Don) the value of `dup` is `0`. 
+
+The value of `dup` is 0 for `Mary Smith` because, even through these `two dentists` share the `same name`, they are not `duplicate observatation`. (For example, they have a different number of years of work experience.)
+
+The observation for `Olive` and `Ruth` are identified as having a value of 1 for `dup` because they each have one duplicate observation.
+
+And `Mike` has a value of `2` for `dup` because he has two duplicate observations.
+
+As you can see, duplicate observations are charactized by having a value of `1` or more for the `dup` variable. We can use this to list just the observation that are `duplicates`, as shown below.
+
+```
+list if dup > 0
+```
+![list of duplicates](./img/list_dups.png)
+
+If there were many variables in the dataset, you migh prefer to view the duplicate observations in the Data Editor by using the `browser` command.
+
+```
+browse if dup > 0
+```
+![browse duplicates](./img/browse_duplicates.png)
+
+After inspection the observation identified as `duplicates`, I feel confident that these observation are genuine duplicates, and we can safely eliminate them from the dataset. We can use the `dupliates drop` command to eliminate duplicates from the dataset.
+
+```
+duplicates drop
+```
+![drop duplicates](./img/drop_duplicates.png)
+
+I expected four observation to be eliminated as `duplicates` (one for Olive, one for Ruth, and two for Mike). Indeed, that is the number of observations deleted by the `duplicates drop` command. The listing below confirms that the duplicates observation have been dropped.
+
+```
+list
+```
+![list after drop duplicates](./img/list_afer_drop.png)

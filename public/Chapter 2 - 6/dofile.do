@@ -406,7 +406,39 @@ table collgrad yrschool
 * college grad with 8 years of school completed, seems like a problem
 list idcode collgrad yrschool if yrschool == 8 & collgrad == 1
 
+* correcting: collget graduate with 8 years of school, was not a graduate
+replace collgrad = 0 if idcode == 107
+note collgrad: collgrad changed from 1 to 0 for idcode 107
+
 * college grad with 13, 14, 15 years of school completed, is this a problem?
 list idcode collgrad yrschool if inlist(yrschool,13, 14,15)
 
+table collgrad yrschool
+
+* women over 50
+list idcode age if age > 50
+
+* correction: digits were transposed
+replace age = 38 if idcode == 51
+
+replace age = 45 if idcode == 80
+
+note age: the value of 83 was corrected to be 38 for idcode 51
+
+note age: the value of 54 was corrected to be 45 for idcode 80
+
+* list the age after change
+list idcode age if age > 50
+
+* see all the notes
+notes
+
+
+/**
+* 4.8 Identifying duplicates
+*/
+
+use dentists_dups,clear
+
+list
 
