@@ -1549,3 +1549,12 @@ This section has illustrated how you can use the suite of `duplicates` commands 
 
 The `edit` command allows you to view and edit the data in the Data Editor. The `browse` command permits you to view (but not edit) the data, making it a safter alternative when you simply wish to view the data.
 
+### 4.9 Final thoughts on data cleaning
+
+The previous sections of this chapter have shown how to check your data for `suspicious values` and how to correct values that are found to be in error. After taking these steps, one might be left with the feeling that no more `data cleaning need to be done`. But `data cleaning` is not a `destination` - `it is a process`. Every additional action you take on the dataset has the potential for introductiong errors.
+
+The process of creating and recoding variables provides opportunies for errors to sneak into your data.It is easy to make a mistake when `creating or recoding a variable`.
+
+When you `merge two datasets together`, this might give you the chance to do additional data checking. Say that you merget two datasets, a dataset with husbands and a dataset with wives. Imagine that both datasets had a variable assking how long they have been married. You could use the techniques described in section 4.6 to check the husbands answer against the wife's answer. By `merging ` the husband and wises datasets, more opportunies arise for data checking than lyou had when the datasets were separated.
+
+`Data cleaning` is ideally done using a `do-file`, which gives you the ability to automatically repeat the `data-checking` and `data-correcting steps`. 
