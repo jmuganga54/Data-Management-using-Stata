@@ -1408,3 +1408,144 @@ I expected four observation to be eliminated as `duplicates` (one for Olive, one
 list
 ```
 ![list after drop duplicates](./img/list_afer_drop.png)
+
+The previous examples using `dentists_dups.dta` were unrealistically small but useful for clearly seeing how these commands work. Now, Let's use `wws.dta` to explore how to identify duplicates in a more realistic example. First, let's read this dataset into memory. 
+
+```
+use wws
+```
+
+This dataset contains a variable, `idcode`, uniquely identifying each observation. The first thing that I would like to do is confirm that this variable truly does uniquely identify each observation. This can be done the `isid` (is this an Id?) command.
+
+```
+isid idcode
+```
+
+Had there been dupliate values for the variable `idcode`, the `isid` command would have returned an error message. The fact that it gave no output indicates that `idcode` truly does uniquely identify each observation. We could also check this with the command `duplicates list idcode`, which displays duplicates solely based on the variable `idcode`. As expected, this command confirms that there are no duplicates for `idcode`.
+
+```
+duplicates list idcode
+```
+![duplicates list idcode](./img/duplicates_idcode.png)
+
+
+Now, lets see if there are any duplicates in this dataset, including all the variables when checking for duplicates. Using `duplicates list` command, we can see that thid dataset contains `no duplicates`
+
+```
+duplicates list
+```
+
+![duplicate list](./img/duplicates_list.png)
+
+Let's inspect a variant of `wws.dta` names `wws_dups.dta`. As you may suspect, this dataset will give use the opportunity to discover some duplicates. In particular, I want to first search for duplicates based on `idcode` and then search for duplicates based on all the variables in the dataset. Below, we first read this dataset into memory. 
+
+```
+use wws_dups
+```
+Let's firs use the `isid` commands to see if, in this dataset, the variable `idcode` uniquely identifies each observation. As we can see below, `idcode` does not uniquely identify the observations.
+
+```
+isid idcode
+```
+![not unique](./img/no_unique.png)
+
+Let's use the `duplicates report` command to determine how many duplicates we have with respect to `idcode`.
+
+```
+duplicates report idcode
+```
+![duplicates report](./img/duplicate_report.png)
+
+We have a total of six observations in which the `idcode` variable appears twice. We can use the `duplicates list` command to see the observation with duplicate values on `idcode`.
+
+```
+duplicates list idcode, sepby(idcode)
+```
+![duplicate list](./img/duplicate_list_idcode.png)
+
+I do not know if these observation are duplicates of all the variables or just duplicates of `idcode`. Let's obtain a report showing us the number of duplicates taking all variable into consideration.
+
+```
+duplicates report
+```
+![duplicates report results](./img/duplicate_report_results.png)
+
+The report above shows that there are four observations that are duplicates when taking all variables into considerations. Previously, we saw that there were six observations that were duplicates just for `idcode`.
+
+Let's use `duplicates tag` command to identify each of these duplicates. Below, the variable `iddup` is created, which identifies duplicates based solely on `idcode`. The variable `alldup` identifies observation that are duplicates when taking all the variables into considerations.
+
+```
+duplicates tag idcode, generate(iddup)
+```
+![duplicates based on idcode](./img/duplicate_idcode.png)
+
+```
+duplicates tag, generate(alldup)
+```
+![duplicate all variables](./img/duplicate_all_variables.png)
+
+Below, we tabulates these two variables aganist each other. This tables gives a more complete picture of what is going on. There are `four observation` that are duplicates for all variables, there are `two observations` that are duplicates for `idcode` but not for the other variables.
+
+```
+tabulate iddup alldup
+```
+![tab iddup alldup](./img/tab_iddup_alldup.png)
+
+Let's look at the `two observations` that are duplicates for `idcode` but not for the rest of the variables. You could do this using `browse` command, and these observations would disply in the `Data Editor`.
+
+```
+browse if iddup == 1 & alldup == 0
+```
+
+Or below, the `list` command is used, showing sampling of the variables from the dataset.
+
+```
+list idcode age race yrschool occupation wage if iddup == 1 & alldup == 0
+```
+![dup all](./img/dup_all.png)
+
+We can clearly seee that these are two women who were accidentalyy assigned the same value of `idcode`. We can remedy this by assigning one of the women a new and unique value for `idcode`. Le't use the `summarize` command to determine the range of value for `idcode` so that we can assign a unique value.
+
+```
+summarize idcode
+```
+![summarize idcode](./img/sum_idcode.png)
+
+The highest value is `5,159`, so let's assing a value of `5,160` to the woman who had an `idcode of 3,905` and who was `41 years` old.
+
+```
+replace idcode = 5160 if idcode == 3905 & age == 41
+```
+
+Now, when we use the `duplicates report` command, we see the same number of duplicates for `idcode` and for the entire dataset. In both cases, there are four duplicates observations.
+
+```
+duplicates report idcode
+```
+![duplicates report idcode](./img/dup_report_idcode.png)
+
+```
+duplicates report 
+```
+![duplicate report all ](./img/duplicate_all_variables.png)
+
+We could further inspect these duplicates observations. Say that we do this and we determine that we are satisfied that these are genuine duplicates. We can then eliminate them using the `duplicates drop` command, as shown below.
+
+```
+duplicates drop
+```
+![duplicates drop](./img/duplicates_drop.png)
+
+Now, the `duplicates report` command confirms that there are no duplicates in this dataset.
+
+```
+duplicates report
+```
+![duplicates report confirm](./img/duplicates_report_confirm.png)
+
+This section has illustrated how you can use the suite of `duplicates` commands to create listings and reports of duplicates as well as how to identify and eliminates duplicates. You can learn more about these commands by typing `help duplicates`.
+
+> Note ! `edit` vs `browse`
+
+The `edit` command allows you to view and edit the data in the Data Editor. The `browse` command permits you to view (but not edit) the data, making it a safter alternative when you simply wish to view the data.
+

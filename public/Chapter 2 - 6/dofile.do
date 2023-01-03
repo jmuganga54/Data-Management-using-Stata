@@ -442,3 +442,45 @@ use dentists_dups,clear
 
 list
 
+* list of all duplicates
+duplicates list
+
+* display duplicates in a group (showing the number of duplicate for each duplicate)
+duplicates examples
+
+* creates a report
+duplicates report
+
+duplicates tag, generate(dup)
+
+list, sep(0)
+
+sort name years
+
+list, sepby(name years)
+
+list if dup > 0
+
+browse if dup > 0
+
+duplicates drop
+
+list
+
+use wws
+
+isid idcode
+
+
+duplicates list idcode
+
+duplicates list
+
+use wws_dups
+
+isid idcode
+
+duplicates report idcode
+
+duplicates list idcode, sepby(idcode)
+
