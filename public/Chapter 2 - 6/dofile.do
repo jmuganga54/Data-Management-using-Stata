@@ -484,3 +484,26 @@ duplicates report idcode
 
 duplicates list idcode, sepby(idcode)
 
+duplicates report
+
+duplicates tag idcode, generate(iddup)
+
+duplicates tag, generate(alldup)
+
+tabulate iddup alldup
+
+browse if iddup == 1 & alldup == 0
+
+list idcode age race yrschool occupation wage if iddup == 1 & alldup == 0
+
+summarize idcode
+
+replace idcode = 5160 if idcode == 3905 & age == 41
+
+duplicates report idcode
+
+duplicates report 
+
+duplicates drop
+
+duplicates report

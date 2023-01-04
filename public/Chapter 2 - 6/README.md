@@ -1558,3 +1558,18 @@ The process of creating and recoding variables provides opportunies for errors t
 When you `merge two datasets together`, this might give you the chance to do additional data checking. Say that you merget two datasets, a dataset with husbands and a dataset with wives. Imagine that both datasets had a variable assking how long they have been married. You could use the techniques described in section 4.6 to check the husbands answer against the wife's answer. By `merging ` the husband and wises datasets, more opportunies arise for data checking than lyou had when the datasets were separated.
 
 `Data cleaning` is ideally done using a `do-file`, which gives you the ability to automatically repeat the `data-checking` and `data-correcting steps`. 
+
+## Chapter 5 | Labelling datasets
+
+We must be careful not to confuse data witht he abstrations we use to analyze them. --William James
+
+### 5.1 Introduction
+This chapter illustrates how to label your datasets. Labeled datasets are easier for others to understand, provide better documentation for yourself, and yield output that is more readable and understandable. Plus, by labelling your datasets so that others can easily understand them, you get the added benefit of making your dataset easier for you to understand at some point in the future when your memories of the data have faded.
+
+The examples in this chapter use a hypothetical survey of eight graduate students. 
+
+> Note!!
+
+This chapter describes how to use Stata commands for labelling datasets. If you are interested in using the point and click Variable Manager, you can see section 2.9.
+
+
