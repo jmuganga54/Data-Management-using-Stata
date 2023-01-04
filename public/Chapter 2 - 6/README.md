@@ -1572,4 +1572,63 @@ The examples in this chapter use a hypothetical survey of eight graduate student
 
 This chapter describes how to use Stata commands for labelling datasets. If you are interested in using the point and click Variable Manager, you can see section 2.9.
 
+### 5.2 Describing datasets
+Let's have a look at an example of a well-labelled dataset. This dataset includes and overall `label for the dataset`, `labels for the variables`, `labels for values of some variables`, `comments (notes) for some variables` and formatting to improve the display of variables.
 
+This section illustrates how such labelling improves the usability of the dataset and explores Stata tools for displaying well-documented dataset. 
+
+`survey4.dta` contains the results of hypothetical survey of eight graduate students with information about their gender, race, date of birth, and income.The survey also asks the female students if they have given birth to a child , if so, the name, sex and birthday of their child. 
+
+Below, we use the dataset and see that it has a label describing the dataset as a `survey of graduate students`
+
+```
+use survey7
+```
+We can get even more information about this dataset using the `describe` command, as shown below.
+```
+describe
+```
+![describe](./img/describe.png)
+
+The header portion of the output gives overall information about the dataset and is broken up into two columns(groups) The `first (left) column` tells us the `name of the dataset`, `the number of observations` and `the number of variables`.
+
+`The second (right)` column shows the `label for the dataset`, `displays the last time it was saved` and `mentions that the overall dataset has notes associated with it`.
+
+The body of the output shows the `name of each variabes`, how the `variables is stored`, the `format for displaying the variable`, the `value label used for displaying the values` and a `variable label that describes the variable`. Variables with asterisks have notes associated with them.
+
+With the `short` option, we can see just the header information. This is useful if you just need to know general information about the dataset, such as the `number of variables and observation it contains`.
+
+```
+describe, short
+```
+![describe short](./img/describe_short.png)
+
+Specifying a list of variables shows just the body of the output (withoug the header). Below, we see information for the variables id, gender, and race
+
+```
+describe id gender race
+```
+![describe variables](./img/describe_variables.png)
+
+The `codebook` commands allows you to more deeply inspect the dataset, producing an electronic codebook for your dataset. You can type `codebook`, and it provides such information for all the variables in the dataset.
+
+```
+codebook
+```
+> (output omitted)
+
+If you specify one or more variabes, the codebook information is limited to just the variables you specify. For example, the `codebook` command below shows codebook information for the `race` variable. This output shows us that the race ranges from `1 to 5`, it has five unique value, and none of its value are missing. The ouput also shows a tabulation of the values of `race` and the `labels associated with those values(that is, value labels)`
+
+```
+codebook race
+```
+![codebook race](./img/codebook_race.png)
+
+Adding the `notes` option to the codebook command show notes associated with a variable, as shown below. The variable `havechild` has three notes (comments) attached to it.
+
+```
+codebook havechild, notes
+```
+![codebook havechild,notes](./img/codebook_notes.png)
+
+The `mv`(missing values) options shows information about whether the missing values on a particular variable are always associated with missingness on other variables.
