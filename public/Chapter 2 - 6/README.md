@@ -1632,3 +1632,61 @@ codebook havechild, notes
 ![codebook havechild,notes](./img/codebook_notes.png)
 
 The `mv`(missing values) options shows information about whether the missing values on a particular variable are always associated with missingness on other variables.
+
+The notation at the bottom of the output below indicates that whenever `havechild` is missing, the variable `ksex` is also always missing. Likewise whenever `kbday` is missing `ksex` is also missing.
+
+This is useful for understanding patterns of missing values within you datase.
+
+```
+codebook ksex, mv
+```
+![codebook mv](./img/codebook_mv.png)
+
+So far, all the information in the variable labels and value labels has appeared in English. Stata supports labels in multiple languanges. As the `label language` command shows, this dataset contains labels in two languaes: `en(English) and de(German)`
+
+```
+label language
+```
+![label language](./img/label_language.png)
+
+After using the `label language de` command, variable labels and value labels are then displayed using German, as illustrated using the `codebook` command.
+
+```
+label language de
+codebook ksex
+```
+![label language](./img/label_languages.png)
+
+The `label language en` command returns us to English labels
+
+```
+label language en
+```
+
+The `lookfor` command allows us to search the current dataset for keywords. Pretend that our dataset is very large and we want to find the variable designating the birthday of the student.
+
+The `lookfor birth` commandasks Stata to search the variables names and labels for any instance of the word `birth`.
+
+Note that the searches are case insensitive, so the prior search would match, for example, `Birth or BIRTH`
+
+```
+lookfor birth
+```
+![lookfor birth](./img/lookfor_birth.png)
+
+In this case, it found three variables, each of which included `birth` in the variable label. Had there been a variable named `birthday` or `dateofbirth`, such variables would have also been included in the list.
+
+We can also search comments(notes) within the dataset using the `notes search` command
+
+```
+notes search birth
+```
+![notes search birth](./img//notes_search_birth.png)
+
+This command found a note associated with `havechild` that had the word `birth` in it.
+
+This seaction has illustrated what a labelled dataset looks like and some of the benefits of having such a labeled dataset.
+
+The rest of this chapter shows how to actually create a labelled dataset.
+
+The following sections illustrates how to label the variables, label the values, label the values with different languages, add notes to the dataset, and format the display of variables.

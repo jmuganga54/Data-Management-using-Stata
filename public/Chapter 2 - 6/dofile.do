@@ -507,3 +507,23 @@ duplicates report
 duplicates drop
 
 duplicates report
+
+/**
+* 5.2 Describitng datasets
+*/
+
+use survey7
+
+describe
+
+describe, short
+
+codebook
+
+codebook race
+
+codebook havechild, notes
+
+codebook ksex, mv
+
+label language
