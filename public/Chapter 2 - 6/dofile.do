@@ -527,3 +527,19 @@ codebook havechild, notes
 codebook ksex, mv
 
 label language
+
+label language de
+
+codebook ksex
+
+label language en
+
+lookfor birth
+
+notes search birth
+
+/**
+* 5.3 labelling variables
+*/
+
+use survey1

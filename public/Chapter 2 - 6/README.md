@@ -1690,3 +1690,33 @@ This seaction has illustrated what a labelled dataset looks like and some of the
 The rest of this chapter shows how to actually create a labelled dataset.
 
 The following sections illustrates how to label the variables, label the values, label the values with different languages, add notes to the dataset, and format the display of variables.
+
+### 5.3 Labelling variables
+This section shows how you can assign `labels to your variables` and assign a `label to the overall dataset`.
+
+We will start with a completely unlabelled version of the student survey dataset named `survey1.dta`.
+
+```
+use survey1
+```
+
+Using the `describe` command shows that this dataset has no labels, including no labels for the variables
+
+```
+describe
+```
+![describe empty](./img/describe_empty.png)
+
+The `label variable` command can be used to assign labels to variabes. This command also provide more descriptive information about each variable. Below, we add variable labels for the variable `id` and gender.
+
+```
+label variable id "Identification variable"
+label variable gender "Gender of student"
+```
+
+The `describe` command shows us the these variables indeed have the labels we assigned to them.
+
+```
+describe id gender
+```
+![describe id gender](./img/describe_id_gender.png)
