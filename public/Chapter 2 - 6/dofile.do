@@ -542,4 +542,11 @@ notes search birth
 * 5.3 labelling variables
 */
 
-use survey1
+use survey1, clear
+
+describe
+
+label variable id "Identification variable"
+label variable gender "Gender of student"
+
+describe id gender

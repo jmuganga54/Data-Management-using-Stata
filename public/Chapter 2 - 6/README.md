@@ -1,8 +1,9 @@
 ## Overview
+
 There is a gap between raw data and statistical analysis. That gap, called data management.
 
 > It has been said that data collection is like garbage collection: before you collect it you should have in mind what you are going to do with it.
--Russel Fox, Gorbuny, and Robert Hooke
+> -Russel Fox, Gorbuny, and Robert Hooke
 
 To allow you to replicate the examples in this book, the datasets are available for download. You can download all the dataset used in this book into your current working directory from within Stata by typing the following commands
 
@@ -11,19 +12,24 @@ net from https://www.stata-press.com/data/dmu2
 net get dmus1
 net get dmus2
 ```
+
 ## Keywords and Notes
+
 ## Listing observation in this book
+
 I frequently use the `list` command to illustrate the effect of commands. Sometimes, I add options to the `list` command to maximize the clarity of the output.
 
-For files with many observations, it can be useful to list a subset of observations. I frequently use the `in` specification to show selected observation from a dataset. 
+For files with many observations, it can be useful to list a subset of observations. I frequently use the `in` specification to show selected observation from a dataset.
 
 For example
+
 ```
 list idcode age hour wage in 1/5
 ```
+
 Sometimes variables names are so long that they get abbreviated by the `list` command. This can make the listings more compact but also make the abbreviated heading harder to understand.
 
-For example, the listing below shows the variables `idcode, married, marriedyrs and nevermarried` for the first five observation. Note how `marriedyrs` and `nevermarried` are abbreviated. 
+For example, the listing below shows the variables `idcode, married, marriedyrs and nevermarried` for the first five observation. Note how `marriedyrs` and `nevermarried` are abbreviated.
 
 ```
 list idcode married marriedyrs nevermarried in 1/5
@@ -36,6 +42,7 @@ For example, specifying `abbreviate(20)` means that none of the variables will b
 ```
 list idcode married marriedyrs nevermarried in 1/5, abb(20)
 ```
+
 When the variable listing is too wide for the page, the listing will wrap on the page. As shown below, this listing is hard to follow, and so I avoid it in this book.
 
 Sometimes, I add the `noobs` option to avoid such wrapping. The `noobs` option suppresses the display of the observation numbers, which occasionally saves just enough room to keep the listing from wrapping on the page.
@@ -44,11 +51,11 @@ Sometimes, I add the `noobs` option to avoid such wrapping. The `noobs` option s
 list idcode ccity hours uniondues married marriedyrs nevermarried in 1/3, abb(20) noobs
 ```
 
-
 ```
-* Which contains 10 observation about the TV-watching habits of four kids 
+* Which contains 10 observation about the TV-watching habits of four kids
 use tv1
 ```
+
 ```
 list
 ```
@@ -58,37 +65,42 @@ Note how a separator line is displayed after every five observations. This helps
 ```
 list,sep(0)
 ```
+
 In other cases, the separator can be especially helpful in clarifying the grouping of observations. In the dataset, there are multiple observation per kid, and we can add the `sepby(kidid)` option to request that a separator be included between each level of `kidid`. This helps us clearly see the grouping of observatios by `kid`
 
 ```
 list,sepby(kidid)
 ```
 
->>Resource
-For more help type
+> > Resource
+> > For more help type
+
 ```
 help internet
 help videos
 ```
 
->> More online resources
-* [Stata resources and support](https://www.stata.com/support/)
-* [Resources for learning Stata](https://www.stata.com/links/resources-for-%20learning-stata/)
-* [Stata Videos](https://www.youtube.com/user/statacorp)
-* [Stata FAQs](https://www.stata.com/support/faqs/)
-* [Statalist](https://www.statalist.org/.)
-* [Stata Journal](https://www.stata-journal.com/)
-* [Stata Blog](https://blog.stata.com/)
+> > More online resources
+
+- [Stata resources and support](https://www.stata.com/support/)
+- [Resources for learning Stata](https://www.stata.com/links/resources-for-%20learning-stata/)
+- [Stata Videos](https://www.youtube.com/user/statacorp)
+- [Stata FAQs](https://www.stata.com/support/faqs/)
+- [Statalist](https://www.statalist.org/.)
+- [Stata Journal](https://www.stata-journal.com/)
+- [Stata Blog](https://blog.stata.com/)
 
 ### Chapter 2 | Reading and importing data files
 
->> Stata rhymes with data 
-An old Stata FAQ
+> > Stata rhymes with data
+> > An old Stata FAQ
 
 ### Introduction
+
 Before you can analyze the data in Stata, you must first read the data into Stata.This section describes how you can read several common types of data files into Stata.
 
 #### Changing directories
+
 To read a data file, you first nee to know the directory or folder in which it is located and how to get there.
 
 Say that you are using Windows and you have a folder names `mydata` that is located in your `Documents` folder. Using `cd` command shown below changes the current working directory to the `mydata` folder withing your `Documents` folder
@@ -104,17 +116,21 @@ cd /statadata
 ```
 
 Consider the partially complete `cd` command shown below
+
 ```
 cd "/
 ```
+
 After typing the forward slash, we can pres the Tab key to activate tab completion, showing a list of possible folders that can be chosen via keystrokes or mouse clicks
 
 ### What kind of file are you reading?
+
 There are several data files that you can read and import into Stata. Additionally, Stata can import data saved in other file formats, including, Excell files(`.xls` and `.xlsx`), SAS files, IBM SPSS files, and dBase files (`.dbf`).
 
 > `Reading versus importing`. In both instances, you are retrieving an external file and placing it into memory
 
 ### 2.2 Reading Stata datasets
+
 This section illustrate how to read Stata datasets.
 
 ```
@@ -135,13 +151,15 @@ use "https://www.stata-press.com/data/dmus2/dentists.dta"
 list
 
 ```
+
 Imagine you want to read only a subset of observation from `dentists.dta`
 
 ```
-* reading ony the subset of observation 
+* reading ony the subset of observation
 use dentists if years >=10
 list
 ```
+
 We can even combine these to read just the variable `name` and `years` for those dentists who have worked at least 10 years, as shown below.
 
 ```
@@ -149,6 +167,7 @@ We can even combine these to read just the variable `name` and `years` for those
 use name years using dentists if years >= 10
 list
 ```
+
 The above command can help on memory usage.
 
 The `sysuse` command allows you to find and use datasets that ship with Stata. The `sysuse dir` command lists all the examples datasets that ship with Stata.
@@ -162,6 +181,7 @@ sysuse auto
 * See all the datasets that comes with stata-press
 sysuse dir
 ```
+
 Theare are many other examples datasets used in Stata manuals but not shipped with Stata. You can list these example datasets by typing `help dta contents` or selecting `File` and then `Example datasets ...` from the main menu.
 
 ```
@@ -177,6 +197,7 @@ webuse fullauto
 ```
 
 ### 2.3 Importing Excel SpreadSheets
+
 We can import Excel file using the `import excel` command as shown below. Note that I included the `firstrow` option, which indicates that the Excel spreadsheet contains the names of the variables in the firstrow
 
 ```
@@ -195,25 +216,33 @@ clear
 import excel dentists3, firstrow cellrange(A1:D6)
 
 ```
-### 2.4  Importing SAS files
+
+### 2.4 Importing SAS files
+
 ### 2.5 Importing SPSS files
+
 ### 2.6 Importing dBase files
+
 ### 2.7 Importing raw data files
+
 Raw data come in many formats, including comma-separated, tab-separated, space-separated and fixed-format files.
 
 Comma-separated files, sometimes referred to as `CSV` (Comma-separated-values) files, are commonly used for storing raw data.Such files often originated from spreadsheet programs and may be given a filename extension of `.csv`.Below, we see an example of a comma-separated file named `dentists1.txt`
 
 The `type` command is used to show this file
+
 ```
 * comma-separated file
 type dentists1.txt
 ```
+
 A related file is a tab-separated file. Instead of separating the variables (columns) with commas, a tab is used. The `dentists2.txt` file (shown below) is an examples of such a file
 
 ```
 * tab-separated file
 type dentists2.txt
 ```
+
 Raw data can also be stored as a space-separated file. Such file use one(or possibly more) spaces to separate the variables (columns)
 
 ```
@@ -230,6 +259,7 @@ type dentists7.txt
 ```
 
 #### Importing comma-separated and tab-separated files
+
 Raw data can be stored in several ways. If the variables are separated by commas, the file is called `comma-separated file`; if the variables are separated by tabs, the file is called `tab-separated file`.
 
 Such file can be read using the `import delimited` command.If the data file contains the names of the variables in the first row of teh data, Stata will detect and use them for naming the variables.
@@ -263,10 +293,11 @@ The following example show how you can read the file and let Stata name the vari
 ```
 import delimited using dentists3.txt
 ```
-You can then use the rename command or the Variable Manager to rename the variables. 
 
->Tip! What about files with other separators
-Stata can read files with other separators as well. The file `dentists4.txt use a colon(:) as a separator(delimiter) between the variable.
+You can then use the rename command or the Variable Manager to rename the variables.
+
+> Tip! What about files with other separators
+> Stata can read files with other separators as well. The file `dentists4.txt use a colon(:) as a separator(delimiter) between the variable.
 
 You can add the `delimiters(":")` option to the import `import delimited` command to read file. For example
 
@@ -275,35 +306,42 @@ import delimited using dentists4.txt, delimiters(":)
 ```
 
 #### 2.7.2 Importing space-separated files
+
 Another common format for storing raw data is a space-separated file. In such a file, variables are separated by one (or more) spaces, and if a string variable contain spaces, it is enclosed in quotes. The file `dentists5.txt` is an example of such a file with information about five dentists
 
 ```
 type dentists5.txt
 ```
-You can use the `infile` command to read this file. Because the file did not include variable names, you need to specify the variable names with `infile` command.In addition, because the variable `name` is a string variable, you need to tell Stata that this file is a string variable by prefacing `name` with `str17`, which informs Stata that this is a sting variable that may be as wide as 17 characters. 
+
+You can use the `infile` command to read this file. Because the file did not include variable names, you need to specify the variable names with `infile` command.In addition, because the variable `name` is a string variable, you need to tell Stata that this file is a string variable by prefacing `name` with `str17`, which informs Stata that this is a sting variable that may be as wide as 17 characters.
 
 ```
 * infile command to read files
 infile str17 name years full rec using dentists5.txt
 list
 ```
+
 The `infile` command does not read files with the variable names in the first row. To read the file we use `import delimited` command, adding option `delimiter("")`
 
 ```
 import delimited using dentists5.txt, delimiters(" ")
 ```
+
 Sometimes, you might need to read a space-separated file that has dozens or even hundreds of variables, but you are interested only in some of those variables. Reading some of the variable and skip other variables to save time when reading datasets using `infile`
 
 ```
 * skip variable when reading space separated files
 infile a _skip(22) x _skip(2) using abc.txt
 ```
+
 Using `if` and `infile` to read some of the observations you want
 
 ```
 infile a _skip(22) x _skip(2) using abc.txt if (a<=5>)
 ```
+
 > TIp | Reading consecutive variables
+
 ```
 infile id age bp1 bp2 bp3 bp4 bp5 pu1 pu2 pu3 pu4 pu5 using cardio1.txt
 * the following command is the shortcut of the above
@@ -312,6 +350,7 @@ infile id age bp1-bp5 pu1-pu5 using cario1.txt
 ```
 
 #### 2.7.3 Importing fixed -column files
+
 Fixed-column files can be confusing because the variables are pushed togethr without spaces, commas, or tabs separated them.
 
 In this file, the `name of the dentist` occupies `columns 1-17`, the `years` in practice occupies `column 18-22`, whether the dentist is `full time` is in `column 23`, whether the dentist `recommends Quaddent` is in `column 24`. Knowing the column locations, you can read this file using the `infix` command like this:
@@ -320,6 +359,7 @@ In this file, the `name of the dentist` occupies `columns 1-17`, the `years` in 
 infix str name 1-17 years 18-22 fulltime 23 recom 24 using dentists7.txt
 list
 ```
+
 You do not have to read all the variables in a `fixed-column data` file. You can read just some few variable as shown on the command below
 
 ```
@@ -327,16 +367,17 @@ infix str name 1-17 fulltime 23 using dentists7.txt
 list
 ```
 
-Likewise, you  do not have to read all the observation in the data file. You can specify an `in` qualifier or an `if` qualifier to read just a subset of the observation
+Likewise, you do not have to read all the observation in the data file. You can specify an `in` qualifier or an `if` qualifier to read just a subset of the observation
 
 ```
 infix years 18-22 fulltime 23 using dentists7.txt in 1/3
 infix years 18-22 fulltime 23 using dentists7.txt if fulltime == 1
 ```
 
-To be  continued ...
+To be continued ...
 
 ### 2.8 Common errors when reading and importing files
+
 This section describes and explains two common error messages you may see when reading or importing data into Stata. These error messages are `no; datasets in memory has changes since last saved` and `you must start with an empty dataset`.
 
 To understand these error message better, let's first briefly explore the mode that Stata uses for reading, modifying and saving datasets.
@@ -359,17 +400,19 @@ This error message is saying that you would lose the changes to the dataset in m
 If you care about the dataset in memory, use the `save` command to save your dataset. If you do not care about the working dataset, you can throw it away using the `clear` command.
 
 > Tip The clear command versus the clear option
-Rather than using the `clear` command, most (if not all) commands permit you to specify the `clear` option. For example, you can type
+> Rather than using the `clear` command, most (if not all) commands permit you to specify the `clear` option. For example, you can type
 
 ```
 use dentist, clear
 ```
-instead of typing 
+
+instead of typing
 
 ```
 clear
 use dentists
 ```
+
 Likewise, you can add the `clear` to other commands like `infile`, `infix` and import. The choice of which to use is up to you.
 
 > The `you must start with an empty dataset` error message
@@ -390,6 +433,7 @@ This error message is saying that you first need to clear the data currently in 
 Raw data files frequently use numeric codes for missing data. For example, `-7` might be the code for `don't know`, `-8`, the code for `refused` and `-9`, the code for `not applicable`
 
 ### 2.9 Entering data directly into the Stata Data Editor
+
 When considering how to enter your data, I would encourage you to think about who how much work you invest in cleaning and preparing the data for analysis.
 
 Ideally, a data entry tool is used that allows only valid values to be entered for each row and column for data. For example, [REDCap](https://www.project-redcap.org/) offers many features for verifying the integrity of the data as they are entered. Or there are mobile apps (like REDCap) that allow data collection and entry in a mobile app on an iPhone, iPad, or Android phone or tablet.
@@ -404,7 +448,7 @@ It is surprising how much time can be saved by having these basic data checks in
 
 In this section we are illustrating how you can enter Data using Data Editor in Stata. Before you are read to enter data into the Data Editor, you first need to create a `codebook` for your data.
 
-The process of entering data into the Data Editor is a four step process. This involves `(step 1)` entering data for the first student, `(step 2)` labelling the variables and values, `(step 4)` entering the data for the rest of the observations. 
+The process of entering data into the Data Editor is a four step process. This involves `(step 1)` entering data for the first student, `(step 2)` labelling the variables and values, `(step 4)` entering the data for the rest of the observations.
 
 Before we can start, we need to `clear` the working dataset with the `clear` command.
 
@@ -430,7 +474,6 @@ Note: `type : str10`, specify that this variable is a string variable that can h
 
 Before doing anything(even before specify the name or label for this variable race), let's enter the information for the coding scheme `racelab`. We can do this by clicking on `Manage` button next to `value label`. Then in the Manage value labels dialog box, click on `Create label`. For the `Label name`, enter `racelab` and then enter a value of `1` and `Label` of `White`; then, click on Add. Enter the values and labels for three remaining race groups, click on `Add` after each group.
 
-
 > Format of dob
 
 Now we have arrived at date of birth `(dob)`. (Remember that we entered a temporary value of 1 for this variable and will fix it in step 3). For `Name`, enter `dob` and for `label`, enter `Date of birth`. To the right of `Format`, click on the `Create` button. Under `Type of data`, choose `Daily` (because this a date variable). The `samples` box at the right shows examples of how this date variable can be displayed. You can choose whichever format you prefer; I will choose `April 7, 2021`. Then, click on `OK` to chose the Create format dialog box.
@@ -438,6 +481,7 @@ Now we have arrived at date of birth `(dob)`. (Remember that we entered a tempor
 ```
 format %tdMon_DD,_CCYY var6
 ```
+
 After I entered all the information for all the variable, my Variable Manager and Data Editor will looks as a below
 
 > Variable Manager
@@ -456,28 +500,27 @@ Note how the variales `race, happy, and glad` display labelled values in blue. T
 
 `If you prefer to see the actual values`, then you can go to the main menu and choose `View` and then `Data Editor` and then `Value label` then `Hide all value labels`.
 
-
 > Step 3: `Fix date variables`
-In the Data Editor, click on the column for `dob`. At the right, you can select the format in which you would like to type dates into the Data Editor.
-The `Format` is like what you set it in `Step 2`.
+> In the Data Editor, click on the column for `dob`. At the right, you can select the format in which you would like to type dates into the Data Editor.
+> The `Format` is like what you set it in `Step 2`.
 
 After investing all this effort, now is a great time to save these data. Data Editor, go to the main menu and click on `File` and then `save as...`and save the file as `studentsurvey`
 
-
 ```
-list 
+list
 describe
 ```
+
 `describe` command shows the names, variable labels, and value labels specified in step 2.
 
 Now that we have successfully entered the first observation for this dataset and labelled this dataset, we are ready for the fourth step, entering the rest of the observations.
 
 > Step 4 : `Enter the data for rest of the observations`
-You can return to the Data Editor and continue entering data for the rest of the students in the survey.
+> You can return to the Data Editor and continue entering data for the rest of the students in the survey.
 
 Once you are done entering the data for all the students, you can `save` the file and close the Data Editor and the Variable Manager. You can then later retrieve the file by going to the main menu, selecting `File` and then `Open`, navigating to the folder in which you saved the file, and then choosing the file you saved.
 
-You can, of course, also read the data with `use` command. You can resume entering data using the `edit` command. Just like a spreadsheet, the data typed into Editor  are not saved until you save them.
+You can, of course, also read the data with `use` command. You can resume entering data using the `edit` command. Just like a spreadsheet, the data typed into Editor are not saved until you save them.
 
 > For more help entering data using the Stata `Data Editor` see
 
@@ -494,25 +537,28 @@ help edit
 3. Note that you can tab from field to field and press Enter after each value tag pair gets entered.
 
 ## Chapter 3 | Saving and exporting data files
+
 #### 3. Introduction
+
 Within Stata, you can save data in many formats. The most common command for saving data is the `save` command, which saves the datasets currently in memory as a Stata dataset.
 
 The resulting dataset is saved using `.dta` format for the current version of Stata.
 
-You can use the `export excel` command to export the dataset currently in memory as an Excel file. The `export excel` command can save `.xls` files or `.xlsx` files. 
+You can use the `export excel` command to export the dataset currently in memory as an Excel file. The `export excel` command can save `.xls` files or `.xlsx` files.
 
 > Note! Saving versus exporting
 
 Both instances, you are taking the dataset currently in memory and storing it into an external file. In general, I will talk about saving a Stata dataset and exporting data into other file format (such as Excel, SAS, dBase, or raw data files)
 
-````
-* exporting SAS XPORT Version 8 file 
+```
+* exporting SAS XPORT Version 8 file
 export sasxport8
 * exporting SAS XPORT Version 5 file
 export sasxport5
 * exporting dBase file
 export dbase
-````
+```
+
 #### Saving Stata datasets
 
 ```
@@ -522,18 +568,21 @@ import delimited using dentists1.txt,clear
 * saving the files
 save mydentists
 ```
+
 If the file already exists, then you can add the `replace` option to indicate that it is okay to overwrite the existing file, as shown below
 
 ```
 * saving the files, if the file exists
 save mydentists, replace
 ```
+
 Saving file for to be open by other older versions of Stata, `saveold` command, also adding an option `version(12)` which specify the verison.
+
 ```
 saveold dentisold, version(12)
 ```
 
-You can use `keep` or `drop` command to select the variables you want to retain and use the the `keep if` or `drop if` command to select the observations to retain. 
+You can use `keep` or `drop` command to select the variables you want to retain and use the the `keep if` or `drop if` command to select the observations to retain.
 
 Say that we want to save a dataset with just the dentists who recommend Quaddent (if `recom` is `1`) and just the variable `name` and `years`. We can do this as illustrated below
 
@@ -552,6 +601,7 @@ Using the `keep if` command selected the observations we wanted to keep. (We als
 Before you save a Stata dataset, you might want to first use the `compress` command. The `compress` command stores each variable in the current dataset using the most parsimonious data type possible, which assuring that you never lose precision.
 
 ### 3.3 Exporting Excel files
+
 ```
 * reading Stata file
 use dentlab,clear
@@ -574,7 +624,8 @@ Looking at the Excel file, I realize that Stata exported the labeled values for 
 ```
 export excel dentlab.xlsx, firstrow(variables) nolabel replace
 ```
-So now I have decided that I actually would like to export both the unlabeled version and the labelled version of the data.I would like to add a new sheet to that file that contains the labeled version of the data, and I want that sheet to be named 'labeled'. 
+
+So now I have decided that I actually would like to export both the unlabeled version and the labelled version of the data.I would like to add a new sheet to that file that contains the labeled version of the data, and I want that sheet to be named 'labeled'.
 
 I add the `sheet("Labeled")` option to the `export excel` command. Note that I removed the `replace` option. If I include the `replace` option, the entire Excel file will be replaced, losing the contents of `sheet1`.
 
@@ -589,6 +640,7 @@ After looking at the sheet named `Labeled`, I decide that I want do not want tha
 export excel dentlab.xlsx, sheet("labeled")
 //worksheet Labeled alread exists, must specify sheet(...,modify) or sheet(...,replace)
 ```
+
 This error messge is informative. It says that the sheet names `labeled` already exists. I need to add either the `modify` or the `replace` suboption within the `sheet()` option. Because I want to replace that sheet, I will add `replace`.
 
 ```
@@ -597,15 +649,20 @@ export excel dentlab.xlsx, sheet("labeled",replace)
 //Expected output: file dentlab.xlsx saved
 
 ```
+
 > Note! Worksheet limits of .xls versus .xlsx files
-When exporting dta to Excel, remember the worksheet size limits of `.xls` versus `.xlsx` files. For an `.xls` file, the worksheet size limit is 65,536 rows by 256 columns.
+> When exporting dta to Excel, remember the worksheet size limits of `.xls` versus `.xlsx` files. For an `.xls` file, the worksheet size limit is 65,536 rows by 256 columns.
 
 By contrast, for an `.xlsx` file, the worksheet size limit is 1,048,576 rows by 16,384 columns. Furthermore, strings are limited to 255 characters in an `.xls` file versus 32,767 in an `.xlsx` file.
 
 ### 3.4 Exporting SAS XPORT Version 8 files
+
 ### 3.5 Exporting SAS XPORT Version 5 files
+
 ### 3.6 Exporting dBase files
+
 ### 3.7 Exporting comma-separated and tab-sepearated files
+
 Sometimes, you may want to save a dataset as comma-separated or tab-separated file. Such files can be read by many other programs, including spreadsheets.
 
 The `export delimited` command is used below to write a comma-separated file called `dentists_comma.csv` (the default extension is `.csv`). Note that the labels for `fulltime` and `recom` are output, not their values
@@ -629,6 +686,7 @@ export delimited using dentists_comma, nolabel replace
 
 type dentists_comma.csv
 ```
+
 If quotes are wanted around the names of the dentists, I could add the `quotes` option. This would be advisable if the names could have commas in them.
 
 ```
@@ -648,32 +706,37 @@ export delimited using dentists_comma, nolabel quote novarnames replace
 
 type dentists_comma.csv
 ```
+
 Setting a fixed format for a variable before exporting it to avoid confusion.
-In the example below, I have applied a display `format` to `years` saing that it should be displayed using a fixed format with a total width of 5 and 2 decimal places. 
+In the example below, I have applied a display `format` to `years` saing that it should be displayed using a fixed format with a total width of 5 and 2 decimal places.
 
 The, on the `export delimited` command, I added the `datafmt` option to indicate that the data should be exported according to the formatted values.
+
 ```
-* 
+*
 format years %5.2f
 export delimited using dentists_comma, quote replace datafmt
 type dentists_comma.csv
 ```
 
-in these example, the option were illustrated in the context of creating comma-separated files. These options work equally well when creating `tab-separated` files. 
+in these example, the option were illustrated in the context of creating comma-separated files. These options work equally well when creating `tab-separated` files.
 
 > For more about about `export delimited`
+
 ```
 help export delimited
 
 ```
 
 ### 3.8 Exporting space-separated files
+
 There may be times that you want to save a dataset from Stata as a `space-separated` file. Such files are sometimes referred to as free-format files and can be read by many programs.
 
 ```
 use dentlab
 list
 ```
+
 The `outfile` command shown below writes a space-separated file called `dentists_space.raw` (the default extension is `.raw`). Note how the labels for `fulltime` and `recom` are output, not their values.
 
 ```
@@ -687,27 +750,34 @@ To display the values, not the labels, for `fulltime` and `recom`, we can add th
 outfile using dentists_space, nolabel replace
 type dentists_space.raw
 ```
+
 Suppose we aslo have `years2` (years squared) and `years3` (years cubed) in the dataset. In this case, when we write the raw data file, it will exceed 80 columns, and Stata wraps the file to make sure that no lines exceed 80 columns.
 
 ```
 outfile using dentists_space, nolabel replace
 type dentists_space.raw
 ```
+
 To avoid this wrapping, we could use the `wide` option. When using the `wide` option, one line of raw data is written in the space-separated file for every observation in the working dataset.
 
 ```
 outfile using dentists_space, nolabel replace wide
 ```
+
 > Note ! For more about `outfile`
+
 ```
 help outfile
 ```
 
 ### 3.9 Exporting Excel files revisted: Creating reports
+
 ## Chapter 4 | Data Cleaning
 
 GIGO - Garbage In; Garbage Out
+
 ### 4.1 Introduction
+
 Once you have read a dataset into Stata, it is tempting to immediately start analyzing the data. But the data are not ready to be analyzed until you have taken reasonable steps to clean them (you know the old saying: garbage in, garbage out). Even when you are given a dataset that is supposed to have been cleaned, it is useful to examine and check the variables.
 
 This chapter divides up the process of `data cleaning` into two components: checking data (searching for possible errors in the data) and correcting data (applying corrections based on confirmed errors).
@@ -744,13 +814,13 @@ Double data entry is like paying a small price now (expend extra effort to clean
 
 If you are doing your own entry for a questionnaire or other original data that you ahve collected, I higly recommend double data entry. This section describes how you can do double data entry using Stata.
 
->> Tip ! Bypassing data entry.
+> > Tip ! Bypassing data entry.
 
 The double data entry paradigm assumes that data are collected and stored on a paper form and then the responses on the paper form are later typed into the computer. The responses need to be typed twice to account for data entry errors.
 
 An alternative to this is to directly record responses during data collection. For example, you can use a mobile app (like REDCap) that allows data collection or entry on an iPhone, iPad, or Android phone or tablet.
 
->>
+> >
 
 As the name implies, the data are typed twice into two datasets. The datasets are then compared aganist each other. Discrepancies between the datasets identify error in the data entry that can be resolved by examining the original data (for example, the original questinnaire form) to determine the correct value. The absence of discrepancies does not necessarily prove that the data are correct; it is possible that the data were entered in error the same way both times.
 
@@ -815,7 +885,7 @@ use survery1, clear
 cf studentid using survey2, verbose
 ```
 
-The firs command uses `survey1.dta`. Then, the `cf` command compares the values of the `studentid` variable in the current dataset with the values of `studentid` in `survey2.dta`. The value of `studentid` for the first observation from the current dataset is compared with the value of `studentid` for the first observation `survey2.dta`. This process is repeated untill all observation have been compared. 
+The firs command uses `survey1.dta`. Then, the `cf` command compares the values of the `studentid` variable in the current dataset with the values of `studentid` in `survey2.dta`. The value of `studentid` for the first observation from the current dataset is compared with the value of `studentid` for the first observation `survey2.dta`. This process is repeated untill all observation have been compared.
 
 Because we included the `verbose` option, the `cf` command will display message for each observation where a discrepancy is found. This message shows the observation number in the discrepancy, followed by the values from the master dataset (for example, `survey1.dta`) and the value from the using dataset (for example, `survey2.dta`)
 
@@ -849,28 +919,31 @@ Following sections discuss data cleaning(that is, checking your data for problem
 
 [Excellent Cheat Sheets by data pracitioners Dr. Tim Essam and Dr. Laura Hughes](https://www.stata.com/bookstore/stata-cheat-sheets/)
 
-
 ### 4.3 Checking individual variables
-This section will illustraate how you can check the values of individual variables searching for possible errors or problems in your data. 
+
+This section will illustraate how you can check the values of individual variables searching for possible errors or problems in your data.
 
 This and the following section will use a dataset called `wws.dta` (Working Women Survey), which is a purely hypothetical dataset with 2,246 observation. Let first read in this dataset
 
 ```
 use wws
 ```
+
 We use the `describe` command to list the variables in the dataset.
 
 ```
 describe
 ```
+
 This dataset contains several demographic variables about these women
- and information about their work life. Let's start checking the variables, focusing on variables that are `categorical`. The easiest way to check categorical variable is by using the `tabulate` command (including the `missing` option to include missing values as part of the tabulation)
+and information about their work life. Let's start checking the variables, focusing on variables that are `categorical`. The easiest way to check categorical variable is by using the `tabulate` command (including the `missing` option to include missing values as part of the tabulation)
 
 Let check the variable `collgrad` which is a dummy variable indication whether the woman graducated from college. The `tabulate` command shows, as we would expect, that all values are either `0` or `1`. We can also see that is variable has no missing values.
 
 ```
 tabulate collgrad, missing
 ```
+
 ![tabulate collgrad.missing](./img/tabulate.png)
 
 The variable `race` should range from `1 to 3`, but below we see that there is one woman who is coded with a 4.
@@ -881,11 +954,12 @@ tabulate race, missing
 
 ![race](./img/race.png)
 
-We see that is erroneous value for `race` belongs to the woman with an `idcode` value of `543`. We could then try and determine what her read value of `race` should be 
+We see that is erroneous value for `race` belongs to the woman with an `idcode` value of `543`. We could then try and determine what her read value of `race` should be
 
 ```
 list idcode race if race == 4
 ```
+
 ![idcode race](./img/idcode%20race.png)
 
 The `summarize` command is useful for inspection continuous variable.
@@ -914,11 +988,12 @@ summarize wage, detail
 
 ![summarize, detail](./img/sum%20details.png)
 
-It seems that the two largeest values were enterented erroneously; perhaps the respondent gave an annual wage instead of an hourly wage. Below, we identify these women by showing observations with wages over 100,000. We could try to ascertain what their hourly wage should have been 
+It seems that the two largeest values were enterented erroneously; perhaps the respondent gave an annual wage instead of an hourly wage. Below, we identify these women by showing observations with wages over 100,000. We could try to ascertain what their hourly wage should have been
 
 ```
 list idcode wage if wage > 100000
 ```
+
 ![idcode wage](./img/idcode_wage.png)
 
 Suppose that, based on prior knowledge, we know that the ages for this sample shound range from `21 to about 50`. We can use the `summarize` command to check this.
@@ -934,6 +1009,7 @@ Seeing that the maximum age is `83`, we can get more information using the `tabu
 ```
 tabulate age if age >= 45
 ```
+
 ![tabulate age](./img/tabu%20age.png)
 
 The age of `54` and `83` seem suspicious. Below, we list the `idcode` for thse cases
@@ -941,13 +1017,14 @@ The age of `54` and `83` seem suspicious. Below, we list the `idcode` for thse c
 ```
 list idcode age if age > 50
 ```
+
 ![idcode age](./img/idcode_age.png)
 
 We could then look up the original data for these two observations to verify their values of `age`.
 
 As shown in the section, the `tabulate` and `summarize` commands are useful for searching for out of range values in dataset.
 
-Once out of range valus is found, the `list` command can be used to identify the actual observation with the out of range values so that we can further investigate the suspicious data. 
+Once out of range valus is found, the `list` command can be used to identify the actual observation with the out of range values so that we can further investigate the suspicious data.
 
 Section `4.7` illustrate how to correct values taht are found to be in error.
 
@@ -966,15 +1043,17 @@ If a woman lives in a city center, then she must live inside a `metropolitan are
 ```
 tabulate metro ccity, missing
 ```
+
 ![metro ccity](./img/metro_ccity.png)
 
 Another way that we could have approached this would have been to count up the number of cases where a woman lived in a `city center` but not in a metropolitan area and to have verified that this count was `0`.
 
-The `&` represent `and`, and the `==` represents is equal to 
+The `&` represent `and`, and the `==` represents is equal to
 
 ```
 count if metro == 0 & ccity == 1
 ```
+
 ![count metro ccity](./img/count_metro_ccity.png)
 
 Consider the variables `married` and `nevermarried`. Although it seems obvious, if you are currently married, your value for `nevermarried` should always be `0`. When we tabulate these variabls, we see that there are two cases that fail this test.
@@ -982,6 +1061,7 @@ Consider the variables `married` and `nevermarried`. Although it seems obvious, 
 ```
 tabulate married nevermarried
 ```
+
 ![nevermarried](./img/nevermarried.png)
 
 Rather than using the `tabulate` command, we can use the `count` command to count up the number of problematic cases, as shown below
@@ -989,6 +1069,7 @@ Rather than using the `tabulate` command, we can use the `count` command to coun
 ```
 count if married == 1 & nevermarried == 1
 ```
+
 ![count nevermarried](./img/count_nevermarried.png)
 
 Below, we find the cases that fail this test by listing the cases where the person is married and has never been married. We see that women with `id` values of `22` and `1,758` have this problematic data pattern. We could then investigate these two cases to try to identify which variables may have been entered incorrectly.
@@ -996,6 +1077,7 @@ Below, we find the cases that fail this test by listing the cases where the pers
 ```
 list idcode married  nevermarried if married == 1 & nevermarried == 1
 ```
+
 ![list_n_married](./img/list_m_nevermarried.png)
 
 Lets conside one more example by checking the variable `collgrad` (did you graduate college?) aganist `yrschool` (how many years have you been in school?). The `table` command is used here because it produces more concise output than the `tabulate` command.
@@ -1003,13 +1085,14 @@ Lets conside one more example by checking the variable `collgrad` (did you gradu
 ```
 table collgrad yrschool
 ```
+
 ![table collgrad yrschool](./img/table_c_yrschool.png)
 
 Among the college graduate, `2` woment reported `13` years of school and `7` reported `14` years of school. These women may have skipped one or two grades or graduated hight school early: this these values might merit some further investigation, but they are not completely implausible.
 
 However, the woman with 8 years of education who graducated college either is the greatest genius or has an error on one of these variables.
 
-`Cross-tabulations` using the `tabulate` or the `table` command are useful for checking `categorical variables aganiist each other`. 
+`Cross-tabulations` using the `tabulate` or the `table` command are useful for checking `categorical variables aganiist each other`.
 
 ### 4.5 Checking categorical by continous variables
 
@@ -1026,6 +1109,7 @@ One way to check for problems here is by using the `summarize` command to get `s
 ```
 summarize uniondues if union == 0
 ```
+
 ![summarize uniondues](./img/sum_uniodues.png)
 
 If we add `bysort union:` before the `summarize` command, we get summary statics for `uniondues` by each leve of `union`. This is another way of showing that some nonunion women paid union dues.
@@ -1033,6 +1117,7 @@ If we add `bysort union:` before the `summarize` command, we get summary statics
 ```
 bysort union: summarize uniondues
 ```
+
 ![bysort union: summarize](./img/bysort_summarize.png)
 
 We can obtain the same output in a more concise fasion by using the `tabstat` comand, as shown below.
@@ -1040,6 +1125,7 @@ We can obtain the same output in a more concise fasion by using the `tabstat` co
 ```
 tabstat uniondues, by(union) statistics (n mean sd min max) missing
 ```
+
 ![tabstat](./img/tabstatistics.png)
 
 However we obtain the output, we see that there is at least one woman who was not in a union who paid some union dues. Let's use the `recode` command to create a dummy variable names `paysdues` that is `0` if a woman paid no union dues and `1` if she paid some dues.
@@ -1047,6 +1133,7 @@ However we obtain the output, we see that there is at least one woman who was no
 ```
 recode uniondues (0=0) (1/max=1), generate(paysdues)
 ```
+
 ![recode](./img/recode.png)
 
 We can now create a table of `uninon` by `paysdues` to see the cross-tabulation of union membership by whether one paid union dues.
@@ -1054,6 +1141,7 @@ We can now create a table of `uninon` by `paysdues` to see the cross-tabulation 
 ```
 tabulate union paysdues, missing
 ```
+
 ![tabulate union paysdues](./img/tabulate_union.png)
 
 The `tabulate` command shows that six nonunion women paid union dues. We can display those cases, as shown below.
@@ -1061,6 +1149,7 @@ The `tabulate` command shows that six nonunion women paid union dues. We can dis
 ```
 list idcode union uniondues if union == 0 & (uniondues > 0) & !missing(uniondues), abb(20)
 ```
+
 ![list uniondues](./img/list_uniondues.png)
 
 We included `! missing(unindues)` as part of our `if` qualifier that excluded missing values from the display.We could investigate further, tryting to determine the appropriate values for these two variables for these six observations.
@@ -1070,6 +1159,7 @@ Let's turn to the variable `married` (coded 0 if not married, 1 if married) and 
 ```
 tabstat marriedyrs, by(married) statistics (n mean sd min max) missing
 ```
+
 ![tabstat marriedyrs](./img/tabstat_marriedyrs.png)
 
 As we would hope, the `804` women who were not married all have the appropriate value of `marriedyrs`, they are all `0`. Among those who are married, some may have been married for less than six months and thus also have a value of `0`. These two variables appear to be consistent with each other.
@@ -1079,6 +1169,7 @@ Let's checkt the variable `everworked` (`0` if never worked, `1` if worked) agan
 ```
 tabstat currexp, by(everworked) statistics(n mean sd min max) missing
 ```
+
 ![tabstat currexp](./img/tab_currexp.png)
 
 Also as we would expect, those who never worked have no previous work experience
@@ -1086,6 +1177,7 @@ Also as we would expect, those who never worked have no previous work experience
 ```
 tabstat prevexp, by(everworked) statistics(n mean sd min max) missing
 ```
+
 ![tabstat prevexp](./img/tabstat_prevexp.png)
 
 Let's check the `everworked` variable aganist the woman's total work experience. To do this, we can create a variable called `totexp`, which is a woman's total work experience, and then check that aganist `everworked`. As we see below, if a woman has never worked, her total work experience is always 0, and if the woman has worked, her minimun total work exprience is 1. This is exactly as we would expect
@@ -1094,13 +1186,12 @@ Let's check the `everworked` variable aganist the woman's total work experience.
 generate totexp = currexp + prevexp
 tabstat totexp , by(everworked) statistics(n mean sd min max) missing
 ```
+
 ![tabstat totexp](./img/tabstat%20totexp.png)
 
 This section illustrated how we can check `continuos variable` aganist `categorical variable` using the `bysort` prefix with the `summarize` command or using the `tabstat` command.
 
 We can also `recode` the continuous variable into categorical variable and then use the `cross-tabulations` for checking the categorical variable aganist the recoded version of the continuos variable. The next section illustrates how to check two continuos variabe.
-
-
 
 ### 4.5 Checking continuous by continuous variables
 
@@ -1108,13 +1199,14 @@ This section explores how we can check one `continuous variable` aganist `contin
 
 Consider the variables `hours` (hours worked last week) and `unempins` (amount of under and unemployment insurance received last week). Suppose that only those who worked 30 or fewer hours per week would be eligible for under and unemployment insurance. If so, all values of `unempins` should be `0` when a woman works over `30 hours` in a week.
 
-The `summarize` command below checks this by showing descriptive statistics for `unempins` for those who worked over 30 hours in a week and did not have missing values for their work hours. If all women who worked more than 30 hours did not get under- and unemployment insurance, then mean and maximum for `unemins` in the output below would be `0`. 
+The `summarize` command below checks this by showing descriptive statistics for `unempins` for those who worked over 30 hours in a week and did not have missing values for their work hours. If all women who worked more than 30 hours did not get under- and unemployment insurance, then mean and maximum for `unemins` in the output below would be `0`.
 
 But as the result show, these values are not all 0, so at least one woman receive under and unemployment insurance payments when working over 30 hours.
 
 ```
 summarize unempins if hours > 30 & !missing(hours)
 ```
+
 ![summarize unempins](./img/sum_unempins.png)
 
 Although the previous `summarize` command shows that there is at least one woman who receive unemployment insurance though she worked more than 30 hours, it does not show us how many women had such a pattern of data. We can use the `count` command to count up the number of women who worked over `30 hours` and received under- and unemployment insurance. This reveals that `19 women` fit this criteria.
@@ -1122,13 +1214,15 @@ Although the previous `summarize` command shows that there is at least one woman
 ```
 count if (hours>30) & !missing(hours) & (unempins>0) & !missing(unempins)
 ```
+
 ![count unempins](./img/count_unempins.png)
 
-We can use the list command to identify the observations with these conflicting values so that we can investigate further. 
+We can use the list command to identify the observations with these conflicting values so that we can investigate further.
 
 ```
 list idcode hours unempins if (hours > 30) & !missing(hours) & (unempins>0) & !missing(unempins)
 ```
+
 ![list idcode](./img/list_idcode.png)
 
 Let's say that e wanted to check the variable `age` aganist the amount of time married, `marriedyrs`. One way to compare these variables aganist each other is to create a new variable that is the age when the woman was married. This new variable can then be inspected for anomalous values. Below, the `generate` command create `agewhenmarried`.
@@ -1136,11 +1230,13 @@ Let's say that e wanted to check the variable `age` aganist the amount of time m
 ```
 generate agewhenmarried = age - marriedyrs
 ```
+
 We can use the `tabulate` command to look for worrisome values in the new `agewhenmarried` variable. For the sake of space of values that might merit further investigate, such as the woman who was married when she was 13 years old.
 
 ```
 tab agewhenmarried  if agewhenmarried < 18
 ```
+
 ![age less than 18](./img/age_less18.png)
 
 We can use the same strategy to check the woman's age aganist her total work experience. We can create a variable, `agewhenstartwork`, that is the woman's age minus her previous plus current work experience. Like the previous example, we can then `tabulate` these values and restrict it to values less than 18 to save space. This reveals three cases when implied age the women started working was at age 8, 9 and 12. These cases seem to merit further investigation.
@@ -1149,6 +1245,7 @@ We can use the same strategy to check the woman's age aganist her total work exp
 generate agewhenstartwork = age - (prevexp + currexp)
 tab agewhenstartwork if agewhenstartwork < 18
 ```
+
 ![age start to work](./img/age_start_work.png)
 
 The dataset has a variable, `numkids`, that contains the number of children the woman has as well as the ages of the first, second, and third child stored in `kidage1`, `kidage2` and `kidage3`. For the women with three kids, lets compare the ages of the second and third using the `table` command below. As we would expect the third child is never older than the second child.
@@ -1156,9 +1253,11 @@ The dataset has a variable, `numkids`, that contains the number of children the 
 ```
 table kidage2 kidage3 if numkids == 3
 ```
+
 ![age of kids cross table](./img/age_of_kids.png)
 
 Although not as concrete, you can also use the `count` command to verify this. Below we count the number of times the age of the third child is greater than the age of the second child when there are three children, being sure to exclude observation where `kidage3` is missing. As we would expect based on the result of the `table` command above, there are no such children.
+
 ```
 count if (kidage3 > kidage2) & (numkids == 3) & !missing(kidage3)
 ```
@@ -1170,6 +1269,7 @@ Likewise, we count the number os second childrent whose ages are greater than th
 ```
 count if (kidage2 > kidage1) & (numkids >= 2) & !missing(kidage2)
 ```
+
 ![age2 greater](./img/age2_greater.png)
 
 Another check we might perform is comparing the age of the woman with the age of her oldest child to determine the womans's age when she had her first child. We can create `agewhenfirstkid`, child. We then tabulate `agewhenfirstkid`. This reveals either cases that need further investigation or fodder for the tabloids about the girl who gave birth at age 3.
@@ -1178,6 +1278,7 @@ Another check we might perform is comparing the age of the woman with the age of
 generate agewhenfirstkid = age - kidage1
 tabulate agewhenfirstkid if agewhenfirstkid < 18
 ```
+
 ![age first kid](./img/age_first_kid.png)
 
 Checking continuous variables aganist each other can be challenging. It sometimes takes a little extra work and some creativity to come up with ways to check one continuous variable aganist another. But such checks can reveal inconsistencies between the variables that would not be revealed by checking each variable individually.
@@ -1195,6 +1296,7 @@ In section `4.3`, we saw that `race` was suppose to have the value `1, 2, 3,` bu
 use www, clear
 list idcode age yrschool race wage if race == 4
 ```
+
 ![women has race coded 4](./img/race_coded4.png)
 
 In section `4.3` we also saw two cases where the values for hourly income seemed outrageously high. The same strategy we just employed can be used to document those possibly probelmatic cases.
@@ -1203,6 +1305,7 @@ In section `4.3` we also saw two cases where the values for hourly income seemed
 * hourly income seems too high
 list idcode age yrschool race wage if wage > 50
 ```
+
 ![hourly income seems too high](./img/hourly_income_high.png)
 
 In sections `4.4-4.6`, we uncovered problems by checking variables aganist each other. In these cases, we did not find values that were intrinsically problematic, but we did find conflicts in the values among two or more variables.
@@ -1215,6 +1318,7 @@ For example, insection `4.4` there was a woman who graduated college who had rep
 * some conflicts between college graduate and years of school
 table collgrad yrschool
 ```
+
 ![yrschool](./img/yrschool.png)
 
 This documentation can be supplemented with a listing showing more information about the potentially problematic cases:
@@ -1223,12 +1327,14 @@ This documentation can be supplemented with a listing showing more information a
 * college grad with 8 years of school completed, seems like a problem
 list idcode collgrad yrschool if yrschool == 8 & collgrad == 1
 ```
+
 ![yrschool problem](./img/yrschool_pr.png)
 
 ```
 * college grad with 13, 14, 15 years of school completed, is this a problem?
 list idcode collgrad yrschool if inlist(yrschool,13, 14,15)
 ```
+
 > output omitted, too long
 
 One important part about this process is distinguish between clearly incongruent values and values that simply merit some further investigation. I try to prioritize problems, creating terminology that distinguishes clear conflicts (for example, the college grad with eight years of education) from observation that merely might be worth looking into.For example, a college grad with 13 years of eduction could be a gifted woman who skipped several years of school.
@@ -1250,6 +1356,7 @@ For example, consider the problem with `race` described earlier in this section,
 replace race = 1 if idcode == 543
 tab race
 ```
+
 ![race is 1](./img/race_1.png)
 
 Note that the replacement was based on `if idcode == 543` and not if `race == 4`. When corrections are identified based on an observation, the replacement should also be based on a variable that uniquely identifies the observation(for example, `idcode`)
@@ -1266,18 +1373,21 @@ Likewise, we might be told that `case 107`, with the woman who appeared to be a 
 replace collgrad = 0 if idcode == 107
 note collgrad: collgrad changed from 1 to 0 for idcode 107
 ```
+
 After applying this correction, the cross-tabulation of `collgrad` by `yrschool` looks okay
 
 ```
 table collgrad yrschool
 ```
+
 ![eight years](./img/eight_years.png)
 
-In `section 4.3` we saw two women whose ages were higher than expected (over 50) 
+In `section 4.3` we saw two women whose ages were higher than expected (over 50)
 
 ```
 list idcode age if age > 50
 ```
+
 ![women over 50](./img/over_50.png)
 
 After further inquires, we found that the digits in these numbers were transposed. We can correct them and include notes of the corrections, as shown below
@@ -1297,6 +1407,7 @@ Having corrected the values, we again list the women who are over 50 years old.
 ```
 list idcode age if age > 50
 ```
+
 ![list idcode](./img/list_idcode.png)
 
 As we would hope, this output is now empty because there are no such women. We can see the notes of all the corrections that we made by using the `notes` command.
@@ -1304,9 +1415,10 @@ As we would hope, this output is now empty because there are no such women. We c
 ```
 notes
 ```
+
 ![notes](./img/notes.png)
 
-After we made a `correction to the data`, we `checked` it again to ensure that the `correction did the trick`. In other words, `data cleaning and data correcting` are, ideally, an `integraded process`. To this end, this process is best done as part of a Stata do-file, where the commands for checking, and rechecking each variable are saved and an easily be executed. 
+After we made a `correction to the data`, we `checked` it again to ensure that the `correction did the trick`. In other words, `data cleaning and data correcting` are, ideally, an `integraded process`. To this end, this process is best done as part of a Stata do-file, where the commands for checking, and rechecking each variable are saved and an easily be executed.
 
 ### 4.8 Identifying duplicates
 
@@ -1320,6 +1432,7 @@ First let's consider a variation of `dentists.dta` called `dentists_dups.dta`. L
 use dentists_dups
 list
 ```
+
 ![list duplicates](./img/list_duplicates.png)
 
 We can use the `duplicates list` command to list the duplicates contained in this dataset.
@@ -1327,6 +1440,7 @@ We can use the `duplicates list` command to list the duplicates contained in thi
 ```
 duplicates list
 ```
+
 ![list of duplicates found](./img/list_duplicates_found.png)
 
 The above command `shows every observation` that contains a duplicates. For example, `three observation` are shown for the dentist `Mike Avity`.
@@ -1336,6 +1450,7 @@ Rather than listing every duplicate, we can list one instance of each duplicates
 ```
 duplicates examples
 ```
+
 ![group of duplicates](./img/grouped_duplicates.png)
 
 The `duplicates report` command creates a report (like the `tabulate` command) that tabulates the number of copies for each observation.
@@ -1343,9 +1458,10 @@ The `duplicates report` command creates a report (like the `tabulate` command) t
 ```
 duplicates report
 ```
+
 ![duplicates report](./img/duplicate_report.png)
 
-The output above shows that there are `four observation` in this dataset that are `unique` ( that is, have only one copy). 
+The output above shows that there are `four observation` in this dataset that are `unique` ( that is, have only one copy).
 
 There are four observation in which there are `two copies of the observation`. These correspond to the observation for `Olive` and for `Ruth`, each of which had `two copies`. The report also shows that there are `three observations` that have `three copies;` these are the `three observations` for Mike
 
@@ -1356,6 +1472,7 @@ This is where the `duplicates tag` command is useful. This command creates a var
 ```
 duplicates tag, generate(dup)
 ```
+
 ![duplicate tag](./img/duplicates%20tag.png)
 
 The listing below shows the number of duplicates(dup) for each observation
@@ -1363,6 +1480,7 @@ The listing below shows the number of duplicates(dup) for each observation
 ```
 list, sep(0)
 ```
+
 ![list after duplicate tag](./img/list_tag.png)
 
 To make this output easier to follow, let's sort the data by `name` and `years` and then list the observations, separating them into groups based on `name` and `years`
@@ -1371,9 +1489,10 @@ To make this output easier to follow, let's sort the data by `name` and `years` 
 sort name years
 list, sepby(name years)
 ```
+
 ![sort](./img/sort.png)
 
-Now, it is easier to understand the `dup` variable. For the observation that were unique (such as Issac or Y. Don) the value of `dup` is `0`. 
+Now, it is easier to understand the `dup` variable. For the observation that were unique (such as Issac or Y. Don) the value of `dup` is `0`.
 
 The value of `dup` is 0 for `Mary Smith` because, even through these `two dentists` share the `same name`, they are not `duplicate observatation`. (For example, they have a different number of years of work experience.)
 
@@ -1386,6 +1505,7 @@ As you can see, duplicate observations are charactized by having a value of `1` 
 ```
 list if dup > 0
 ```
+
 ![list of duplicates](./img/list_dups.png)
 
 If there were many variables in the dataset, you migh prefer to view the duplicate observations in the Data Editor by using the `browser` command.
@@ -1393,6 +1513,7 @@ If there were many variables in the dataset, you migh prefer to view the duplica
 ```
 browse if dup > 0
 ```
+
 ![browse duplicates](./img/browse_duplicates.png)
 
 After inspection the observation identified as `duplicates`, I feel confident that these observation are genuine duplicates, and we can safely eliminate them from the dataset. We can use the `dupliates drop` command to eliminate duplicates from the dataset.
@@ -1400,6 +1521,7 @@ After inspection the observation identified as `duplicates`, I feel confident th
 ```
 duplicates drop
 ```
+
 ![drop duplicates](./img/drop_duplicates.png)
 
 I expected four observation to be eliminated as `duplicates` (one for Olive, one for Ruth, and two for Mike). Indeed, that is the number of observations deleted by the `duplicates drop` command. The listing below confirms that the duplicates observation have been dropped.
@@ -1407,9 +1529,10 @@ I expected four observation to be eliminated as `duplicates` (one for Olive, one
 ```
 list
 ```
+
 ![list after drop duplicates](./img/list_afer_drop.png)
 
-The previous examples using `dentists_dups.dta` were unrealistically small but useful for clearly seeing how these commands work. Now, Let's use `wws.dta` to explore how to identify duplicates in a more realistic example. First, let's read this dataset into memory. 
+The previous examples using `dentists_dups.dta` were unrealistically small but useful for clearly seeing how these commands work. Now, Let's use `wws.dta` to explore how to identify duplicates in a more realistic example. First, let's read this dataset into memory.
 
 ```
 use wws
@@ -1426,8 +1549,8 @@ Had there been dupliate values for the variable `idcode`, the `isid` command wou
 ```
 duplicates list idcode
 ```
-![duplicates list idcode](./img/duplicates_idcode.png)
 
+![duplicates list idcode](./img/duplicates_idcode.png)
 
 Now, lets see if there are any duplicates in this dataset, including all the variables when checking for duplicates. Using `duplicates list` command, we can see that thid dataset contains `no duplicates`
 
@@ -1437,16 +1560,18 @@ duplicates list
 
 ![duplicate list](./img/duplicates_list.png)
 
-Let's inspect a variant of `wws.dta` names `wws_dups.dta`. As you may suspect, this dataset will give use the opportunity to discover some duplicates. In particular, I want to first search for duplicates based on `idcode` and then search for duplicates based on all the variables in the dataset. Below, we first read this dataset into memory. 
+Let's inspect a variant of `wws.dta` names `wws_dups.dta`. As you may suspect, this dataset will give use the opportunity to discover some duplicates. In particular, I want to first search for duplicates based on `idcode` and then search for duplicates based on all the variables in the dataset. Below, we first read this dataset into memory.
 
 ```
 use wws_dups
 ```
+
 Let's firs use the `isid` commands to see if, in this dataset, the variable `idcode` uniquely identifies each observation. As we can see below, `idcode` does not uniquely identify the observations.
 
 ```
 isid idcode
 ```
+
 ![not unique](./img/no_unique.png)
 
 Let's use the `duplicates report` command to determine how many duplicates we have with respect to `idcode`.
@@ -1454,6 +1579,7 @@ Let's use the `duplicates report` command to determine how many duplicates we ha
 ```
 duplicates report idcode
 ```
+
 ![duplicates report](./img/duplicate_report.png)
 
 We have a total of six observations in which the `idcode` variable appears twice. We can use the `duplicates list` command to see the observation with duplicate values on `idcode`.
@@ -1461,6 +1587,7 @@ We have a total of six observations in which the `idcode` variable appears twice
 ```
 duplicates list idcode, sepby(idcode)
 ```
+
 ![duplicate list](./img/duplicate_list_idcode.png)
 
 I do not know if these observation are duplicates of all the variables or just duplicates of `idcode`. Let's obtain a report showing us the number of duplicates taking all variable into consideration.
@@ -1468,6 +1595,7 @@ I do not know if these observation are duplicates of all the variables or just d
 ```
 duplicates report
 ```
+
 ![duplicates report results](./img/duplicate_report_results.png)
 
 The report above shows that there are four observations that are duplicates when taking all variables into considerations. Previously, we saw that there were six observations that were duplicates just for `idcode`.
@@ -1477,11 +1605,13 @@ Let's use `duplicates tag` command to identify each of these duplicates. Below, 
 ```
 duplicates tag idcode, generate(iddup)
 ```
+
 ![duplicates based on idcode](./img/duplicate_idcode.png)
 
 ```
 duplicates tag, generate(alldup)
 ```
+
 ![duplicate all variables](./img/duplicate_all_variables.png)
 
 Below, we tabulates these two variables aganist each other. This tables gives a more complete picture of what is going on. There are `four observation` that are duplicates for all variables, there are `two observations` that are duplicates for `idcode` but not for the other variables.
@@ -1489,6 +1619,7 @@ Below, we tabulates these two variables aganist each other. This tables gives a 
 ```
 tabulate iddup alldup
 ```
+
 ![tab iddup alldup](./img/tab_iddup_alldup.png)
 
 Let's look at the `two observations` that are duplicates for `idcode` but not for the rest of the variables. You could do this using `browse` command, and these observations would disply in the `Data Editor`.
@@ -1502,6 +1633,7 @@ Or below, the `list` command is used, showing sampling of the variables from the
 ```
 list idcode age race yrschool occupation wage if iddup == 1 & alldup == 0
 ```
+
 ![dup all](./img/dup_all.png)
 
 We can clearly seee that these are two women who were accidentalyy assigned the same value of `idcode`. We can remedy this by assigning one of the women a new and unique value for `idcode`. Le't use the `summarize` command to determine the range of value for `idcode` so that we can assign a unique value.
@@ -1509,6 +1641,7 @@ We can clearly seee that these are two women who were accidentalyy assigned the 
 ```
 summarize idcode
 ```
+
 ![summarize idcode](./img/sum_idcode.png)
 
 The highest value is `5,159`, so let's assing a value of `5,160` to the woman who had an `idcode of 3,905` and who was `41 years` old.
@@ -1522,11 +1655,13 @@ Now, when we use the `duplicates report` command, we see the same number of dupl
 ```
 duplicates report idcode
 ```
+
 ![duplicates report idcode](./img/dup_report_idcode.png)
 
 ```
-duplicates report 
+duplicates report
 ```
+
 ![duplicate report all ](./img/duplicate_all_variables.png)
 
 We could further inspect these duplicates observations. Say that we do this and we determine that we are satisfied that these are genuine duplicates. We can then eliminate them using the `duplicates drop` command, as shown below.
@@ -1534,6 +1669,7 @@ We could further inspect these duplicates observations. Say that we do this and 
 ```
 duplicates drop
 ```
+
 ![duplicates drop](./img/duplicates_drop.png)
 
 Now, the `duplicates report` command confirms that there are no duplicates in this dataset.
@@ -1541,6 +1677,7 @@ Now, the `duplicates report` command confirms that there are no duplicates in th
 ```
 duplicates report
 ```
+
 ![duplicates report confirm](./img/duplicates_report_confirm.png)
 
 This section has illustrated how you can use the suite of `duplicates` commands to create listings and reports of duplicates as well as how to identify and eliminates duplicates. You can learn more about these commands by typing `help duplicates`.
@@ -1557,37 +1694,42 @@ The process of creating and recoding variables provides opportunies for errors t
 
 When you `merge two datasets together`, this might give you the chance to do additional data checking. Say that you merget two datasets, a dataset with husbands and a dataset with wives. Imagine that both datasets had a variable assking how long they have been married. You could use the techniques described in section 4.6 to check the husbands answer against the wife's answer. By `merging ` the husband and wises datasets, more opportunies arise for data checking than lyou had when the datasets were separated.
 
-`Data cleaning` is ideally done using a `do-file`, which gives you the ability to automatically repeat the `data-checking` and `data-correcting steps`. 
+`Data cleaning` is ideally done using a `do-file`, which gives you the ability to automatically repeat the `data-checking` and `data-correcting steps`.
 
 ## Chapter 5 | Labelling datasets
 
 We must be careful not to confuse data witht he abstrations we use to analyze them. --William James
 
 ### 5.1 Introduction
+
 This chapter illustrates how to label your datasets. Labeled datasets are easier for others to understand, provide better documentation for yourself, and yield output that is more readable and understandable. Plus, by labelling your datasets so that others can easily understand them, you get the added benefit of making your dataset easier for you to understand at some point in the future when your memories of the data have faded.
 
-The examples in this chapter use a hypothetical survey of eight graduate students. 
+The examples in this chapter use a hypothetical survey of eight graduate students.
 
 > Note!!
 
 This chapter describes how to use Stata commands for labelling datasets. If you are interested in using the point and click Variable Manager, you can see section 2.9.
 
 ### 5.2 Describing datasets
+
 Let's have a look at an example of a well-labelled dataset. This dataset includes and overall `label for the dataset`, `labels for the variables`, `labels for values of some variables`, `comments (notes) for some variables` and formatting to improve the display of variables.
 
-This section illustrates how such labelling improves the usability of the dataset and explores Stata tools for displaying well-documented dataset. 
+This section illustrates how such labelling improves the usability of the dataset and explores Stata tools for displaying well-documented dataset.
 
-`survey4.dta` contains the results of hypothetical survey of eight graduate students with information about their gender, race, date of birth, and income.The survey also asks the female students if they have given birth to a child , if so, the name, sex and birthday of their child. 
+`survey4.dta` contains the results of hypothetical survey of eight graduate students with information about their gender, race, date of birth, and income.The survey also asks the female students if they have given birth to a child , if so, the name, sex and birthday of their child.
 
 Below, we use the dataset and see that it has a label describing the dataset as a `survey of graduate students`
 
 ```
 use survey7
 ```
+
 We can get even more information about this dataset using the `describe` command, as shown below.
+
 ```
 describe
 ```
+
 ![describe](./img/describe.png)
 
 The header portion of the output gives overall information about the dataset and is broken up into two columns(groups) The `first (left) column` tells us the `name of the dataset`, `the number of observations` and `the number of variables`.
@@ -1601,6 +1743,7 @@ With the `short` option, we can see just the header information. This is useful 
 ```
 describe, short
 ```
+
 ![describe short](./img/describe_short.png)
 
 Specifying a list of variables shows just the body of the output (withoug the header). Below, we see information for the variables id, gender, and race
@@ -1608,6 +1751,7 @@ Specifying a list of variables shows just the body of the output (withoug the he
 ```
 describe id gender race
 ```
+
 ![describe variables](./img/describe_variables.png)
 
 The `codebook` commands allows you to more deeply inspect the dataset, producing an electronic codebook for your dataset. You can type `codebook`, and it provides such information for all the variables in the dataset.
@@ -1615,6 +1759,7 @@ The `codebook` commands allows you to more deeply inspect the dataset, producing
 ```
 codebook
 ```
+
 > (output omitted)
 
 If you specify one or more variabes, the codebook information is limited to just the variables you specify. For example, the `codebook` command below shows codebook information for the `race` variable. This output shows us that the race ranges from `1 to 5`, it has five unique value, and none of its value are missing. The ouput also shows a tabulation of the values of `race` and the `labels associated with those values(that is, value labels)`
@@ -1622,6 +1767,7 @@ If you specify one or more variabes, the codebook information is limited to just
 ```
 codebook race
 ```
+
 ![codebook race](./img/codebook_race.png)
 
 Adding the `notes` option to the codebook command show notes associated with a variable, as shown below. The variable `havechild` has three notes (comments) attached to it.
@@ -1629,6 +1775,7 @@ Adding the `notes` option to the codebook command show notes associated with a v
 ```
 codebook havechild, notes
 ```
+
 ![codebook havechild,notes](./img/codebook_notes.png)
 
 The `mv`(missing values) options shows information about whether the missing values on a particular variable are always associated with missingness on other variables.
@@ -1640,6 +1787,7 @@ This is useful for understanding patterns of missing values within you datase.
 ```
 codebook ksex, mv
 ```
+
 ![codebook mv](./img/codebook_mv.png)
 
 So far, all the information in the variable labels and value labels has appeared in English. Stata supports labels in multiple languanges. As the `label language` command shows, this dataset contains labels in two languaes: `en(English) and de(German)`
@@ -1647,6 +1795,7 @@ So far, all the information in the variable labels and value labels has appeared
 ```
 label language
 ```
+
 ![label language](./img/label_language.png)
 
 After using the `label language de` command, variable labels and value labels are then displayed using German, as illustrated using the `codebook` command.
@@ -1655,6 +1804,7 @@ After using the `label language de` command, variable labels and value labels ar
 label language de
 codebook ksex
 ```
+
 ![label language](./img/label_languages.png)
 
 The `label language en` command returns us to English labels
@@ -1672,6 +1822,7 @@ Note that the searches are case insensitive, so the prior search would match, fo
 ```
 lookfor birth
 ```
+
 ![lookfor birth](./img/lookfor_birth.png)
 
 In this case, it found three variables, each of which included `birth` in the variable label. Had there been a variable named `birthday` or `dateofbirth`, such variables would have also been included in the list.
@@ -1681,6 +1832,7 @@ We can also search comments(notes) within the dataset using the `notes search` c
 ```
 notes search birth
 ```
+
 ![notes search birth](./img//notes_search_birth.png)
 
 This command found a note associated with `havechild` that had the word `birth` in it.
@@ -1692,6 +1844,7 @@ The rest of this chapter shows how to actually create a labelled dataset.
 The following sections illustrates how to label the variables, label the values, label the values with different languages, add notes to the dataset, and format the display of variables.
 
 ### 5.3 Labelling variables
+
 This section shows how you can assign `labels to your variables` and assign a `label to the overall dataset`.
 
 We will start with a completely unlabelled version of the student survey dataset named `survey1.dta`.
@@ -1705,6 +1858,7 @@ Using the `describe` command shows that this dataset has no labels, including no
 ```
 describe
 ```
+
 ![describe empty](./img/describe_empty.png)
 
 The `label variable` command can be used to assign labels to variabes. This command also provide more descriptive information about each variable. Below, we add variable labels for the variable `id` and gender.
@@ -1719,4 +1873,44 @@ The `describe` command shows us the these variables indeed have the labels we as
 ```
 describe id gender
 ```
+
 ![describe id gender](./img/describe_id_gender.png)
+
+Let's apply to the rest of the variables, as shown below
+
+```
+label variable race "Race of student"
+label variable havechild "Given birth to a child"
+label variable ksex "Sex of child"
+label variable bdays "Birthday of student"
+label variable income "Income of student"
+label variable kbdays "Birthday of child"
+label variable kidname "Name of child"
+```
+
+Now, all the variables in this dataset are labelled
+
+The `label variable` command can also be used to change a label. Below, we change the label for the `id` variable and show the results.
+
+```
+label variable id "Unique Identification variable"
+
+describe id
+
+```
+
+![change variable name](./img/change_variable_name.png)
+
+Finally, you can assign a label for the overall dataset with the `label data` command. This label will appear whenever you `use` the dataset
+
+```
+label data "Survey of graduate students"
+```
+
+We now save the dataset `survey2.dta` for use in the next section
+
+```
+save survey2, replace
+```
+
+For more information about labelling variables, see `help label`. The next section illustrates how to create and apply value labels to the variables
