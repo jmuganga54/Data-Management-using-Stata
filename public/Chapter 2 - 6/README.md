@@ -1914,3 +1914,87 @@ save survey2, replace
 ```
 
 For more information about labelling variables, see `help label`. The next section illustrates how to create and apply value labels to the variables
+
+### 5.4 Labelling values
+This section shows how we can assign labels to the values of our variables. Sometimes, variables are coded with values that have no intrinsic meaning, such as `1 meaning male` and `2 meaning female`.
+
+Withoutany labels, we would not know what the meaning of a 1 or a 2 is. Below, we create a label named `mf` (male or female) that associates the value of `1` with `male` and the value of `2` with female.
+
+Once that label is created, we then associate the gender variable with the value label `mf`.
+
+```
+use survey2.dta, clear
+label define mf 1 'Male' 2 'Female'
+label value gender mf
+```
+
+The `codebook` shows us that we successfully associate the `gender` variable with the value label `mf`. We can see that 1 is associate with "Male" and 2 is associated with "Female".
+
+```
+codebook gender
+```
+![codebook gender](./img/codebook_gender.png)
+
+We can use the same strategy to assign labels for the variable `race`. Note how this is two step process. We first create the values label named `racelab` using the `label define` command, and then we use `label values` command, and then we use the `label values` command to say that `race` should use the value label named `racelab` to the values.
+
+```
+label define racelab 1 "White" 2 "Asian" 3 "Hispanic" 4 "Black"
+label value race racelab
+```
+
+The Value 5 is not labeled for `race`. That should labeled "Other". Using the `add` option, we add the label for this value below.
+
+```
+label define racelab 5 "Other", add
+codebook race
+```
+
+Say that we would prefer to label category 4 as "African American". We cn use `modify` option to modify an existing label.
+
+```
+label define racelab 4 "African Amerian", modify
+codebook
+```
+
+Let's have a look at the output produced by the `tabulate race` command 
+tabulate race
+```
+tabulate race
+```
+![tab_race](./img/tab_race.png)
+
+The `tabulate` command shows only the labels (but not the value) of `race`. Earlier in this section, we labeled the `race` variable using the value label `racelab`. We can disply the values and labels for `racelab` using the `label list` command.
+
+```
+label list racelab
+```
+![label_list](./img/label_list.png)
+
+We could manually alter these labels to insert the numeric value as a prefix in front of each label(for example, 1. White, 2. Asian). Stata offers a convenience command called `numlabel` to insert these numeric values. The `numlabel` command below takes the value label `racelab` and adds the numeric value infront of each of the labels.
+
+```
+numlabel racelab, add
+label list racelab
+```
+![label_list_racelab](./img/label_list_racelab.png)
+
+Now when we issue the `tabulate race` command, the values and labels are shown for each level of race
+
+```
+tabulate race
+```
+![tabulate_race](./img/tabulate_race.png)
+
+This also applies to the `list` command. Below, we see that the values and labels for `race` are displayed.list race
+
+```
+list race
+```
+![list_race](./img/list_race.png)
+
+We can remove the numeric prefix from `racelab` with the `numlabel` command with the `remove` option, as shown below. Then, the `label list` command shows the numeric values have been removed from the labels defind by `racelab`
+
+```
+numlabel racelab, remove
+labe list racelab
+```

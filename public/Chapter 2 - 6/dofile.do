@@ -550,3 +550,20 @@ label variable id "Identification variable"
 label variable gender "Gender of student"
 
 describe id gender
+
+label variable race "Race of student"
+label variable havechild "Given birth to a child"
+label variable ksex "Sex of child"
+label variable bdays "Birthday of student"
+label variable income "Income of student"
+label variable kbdays "Birthday of child"
+label variable kidname "Name of child"
+
+
+label variable id "Unique Identification variable"
+
+describe id
+
+label data "Survey of graduate students"
+
+save survey2,replace
