@@ -2042,3 +2042,68 @@ We now save the dataset as `survey3.dta` for use in the next section.
 ```
 save survey3,replace
 ```
+
+### 5.5 Labelling utilities
+
+Having created some value labels, let's explore some of the utility programs that Stata have for managing them.
+
+Using `survey3.dta`, we use the `label dir` command to show a list of the value labels defined in that dataset.
+
+This shows us the four value labels we created in the previous section.
+
+```
+use survey3, clear
+label dir
+```
+
+![label_dir](./img/label_dir.png)
+
+The `label list` command can be used to inspect a value label. Below, we see the labels and values for the value label `mf`.
+
+```
+label list mf
+```
+
+![label_list](./img/label_list_new.png)
+
+We can list mulitple value labels at once, as shown below:
+
+```
+label list havelab recelab
+```
+
+If no variables are specified, then all values labels will be listed
+
+```
+label list
+```
+
+The `label save` command takes the value labels defind in the working dataset and writes a Stata do-file with the `label define` statements to create those value labels.
+
+This can be useful if you have a dataset with value labels that you would like to apply to a different dataset but you do not have the original `label define` commands to create the labels.
+
+```
+label save mf racelab using surverylabs
+```
+
+The `surverylabs` file will be generated on the same directory of the dofile.
+
+The `labelbook` command provides information about the value labels in th working dataset. The `labelbook` command below shows information about the value label `racelab`. (if we had issued the labelbook command alone, it would have provide information about all the labels in the working dataset)
+
+```
+labelbook racelab
+```
+
+![labelbook](./img/label)
+
+Notice how three groups of information are in the output, corresponding to the headins `values`, `labels` and `definition`.
+
+The value section tells us that the values range from 1 to 5, with a total of five labels that have no gaps and no missing value.
+
+The label section tell us that the lengths of the labels range from 8 to 19 characters wide, are all unique, and are still unique if truncated to 12 charecters.
+
+By default, the definition section lists all values and labels, but you can use the `list()` option to restrict how many values are listed.
+
+```
+labelbook racelab mf, list(0)
+```
