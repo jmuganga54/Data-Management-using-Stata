@@ -567,3 +567,35 @@ describe id
 label data "Survey of graduate students"
 
 save survey2,replace
+
+/**
+5.4 Labelling values
+*/
+
+use survey2.dta, clear
+label define mf 1 "Male" 2 "Female"
+label value gender mf
+
+codebook gender
+
+label define racelab 1 "White" 2 "Asian" 3 "Hispanic" 4 "Black"
+label value race racelab
+codebook race
+
+label define racelab 5 "Other", add
+codebook race
+
+label define racelab 4 "African Amerian", modify
+codebook race
+
+tabulate race
+
+label list racelab
+
+numlabel racelab, add
+
+label list racelab
+
+tabulate race
+
+list race
