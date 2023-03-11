@@ -2107,3 +2107,24 @@ By default, the definition section lists all values and labels, but you can use 
 ```
 labelbook racelab mf, list(0)
 ```
+The value and labels sections are tying to alert you to potential problems in your labels. 
+
+If you have many labels, you may tire of reading this detailed output. The `problems` option can be used with labelbook command to summarize the problems found  with the labels. In this case, the labels were in good share and there were no problems to report
+
+```
+labelbook, problems
+```
+
+We can ask for detailed information about the problems found using `detail problems` option
+
+```
+labelbook mf2, detail problems
+```
+
+Which can use `codebook` command to inspect where the problem begins, to see what happed on the label value example `racelab`
+
+```
+codebook race
+```
+
+This concludes our exploration of labelling utilities. For more information. see `help label list` and `help labelbook`.

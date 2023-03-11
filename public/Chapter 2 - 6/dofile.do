@@ -590,9 +590,25 @@ codebook race
 
 tabulate race
 
+save survey3, replace
+
+/**
+*5.5 labeling utilities
+*/
+user survey3,clear
+
+label dir
+
+label list mf
+
+label list havelab recelab
+
+label save mf racelab using surverylabs
+
+labelbook racelab
+
 label list racelab
 
-numlabel racelab, add
 
 label list racelab
 
