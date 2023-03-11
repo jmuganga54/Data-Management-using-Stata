@@ -619,3 +619,36 @@ label language
 label language en, rename
 
 label language de, new
+
+describe
+
+label variable id "identifikationsvariable"
+label variable gender "Geschlecht"
+
+label define def 1 "Mann" 2 "Frau"
+label value gender demf
+
+label language en
+describe
+
+label language es, new
+
+label language en
+label language es, delete
+
+save survey4,replace
+
+/**
+*5.7 Adding Comments to your dataset using notes
+*/
+
+use survey4
+note: This was based on the dataset called survey1.txt
+
+note race: The other category includes people who specified multiple races
+
+notes race
+
+notes _dta
+
+save survey5,replace

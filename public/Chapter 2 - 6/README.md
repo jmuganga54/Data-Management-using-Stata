@@ -2107,9 +2107,10 @@ By default, the definition section lists all values and labels, but you can use 
 ```
 labelbook racelab mf, list(0)
 ```
-The value and labels sections are tying to alert you to potential problems in your labels. 
 
-If you have many labels, you may tire of reading this detailed output. The `problems` option can be used with labelbook command to summarize the problems found  with the labels. In this case, the labels were in good share and there were no problems to report
+The value and labels sections are tying to alert you to potential problems in your labels.
+
+If you have many labels, you may tire of reading this detailed output. The `problems` option can be used with labelbook command to summarize the problems found with the labels. In this case, the labels were in good share and there were no problems to report
 
 ```
 labelbook, problems
@@ -2137,6 +2138,7 @@ Stata supports variables labels and value labels in different languages. We can 
 use survey3, clear
 label language
 ```
+
 ![Languages](./img/languages.png)
 
 Currently the only language defined is `default`. Let's rename the current language to be `en` English
@@ -2144,6 +2146,7 @@ Currently the only language defined is `default`. Let's rename the current langu
 ```
 label language en, rename
 ```
+
 Let's now add German (de) as the new language. This not only creates this new language but also selects it.
 
 ```
@@ -2155,6 +2158,7 @@ As the `describe` command shows, the variable labels and value labels are empty 
 ```
 describe
 ```
+
 ![describe](./img/des_lang.png)
 
 Let's now add German variable labels
@@ -2205,3 +2209,79 @@ save survey4
 
 For more information, see `help label language`.
 
+### 5.7 Adding Comments to your dataset using notes
+
+This section shows how you can add notes to your dataset. We will use `survey4.dta`, which was saved at the end of the previous section.
+
+You can add an overall note to your dataset with the `note` command.
+
+```
+use survey4
+note: This was based on the dataset called survey1.txt
+```
+
+The `notes` command displays notes that are contained in the dataset
+
+```
+notes
+```
+
+You can use the `note` command to add notes for specific variable as well. This is illustrated below for the variable race.
+
+```
+note race: The other category includes people who specified multiple races
+```
+
+Now, the `notes` command shows the notes for the overall dataset as well as the notes associated with specific variables.
+
+```
+notes
+```
+
+We can see just notes for `race` via the `notes race` command
+
+```
+notes race
+```
+
+Now, the `notes` command shows the notes for the overall dataset as well as the notes associated with specific variables.
+
+We can view the notes for `havechild` and `ksex` like this:
+
+```
+notes havechild ksex
+```
+
+We can view just the notes for the overall dataset with the `notes _dta` command,
+
+```
+notes _dta
+```
+
+The second note for `havechild` is not useful, so we remove it with the `notes drop` command. We use the `notes` command to confirm this note was indeed dropped:
+
+```
+notes drop havechild in 2
+notes havechild
+```
+
+We use the `notes renumber` command below to renumber the notes for `havechild`, eliminating the gap in the numbering.
+
+```
+notes renumber havechild
+notes havechild
+```
+
+The `notes search` command allows you to search the contents of the notes. We use it below to show all the notes that contain the text .u.
+
+```
+notes search .u
+```
+
+We now save the dataset as `survey5.dta` for use in the next section
+
+```
+save survey5
+```
+
+For more information about `notes`, see `help note`.
