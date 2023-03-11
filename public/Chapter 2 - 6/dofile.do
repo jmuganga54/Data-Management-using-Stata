@@ -607,11 +607,15 @@ label save mf racelab using surverylabs
 
 labelbook racelab
 
-label list racelab
+labelbook racelab mf, list(0)
 
+/**
+* 5.6 Labelling variables and values in different languages.
+*/
 
-label list racelab
+use survey3, clear
+label language
 
-tabulate race
+label language en, rename
 
-list race
+label language de, new

@@ -2128,3 +2128,80 @@ codebook race
 ```
 
 This concludes our exploration of labelling utilities. For more information. see `help label list` and `help labelbook`.
+
+### 5.6 Labelling variables and values in different languages.
+
+Stata supports variables labels and value labels in different languages. We can use the `label language` command to see what languages the dataset currently contains.
+
+```
+use survey3, clear
+label language
+```
+![Languages](./img/languages.png)
+
+Currently the only language defined is `default`. Let's rename the current language to be `en` English
+
+```
+label language en, rename
+```
+Let's now add German (de) as the new language. This not only creates this new language but also selects it.
+
+```
+label language de, new
+```
+
+As the `describe` command shows, the variable labels and value labels are empty for this langauge (however, the variable and value labels for the language `en` still exist)
+
+```
+describe
+```
+![describe](./img/des_lang.png)
+
+Let's now add German variable labels
+
+```
+label variable id "identifikationsvariable"
+label variable gender "Geschlecht"
+```
+
+The `describe` command shows us that these variables were successfully assigned.
+
+Now, we assign German value labels for the variable `gender`, `race`, `havechild`, and `ksex`.
+
+```
+label define def 1 "Mann" 2 "Frau"
+label value gender demf
+```
+
+The `codebook` command shows us that this was successful.
+
+Below, we make `en` the selected language. We can see that the English language labels are still intact.
+
+```
+label language en
+describe
+```
+
+Let's make a third language named `en` for Spanish
+
+```
+label language es, new
+```
+
+We are now using `es` language. The `describe` command below shows that in this new language, we have no variable lables or value labels. So we can label the variable and value labels.
+
+Let's switch back to English labels and then delete the Spanish labels from this dataset.
+
+```
+label language en
+label language es, delete
+```
+
+Now, let's save the dataset as `survey4.dta` for ue in the next section. The selected language will be English, but the dataset also includes German.
+
+```
+save survey4
+```
+
+For more information, see `help label language`.
+
