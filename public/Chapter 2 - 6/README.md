@@ -2285,3 +2285,108 @@ save survey5
 ```
 
 For more information about `notes`, see `help note`.
+
+### 5.8 Formatting the display of variables
+
+Formats give you control over how variables are displayed. Let's illustrate this using `suvery5.dta`, which we saved at the end of the last section.
+
+The impact of formats is most evident when using the `list` command. Below, we list the variable `income` for the first five observations fo this dataset.
+
+```
+use survey5, clear
+list id income in 1/5
+
+```
+
+By using the `describe` command, we can see that the `income` variable is currently displayed using the `%9.0g` format. Without going into too many details, this is a general format that displays incomes using a width of nine and decides for us the best way to display the values of `income` within that width.
+
+```
+describe income
+```
+
+![describe_income](./img/describe_income.png)
+
+Other formats, such as fixed format, give us more control over the display format. For example, below we use the `%12.2f` format, which display incomes using a fixed format with a maximum width of `12 characters` including the `decimal point`.
+
+Note how observations 3, 4, and 5 now display `income` using 2 descimal places.
+
+```
+format income %12.2f
+list id income in 1/5
+```
+
+![format income](./img/format_income.png)
+
+If we format using `%7.0f`, we can view incomes up to a million dollars (seven-digit incomes), and incomes will be rounded to the nearest dollar.
+
+```
+format income %7.0f
+list id income in 1/5
+```
+
+We could disply the income to the nearest dime by specifying a `%9.1f`. Compared with the prior example, we need to increase the width of this format from 7 to 9 (not 7 to 8) to accommodate the decimal point.
+
+```
+format income %9.1f
+list id income in 1/5
+```
+
+For large numbers, it can help to see commas separating each group of three numbers. By adding a `c` to the format, we request that commas be displayed as well. Compared with the prior example, we expanded the overall width from 9 to 11 to accomodate the two commas that are inserted for observation 3.
+
+```
+format income %11.1fc
+list id income in 1/5
+```
+
+![format_comma](./img/format_comma.png)
+
+Let's turn our attention to how to control the display of string variables, such as the variable `kidname`. As we see below, the display format for `kidname is %10s`, meaning that it is a string variable displayed with a width of 10.
+
+```
+describe kidname
+```
+
+![format_string](./img/format_string.png)
+
+The listing below illustrates that this format displays the names as right-justied
+
+```
+list id kidname in 1/5
+```
+
+![list_kidname](./img/list_kidname.png)
+
+To specify that the variable should be shown as left-justified, you precede the width with a dash. Below, we change the display format for `kidname` to have a width of 10 and to be `left-justified`.
+
+```
+format kidname %-10s
+describe kidname
+list id kidname in 1/5
+```
+
+![left_justified](./img/left_justified.png)
+
+There are many options for the display of date variables. In this dataset, the variables `bdays` and `kbdays` contain the birth date of the mother and the child, but they are currently stored as string variables.
+
+First, we need to convert these variables into date variabale, as shown below.
+
+generate bday = date(bdays,"MDY")
+generate kbday = date(kbdays, "MDY")
+
+list id bdays bday kbdays kbday in 1/5
+
+![format_date](./img/format_date.png)
+
+The conversion would appear faulty because the values for `bday` and `kbday` do not appear correct, but they are.
+
+Date variables are stored as and, by default, are displayed as the number of days since January 1, 1960.
+
+Below, we request that the dates be displayed using a general date format named `%td`. Now, the dates appear as we would expect.
+
+```
+format bday kbday %td
+list id bdays bday kbdays kbday in 1/5
+
+```
+
+![format_dates](./img/format_new_date.png)
