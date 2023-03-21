@@ -2414,3 +2414,55 @@ The example in this section focused on how the `format` command can be used to c
 Note that the `format` command can be also be used to control the exported value of variable when exporting delimited dataset via the `export delimited` command
 
 This concludes this section on formating variable. For more information, see `help format`.
+
+### 5.9 Changing the order of variables in a dataset
+`survey6.dta` is well labelled, but the variable are unordered. 
+
+If you look at the output of the `describe` command below, you can see that the information about the graduate student being surveyed is intermixed with information about that student's child.
+
+```
+use survey6, clear
+describe
+```
+
+Datasets often have natural groupings of variables. The clarity of the dataset is improved when related variables are positioned next to each other in the dataset. The `order` command below specifies the order in which we want the variables to appear in the dataset.
+
+The command indicates that the variable `id` should be first, followed by `gender`, `race`, `bday`, `income` and then `havechild`. Any remaining variables (which happen to be the child variables) will follow `havechild` in the order in which they currently appear in the dataset.
+
+```
+order id gender race bday income havechild
+describe
+```
+
+>The variable will be ordered as specified order.
+
+This ordering is pretty good, except that it would be nice for the list of child variable to start with `kidname` insted of `ksex`. The `order` command below is used to move `kidname` before `ksex`. (we could get the same result by specifyng after (havechild) instead of before (ksex))
+
+```
+order kidname, before(ksex)
+describe
+```
+
+Now, the variables are organized in a more natural fashion, and it is pretty easy to see this natural ordering. However, with datasets containing more variables, it can be harder to see the groupings of the variables. In such cases, I like to create variable that act as headers to introduce each new grouping of variable.
+
+Below, the variable `STUDENTVARS` and `KIDVARS` are created, and then the `order` command positions them at the begining of their group of variables. Then, I use the `label variable` command to label each variable.
+
+```
+generate STUDENTVARS = .
+geneerate KIDVARS = .
+order STUDENTVARS, before(gender)
+order KIDVARS, before (kidname)
+label variabe STUDENTVARS "STUDENT VARIABLES ================"
+label variable KIDVARS "KID VARIABLES ============"
+```
+
+> Tip! generate and order in one step
+
+The `generate` command offers options for specifiying the position of the variable in the dataset. For example, the `generate` command shown below create the variable `STUDENTVARS` and uses the `before(gender)` option to position that variable before gender
+
+```
+generate STUDENTVARS = ., before(gender)
+```
+You can instead use the `after()` option. For example, the `generate` command shown below creates the variable `KIDVARS` and uses the `after(havechild)` option to position that variable after `havechild`.
+
+generate KIDVARS = ., after(havechild)
