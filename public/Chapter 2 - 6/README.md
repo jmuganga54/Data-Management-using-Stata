@@ -2390,3 +2390,27 @@ list id bdays bday kbdays kbday in 1/5
 ```
 
 ![format_dates](./img/format_new_date.png)
+
+Stata supports many customs ways to display dates. For example, below we specify that `bday` should be displayed with the format `%tdNN/DD/YY`.
+
+This format displays the variable as a date with the numeric month followed by as slash, then the numberic day followed by a slash, and then the two digit year. This yields, for example, `01/24/61`
+
+```
+format bday %tdNN/DD/YY
+list id bdays bday in 1/5
+```
+
+Below, we change the display format of `kbday` to `%tdMonth_DD, CCYY`. 
+
+This format displays the name of the month followed by a space (indicated with the underscore), then the numeric day followed by a comma, and then the two-digit century (for example, 19 or 20) followed by the two-digit year. This yields for example, `Augus 22, 1983`.
+
+```
+format kbday %tdMonth_DD, CCYY
+list id kbdays kbday in 1/5
+```
+
+The example in this section focused on how the `format` command can be used to control the display of variables with the `list` command. 
+
+Note that the `format` command can be also be used to control the exported value of variable when exporting delimited dataset via the `export delimited` command
+
+This concludes this section on formating variable. For more information, see `help format`.
