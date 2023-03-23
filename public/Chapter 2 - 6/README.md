@@ -2400,7 +2400,7 @@ format bday %tdNN/DD/YY
 list id bdays bday in 1/5
 ```
 
-Below, we change the display format of `kbday` to `%tdMonth_DD, CCYY`. 
+Below, we change the display format of `kbday` to `%tdMonth_DD, CCYY`.
 
 This format displays the name of the month followed by a space (indicated with the underscore), then the numeric day followed by a comma, and then the two-digit century (for example, 19 or 20) followed by the two-digit year. This yields for example, `Augus 22, 1983`.
 
@@ -2409,14 +2409,15 @@ format kbday %tdMonth_DD, CCYY
 list id kbdays kbday in 1/5
 ```
 
-The example in this section focused on how the `format` command can be used to control the display of variables with the `list` command. 
+The example in this section focused on how the `format` command can be used to control the display of variables with the `list` command.
 
 Note that the `format` command can be also be used to control the exported value of variable when exporting delimited dataset via the `export delimited` command
 
 This concludes this section on formating variable. For more information, see `help format`.
 
 ### 5.9 Changing the order of variables in a dataset
-`survey6.dta` is well labelled, but the variable are unordered. 
+
+`survey6.dta` is well labelled, but the variable are unordered.
 
 If you look at the output of the `describe` command below, you can see that the information about the graduate student being surveyed is intermixed with information about that student's child.
 
@@ -2434,7 +2435,7 @@ order id gender race bday income havechild
 describe
 ```
 
->The variable will be ordered as specified order.
+> The variable will be ordered as specified order.
 
 This ordering is pretty good, except that it would be nice for the list of child variable to start with `kidname` insted of `ksex`. The `order` command below is used to move `kidname` before `ksex`. (we could get the same result by specifyng after (havechild) instead of before (ksex))
 
@@ -2463,6 +2464,26 @@ The `generate` command offers options for specifiying the position of the variab
 ```
 generate STUDENTVARS = ., before(gender)
 ```
+
 You can instead use the `after()` option. For example, the `generate` command shown below creates the variable `KIDVARS` and uses the `after(havechild)` option to position that variable after `havechild`.
 
 generate KIDVARS = ., after(havechild)
+
+### Chapter 6 | Creating Variables
+> Not everything that can be counted counts, and not everything that counts can be counted. - Albert Einstein
+
+### 6.1 Introduction
+This chapter covers many ways that you can create variables in Stata. Start by introducting `generate` and `replace` commands for creating new variables and changing the contents of existing variable (section 6.2)
+
+The next two sections describes how you can use `numeric expressions` and `functions` when creating variables (section 6.3) and how you can use `string expressions` and `functions` when creating variables (see section 6.4). Section 6.5 illustrates tools to `recode variables`.
+
+Tools for coding missing values are illustrated in secton 6.6, which followed by a discussion of dummy variables and the broader issue of factor variable (see section 6.7). Section 6.8 covers creating and using date variables, and section 6.9 covers creating and using date and time variables.
+
+The next three section illustrate the use of `egen` command for computations across variables within each observations (section 6.10), for computations across observations (section 6.11) and for additional functions (section 6.12)
+
+`Methods for converting string variables` to `numeric variables` are illustrated in section 6.13, and section 6.14 shows how `numeric variable` can be converted to `string variables`.
+
+The chapter concluedes with section 6.15, which illustrates how to `rename` and `order` variables.
+
+q
+

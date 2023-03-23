@@ -595,19 +595,21 @@ save survey3, replace
 /**
 *5.5 labeling utilities
 */
-user survey3,clear
+use survey3,clear
 
 label dir
 
 label list mf
 
-label list havelab recelab
+//label list havelab recelab
 
-label save mf racelab using surverylabs
+//label save mf racelab using surverylabs
 
 labelbook racelab
 
 labelbook racelab mf, list(0)
+
+
 
 /**
 * 5.6 Labelling variables and values in different languages.
@@ -652,3 +654,43 @@ notes race
 notes _dta
 
 save survey5,replace
+
+/**
+*5.8 Formatting the display of variables
+*/
+use survey5
+
+//format bday %tdNN/DD/YY
+list id bdays bday in 1/5
+
+
+//format kbday %tdMonth_DD, CCYY
+list id kbdays kbday in 1/5
+
+label variable bday "Date of birth of student"
+label variable kbday "Date of birth of child"
+//drop bdays kbdays
+
+save survey6,replace
+
+/**
+*### 5.9 Changing the order of variables in a dataset
+*/
+
+use survey6, clear
+describe
+
+order id gender race bdays income havechild
+describe
+
+order kidname, before(ksex)
+describe
+
+generate STUDENTVARS = .
+generate KIDVARS = .
+order STUDENTVARS, before(gender)
+order KIDVARS, before (kidname)
+label variable STUDENTVARS "STUDENT VARIABLES ================"
+label variable KIDVARS "KID VARIABLES ============"
+
+save survey7,replace
