@@ -2485,5 +2485,69 @@ The next three section illustrate the use of `egen` command for computations acr
 
 The chapter concluedes with section 6.15, which illustrates how to `rename` and `order` variables.
 
-q
+### 6.2 Creating and changing variables
+The two most common commands used for creating and modifying variables are the `generate` and `replace` commands.
 
+These commands, are identical except that `generate` creates a new variable, while `replace` alters the value of an existing variable.
+
+I illustrate these two commands using `wws2.dta`, which contains demographic and labor force information regarding 2,246 women.
+
+Consider the variable `wage`, which contains the woman's hourly wages. This variables is summarized below. It has two missing values (the N = 2244)
+
+```
+use ww2
+summarize wage
+```
+![Summarize wages](./img/summarize_wages.png)
+
+Say that we want to compute a weekly wage for these women based on 40-hour work week. We use the `generate` command to create the new variable, called `wageweek`, which contain the value of `wage` multiplied by 40.
+
+```
+generate wageweek = wage * 
+//output: 2 missing values generated
+```
+
+```
+summarize wageweek
+```
+![summarize wageweek](./img/sum_wageweek.png)
+
+This dataset also contains a variable named `hours`, which is the typical number of hours the woman works per week. Let's create `wageweek` again but use `hours`in place of 40. Because `wageweek` already exists, we must use the `replace` command to indicates that we want to replace the contents of exisiting variable. Note that bacause hours has 4 missing observations, the `wageweek` variable now has 4 additional mission observations, having only `2,240` valid observations instead of `2,244`.
+
+```
+replace wageweek = wage * hours
+//output: 1,152 real changes made, 4 to missing
+```
+
+```
+summarize wageweek
+```
+![replace wageweek](./img/replace_wageweek.png)
+
+> Tip ! Ordering variables with the generate command
+
+When creating a new variable using the `generate` command, you can use the `before()` or `after()` option to specify where the new variable will be positioned withing the dataset. For example, we could have used the `generate` command as follows to create `wageweek`, positioning it after the variable wage:
+
+```
+generate wageweek = wage * 40, after(wage)
+```
+
+The `generate` and `replace` commands can be used together when a variable takes multiple steps to create. Consider the variable `married` (which is 1 if the woman is currently married and 0 otherwise) and `nevermarried` (which is 1 if she was never married and 0 if she married or was previously married). We can place the women into three groups based on the cross tabulation of these two variables
+
+```
+tabulate married nevermarried
+```
+![tab married nevermarried](./img/tab_married.png)
+
+Say that we want to create a variable that reflects whether a woman is 1) single and nevermarried (`n=234`), 2) currently married (`n=1440`) or 3) single but previously married (`n=570`).
+
+Those who are (nonsensically) currently married and have never been married (`n=2`) will be assigned a value of missing. This can be done as shown below.
+
+The first `generate` command creates the variable `smd` (for single, married or divorced or widowed) and assigns a value of 1 if the woman meets the criteria for being single (and never married)
+
+```
+generate smd = 1 if (married == 0) & (nevermarried == 1)
+//output: (2,012 missing values generated)
+```
+
+The `replace` command assigns a value of 2 if the woman meets the criteria for being currently married.
