@@ -2470,9 +2470,11 @@ You can instead use the `after()` option. For example, the `generate` command sh
 generate KIDVARS = ., after(havechild)
 
 ### Chapter 6 | Creating Variables
+
 > Not everything that can be counted counts, and not everything that counts can be counted. - Albert Einstein
 
 ### 6.1 Introduction
+
 This chapter covers many ways that you can create variables in Stata. Start by introducting `generate` and `replace` commands for creating new variables and changing the contents of existing variable (section 6.2)
 
 The next two sections describes how you can use `numeric expressions` and `functions` when creating variables (section 6.3) and how you can use `string expressions` and `functions` when creating variables (see section 6.4). Section 6.5 illustrates tools to `recode variables`.
@@ -2486,6 +2488,7 @@ The next three section illustrate the use of `egen` command for computations acr
 The chapter concluedes with section 6.15, which illustrates how to `rename` and `order` variables.
 
 ### 6.2 Creating and changing variables
+
 The two most common commands used for creating and modifying variables are the `generate` and `replace` commands.
 
 These commands, are identical except that `generate` creates a new variable, while `replace` alters the value of an existing variable.
@@ -2498,18 +2501,20 @@ Consider the variable `wage`, which contains the woman's hourly wages. This vari
 use ww2
 summarize wage
 ```
+
 ![Summarize wages](./img/summarize_wages.png)
 
 Say that we want to compute a weekly wage for these women based on 40-hour work week. We use the `generate` command to create the new variable, called `wageweek`, which contain the value of `wage` multiplied by 40.
 
 ```
-generate wageweek = wage * 
+generate wageweek = wage *
 //output: 2 missing values generated
 ```
 
 ```
 summarize wageweek
 ```
+
 ![summarize wageweek](./img/sum_wageweek.png)
 
 This dataset also contains a variable named `hours`, which is the typical number of hours the woman works per week. Let's create `wageweek` again but use `hours`in place of 40. Because `wageweek` already exists, we must use the `replace` command to indicates that we want to replace the contents of exisiting variable. Note that bacause hours has 4 missing observations, the `wageweek` variable now has 4 additional mission observations, having only `2,240` valid observations instead of `2,244`.
@@ -2522,6 +2527,7 @@ replace wageweek = wage * hours
 ```
 summarize wageweek
 ```
+
 ![replace wageweek](./img/replace_wageweek.png)
 
 > Tip ! Ordering variables with the generate command
@@ -2537,6 +2543,7 @@ The `generate` and `replace` commands can be used together when a variable takes
 ```
 tabulate married nevermarried
 ```
+
 ![tab married nevermarried](./img/tab_married.png)
 
 Say that we want to create a variable that reflects whether a woman is 1) single and nevermarried (`n=234`), 2) currently married (`n=1440`) or 3) single but previously married (`n=570`).
@@ -2576,3 +2583,72 @@ The below means, hours not missing `!missing(hours). Withous the second qualifie
 ```
 replace over40hours = 1 if (hours > 40) & !missing(hours)
 ```
+
+### 6.3 Numeric expressions and functions.
+
+In the previous section, we used the `generate` and `replace` commands on simple expression, such as creating new variable that equal `wage*40`. This section illustrates more complex expression and some useful functions that can be used with the `generate` and `replace` command.
+
+Stata supports the standard mathematical operators of addition(+), substration(-), multiplication(\*), division(/), and exponentional (^) using the standard rules of the order of operators.
+
+Parentheses can be used to override the standard order of operators or to provide clarity. I illustrate these operators below to create a nonsense variable named `nonsense` using ww2.dta
+
+```
+use wws2, clear
+generate nonsense = (age*2 + 10)^2  - (grade/10)
+//output: (4 missing values generated)
+```
+
+Stata also has many mathematical functions that you can include in your `generate` and `replace` commands. The example below illustrate `int()` function (which removes any value after the decimal place), `round()` function (which rounds a number to the desired number of decimal places), the `ln()` function (which yield the natural log), the `log10()` function (which computes the base-10 logarithm), the `sqrt()` (which computes the square root).
+
+```
+. generate intwage = int(wage)
+//(2 missing values generated)
+
+. generate rndwage = round(wage,1)
+//(2 missing values generated)
+
+. generate lnwage = ln(wage)
+(3 missing values generated)
+
+. generate logwage = log10(wage)
+//(3 missing values generated)
+
+. generate sqrtwage = sqrt(wage)
+//(2 missing values generated)
+
+. list wage intwage rndwage lnwage logwage sqrtwage in 1/5
+
+```
+
+Stata has many functions for creating random variable. For example, you can use the `runiform()` (random uniform) function to create a variable with a random number ranging from 0 to 1.
+
+Below , I set the see of the random function generator to a number picked from thin air, and then I use the `generate` command to create a new variable, `r`, that a random number between 0 and 1
+
+```
+set seed 83271
+generate r = runiform()
+summarize r
+```
+
+The `rnormal()` (random normal) function allow us to drwa random value from a normal distribution with a mean of 0 and a standard deviation of 1, as illustrated below with the variable `randz`. The variable `randiq` is created, drown form a normal distribution with a mean of 100 and standard deviation of 15 (which is the same distribution as some IQ tests).
+
+```
+generate randz = rnormal()
+generate randiq = rnormal(100,15)
+summarize randz randiq
+```
+
+![rnormal](./img/rnormal.png)
+
+You can even use `rchi2` (random chi-square) function to create a variable represention a random value from a chi-squared distribution. For example, below I create `randchi2`, which draws random values from a chi-squared distribution with 5 degree of freedom.
+
+```
+generate randchi2 = rchi2(5)
+summarize randchi2
+```
+
+![rchi2](./img/rchi2.png)
+
+This section has illustrated just a handful of the numeric function taht are available in Stata.
+
+> Setting the seed guarantees that we get the same series of random numbers every time we run the commands, making result that use roandom numbers reproducible.
