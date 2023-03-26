@@ -694,3 +694,30 @@ label variable STUDENTVARS "STUDENT VARIABLES ================"
 label variable KIDVARS "KID VARIABLES ============"
 
 save survey7,replace
+
+/**
+*Chapter 6 | Creating Variables
+* 6.1 Introduction
+* 6.2 Creating and changing variables
+*/
+
+use wws2
+summarize wage
+
+generate wageweek = wage * 40
+
+summarize wageweek
+
+replace wageweek = wage * hours
+
+summarize wageweek
+
+tabulate married nevermarried
+
+generate smd = 1 if (married == 0) & (nevermarried == 1)
+
+replace smd = 2 if (married == 1) & (nevermarried == 0)
+
+replace smd = 3 if (married == 0) & (nevermarried == 0)
+
+

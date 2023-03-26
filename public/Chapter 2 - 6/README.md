@@ -2551,3 +2551,28 @@ generate smd = 1 if (married == 0) & (nevermarried == 1)
 ```
 
 The `replace` command assigns a value of 2 if the woman meets the criteria for being currently married.
+
+```
+replace smd = 2 if (married == 1) & (nevermarried == 0)
+//output:(1,440 real changes made)
+```
+
+The second `replace` command assigns a value of 3 if the woman meets the criteria for being divorced or windowed.
+
+```
+replace smd = 3 if (married == 0) & (nevermarried == 0)
+//output: (570 real changes made)
+```
+
+The third `replace` command is superfluos but clearly shows that `smd` is missing for those nonsense cases where the woman is currently married and has never been married. (For more information about tthe use of `if` see stion A.8)
+
+```
+replace smd = . if (married == 1) & (nevermarried == 1)
+//output: (0 real changes made)
+```
+
+The below means, hours not missing `!missing(hours). Withous the second qualifier, people who had missing data on hours would be treated as through they had worked over 40 hours (because missing values are treated as positive infinity)
+
+```
+replace over40hours = 1 if (hours > 40) & !missing(hours)
+```
