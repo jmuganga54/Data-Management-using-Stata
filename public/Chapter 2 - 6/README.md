@@ -2649,6 +2649,90 @@ summarize randchi2
 
 ![rchi2](./img/rchi2.png)
 
-This section has illustrated just a handful of the numeric function taht are available in Stata.
+This section has illustrated just a handful of the numeric function that are available in Stata.
 
 > Setting the seed guarantees that we get the same series of random numbers every time we run the commands, making result that use roandom numbers reproducible.
+
+
+### 6.4 String expression and functions
+The previous section focused on numeric expressions and functions, while this section focuses on string expressions and functions.
+
+We will use `authors.dta` to illustrate string functions (shown below) 
+
+```
+use authors
+format name %-17s
+list
+```
+![String expression](./img/string_expressions.png)
+
+Note how the names have some errors and inconsistencies; for example, there is an extra space before Ruth's name. Sometimes, the first letter or inital is in lowercase, and sometimes, periods are omitted after intials.
+
+By cleaning up these names, we can see how to work with string expression and function in Stata.
+
+There are inconsistencies in the capitalization of the author's names. Below, I use the `ustrtitle() function` to `titlecase` the names (that is, make the first letter of each word in uppercase).
+
+This uses Unicode definitions of what constitues a word. I use the `ustrlower()` and `ustrupper()` functions to convert the names into all lowercase and all uppercase, respectively, according to unicode rules of capitalization.
+
+```
+generate name2 = ustrtitle(name)
+generate lowname = ustrlower(name)
+generate upname = ustrupper(name)
+format name2 lowname upname %-23s
+list name2 lowname upname
+```
+![String change case](./img/string_change_case.png)
+
+We can trim off the leading blanks, like the one in front of Ruth's name, using ustrltrim() function, like this:
+
+```
+generate name3 = ustrltrim(name2)
+```
+To see the result of `ustrltrim() function`, we need to left-justify name2 and name3 before we list results
+
+```
+format name2 name3 %-17s
+list name name2 name3 
+```
+![Trim space infront](./img/trimFrontSpace.png)
+
+Let's identify the names that start with an initial rather than with a full first name. When you look at those names, their second character is either a period or space.
+
+We need a way to extract a piece of name, starting with the second character and extracting that one character. The `usubstr() function` used with the `generate` command below does exactly this, creating the variable `secondchar`. Then, the value of `firstinit` gets the value of the logical expression that tests if `secondchar` is a space or a period, yielding a `1` if this expression is true and `0` if false.
+
+```
+generate secondchar = usubstr(name3,2,2)
+generate firstinit = (secondchar == " " | secondchar = ".") if !missing(seconchar)
+list name3 secondchar firstinit, abb(20)
+```
+![Sub string](./img/substr.png)
+
+We might want to take the full name and break it up into first, middle, and last names. Because some of the authors have only two names, we first need to count the number of names. The Unicode-aware version of this function is called `ustrwordcount()`. This is used to count the nuber of names, using the word boundary rules of Unicode strings.
+
+```
+generate namecnt = ustrwordcount(name3)
+list name3 namecnt
+```
+![Word count](./img/wordCount.png)
+
+Note how the `ustrwordcount()` function reports four word in the name of the second author. To help understand this better, I use the `ustrword()` function to extract the first, second, third and fourth word from name. These are called `uname1`, `uname2`, `uname3` and `uname4`. The `list` command then shows the full name along with the first, second, third and fourth word of the name.
+
+```
+generate uname1 = ustrword(name3,1)
+generate uname2 = ustrword(name3,2)
+generate uname3 = ustrword(name3,3)
+generate uname4 = ustrword(name3,4)
+
+list name3 uname1 uname2 uname3 uname4
+```
+![Word seperator](./img/word_seperator.png)
+
+Now, it is clear why author 2 is counted as having four words in the name. According to the Unicode word-boundary rules, the single period is being counted as a separate word.
+
+To handle this, I am going to create a new variable named `name4`, where the `.` has been removed from `name3`. The output of the `list` command below confirms that `name4` is the same as `name3` except for the removal of the period from the name.
+
+```
+generate name4 = usubinstr(name3, ".","",.)
+list name 3 name4
+```
+![Remove period on the name](./img/remove_period.png)

@@ -720,4 +720,34 @@ replace smd = 2 if (married == 1) & (nevermarried == 0)
 
 replace smd = 3 if (married == 0) & (nevermarried == 0)
 
+replace smd = . if (married == 1) & (nevermarried == 1)
+
+generate over40hours = 0 if (hours <= 40)
+
+replace over40hours = 1 if (hours > 40) & !missing(hours)
+
+/**
+*6.3 Numeric expressions and functions.
+*/
+
+use wws2, clear
+generate nonsense = (age*2 + 10)^2  - (grade/10)
+
+generate intwage = int(wage)
+generate rndwage = round(wage,1)
+generate lnwage = ln(wage)
+generate logwage = log10(wage)
+generate sqrtwage = sqrt(wage)
+list wage intwage rndwage lnwage logwage sqrtwage in 1/5
+
+set seed 83271
+generate r = runiform()
+summarize r
+
+generate randz = rnormal()
+generate randiq = rnormal(100,15)
+summarize randz randiq
+
+generate randchi2 = rchi2(5)
+summarize randchi2
 
