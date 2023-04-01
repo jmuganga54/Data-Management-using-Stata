@@ -751,3 +751,42 @@ summarize randz randiq
 generate randchi2 = rchi2(5)
 summarize randchi2
 
+
+/**
+* 6.4 String expressions and function
+*/
+
+use authors, clear
+format name %-17s
+list
+
+
+generate name2 = ustrtitle(name)
+generate lowname = ustrlower(name)
+generate upname = ustrupper(name)
+format name2 lowname upname %-23s
+list name2 lowname upname
+
+generate name3 = ustrltrim(name2)
+
+list name3
+format name2 name3 %-17s
+list name name2 name3 
+
+
+generate secondchar = usubstr(name3,2,1)
+generate firstinit = (secondchar == " " | secondchar == ".") if !missing(secondchar)
+list name3 secondchar firstinit, abb(20)
+
+generate namecnt = ustrwordcount(name3)
+list name3 namecnt
+
+
+generate uname1 = ustrword(name3,1)
+generate uname2 = ustrword(name3,2)
+generate uname3 = ustrword(name3,3)
+generate uname4 = ustrword(name3,4)
+list name3 uname1 uname2 uname3 uname4
+
+generate name4 = usubinstr(name3, ".","",.)
+list name3 name4

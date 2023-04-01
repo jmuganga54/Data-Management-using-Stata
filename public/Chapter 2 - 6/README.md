@@ -2653,17 +2653,18 @@ This section has illustrated just a handful of the numeric function that are ava
 
 > Setting the seed guarantees that we get the same series of random numbers every time we run the commands, making result that use roandom numbers reproducible.
 
-
 ### 6.4 String expression and functions
+
 The previous section focused on numeric expressions and functions, while this section focuses on string expressions and functions.
 
-We will use `authors.dta` to illustrate string functions (shown below) 
+We will use `authors.dta` to illustrate string functions (shown below)
 
 ```
 use authors
 format name %-17s
 list
 ```
+
 ![String expression](./img/string_expressions.png)
 
 Note how the names have some errors and inconsistencies; for example, there is an extra space before Ruth's name. Sometimes, the first letter or inital is in lowercase, and sometimes, periods are omitted after intials.
@@ -2681,6 +2682,7 @@ generate upname = ustrupper(name)
 format name2 lowname upname %-23s
 list name2 lowname upname
 ```
+
 ![String change case](./img/string_change_case.png)
 
 We can trim off the leading blanks, like the one in front of Ruth's name, using ustrltrim() function, like this:
@@ -2688,12 +2690,14 @@ We can trim off the leading blanks, like the one in front of Ruth's name, using 
 ```
 generate name3 = ustrltrim(name2)
 ```
+
 To see the result of `ustrltrim() function`, we need to left-justify name2 and name3 before we list results
 
 ```
 format name2 name3 %-17s
-list name name2 name3 
+list name name2 name3
 ```
+
 ![Trim space infront](./img/trimFrontSpace.png)
 
 Let's identify the names that start with an initial rather than with a full first name. When you look at those names, their second character is either a period or space.
@@ -2705,6 +2709,7 @@ generate secondchar = usubstr(name3,2,2)
 generate firstinit = (secondchar == " " | secondchar = ".") if !missing(seconchar)
 list name3 secondchar firstinit, abb(20)
 ```
+
 ![Sub string](./img/substr.png)
 
 We might want to take the full name and break it up into first, middle, and last names. Because some of the authors have only two names, we first need to count the number of names. The Unicode-aware version of this function is called `ustrwordcount()`. This is used to count the nuber of names, using the word boundary rules of Unicode strings.
@@ -2713,6 +2718,7 @@ We might want to take the full name and break it up into first, middle, and last
 generate namecnt = ustrwordcount(name3)
 list name3 namecnt
 ```
+
 ![Word count](./img/wordCount.png)
 
 Note how the `ustrwordcount()` function reports four word in the name of the second author. To help understand this better, I use the `ustrword()` function to extract the first, second, third and fourth word from name. These are called `uname1`, `uname2`, `uname3` and `uname4`. The `list` command then shows the full name along with the first, second, third and fourth word of the name.
@@ -2725,6 +2731,7 @@ generate uname4 = ustrword(name3,4)
 
 list name3 uname1 uname2 uname3 uname4
 ```
+
 ![Word seperator](./img/word_seperator.png)
 
 Now, it is clear why author 2 is counted as having four words in the name. According to the Unicode word-boundary rules, the single period is being counted as a separate word.
@@ -2735,4 +2742,78 @@ To handle this, I am going to create a new variable named `name4`, where the `.`
 generate name4 = usubinstr(name3, ".","",.)
 list name 3 name4
 ```
+
 ![Remove period on the name](./img/remove_period.png)
+
+Now, I am going to use the `replace` command to create a new version of `namecnt` that counts the number of words in this new version of name, `name4`
+
+```
+replace namecnt = ustrwordcount(name4)
+list name4 namecnt
+```
+![Word Count after removing space and period](./img/new_word_counts.png)
+
+The count of the number of names matches what I would expect.
+
+Now, we can splict `name4` into first, middle, and last names using the `ustrword()` function. The first name is the first word shown in `name4` (that is, `ustrword(name4,1)`). The second name is the second word if there are three words in `name4` (that is, `ustrword(name4,2) if namecnt == 3`). The last name is based on the number of names the dentist has (that is, `ustrword(name4,namecnt)`)
+
+```
+generate fname = ustrword(name4,1)
+generate mname = ustrword(name4,2) if namecnt == 3
+generate lname = ustrword(name4,namecnt)
+```
+
+Now, I format the first, middle, and last names using a width of 15 with left-justification and then list the first, middle, and last names:
+
+```
+format fname mname lname %-15s
+list name4 fname mname lname
+```
+![After split words](./img/after_split_words.png)
+
+If you look at the values of `fname` and `mname` above, you can see that some of the names are composed of one initial. In every instance, the initial does not have a period after it(because we removed it).
+
+Let's make all the initial have a period after them. In the first `replace` command below, the `ustrlen()` function is used to identify observation where the first name is one character. In such instances, the `fname` variable is replaced with the `fname` with a period appended to it (showing that the plus sign can be used to combine strings together). The same strategy is applied to the middle names in the next `replace` command.
+
+```
+replace fname = fname + "." if ustrlen(fname) == 1
+replace mname = mname + "." if ustrlen(mname) == 1
+```
+
+Below, we see that the first and middle names always have a period after them if they are one initial.
+
+```
+list fname mname
+```
+![After adding a period](./img/period_added.png)
+
+Now that we have repaired the first and middle names, we can join the first, middle, and last names together to form a full name. I then use the `format` command to left-justify the full name.
+
+```
+generate fullname = fname + " " + lname if namecnt == 2
+replace fullname = fname + " " + mname + " " + lname if namecnt == 3
+format fullname %-30s
+```
+
+The output of the `list` command below displays the first, middle and last names as well as the full name
+
+```
+list fname mname lname fullname
+```
+![After joining](./img/after_join.png)
+
+The output of the `list` command below shows only the original name and the version of the name we cleaned up.
+
+```
+list name fullname
+```
+![Final output](./img/final_output.png)
+
+> For more information about string functions and unicode
+```
+help string functions
+help unicode
+```
+> Tip ! Long strings
+Do you work with datasets with long strings? Stata has a special string variable type called `strL` (pronounced `sturl`). This variable type can be more frugal than a standard string variable, and it can hold large strings, up to 2-billion bytes.
+
