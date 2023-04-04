@@ -790,3 +790,29 @@ list name3 uname1 uname2 uname3 uname4
 
 generate name4 = usubinstr(name3, ".","",.)
 list name3 name4
+
+replace namecnt = ustrwordcount(name4)
+list name4 namecnt
+
+generate fname = ustrword(name4,1)
+generate mname = ustrword(name4,2) if namecnt == 3
+generate lname = ustrword(name4,namecnt)
+
+format fname mname lname %-15s
+list name4 fname mname lname
+
+replace fname = fname + "." if ustrlen(fname) == 1
+replace mname = mname + "." if ustrlen(mname) == 1
+
+
+list fname mname
+
+generate fullname = fname + " " + lname if namecnt == 2
+replace fullname = fname + " " + mname + " " + lname if namecnt == 3
+format fullname %-30s
+
+list fname mname lname fullname
+
+list name fullname
+
+

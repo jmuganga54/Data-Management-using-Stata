@@ -2751,6 +2751,7 @@ Now, I am going to use the `replace` command to create a new version of `namecnt
 replace namecnt = ustrwordcount(name4)
 list name4 namecnt
 ```
+
 ![Word Count after removing space and period](./img/new_word_counts.png)
 
 The count of the number of names matches what I would expect.
@@ -2769,6 +2770,7 @@ Now, I format the first, middle, and last names using a width of 15 with left-ju
 format fname mname lname %-15s
 list name4 fname mname lname
 ```
+
 ![After split words](./img/after_split_words.png)
 
 If you look at the values of `fname` and `mname` above, you can see that some of the names are composed of one initial. In every instance, the initial does not have a period after it(because we removed it).
@@ -2785,6 +2787,7 @@ Below, we see that the first and middle names always have a period after them if
 ```
 list fname mname
 ```
+
 ![After adding a period](./img/period_added.png)
 
 Now that we have repaired the first and middle names, we can join the first, middle, and last names together to form a full name. I then use the `format` command to left-justify the full name.
@@ -2800,6 +2803,7 @@ The output of the `list` command below displays the first, middle and last names
 ```
 list fname mname lname fullname
 ```
+
 ![After joining](./img/after_join.png)
 
 The output of the `list` command below shows only the original name and the version of the name we cleaned up.
@@ -2807,13 +2811,67 @@ The output of the `list` command below shows only the original name and the vers
 ```
 list name fullname
 ```
+
 ![Final output](./img/final_output.png)
 
 > For more information about string functions and unicode
+
 ```
 help string functions
 help unicode
 ```
-> Tip ! Long strings
-Do you work with datasets with long strings? Stata has a special string variable type called `strL` (pronounced `sturl`). This variable type can be more frugal than a standard string variable, and it can hold large strings, up to 2-billion bytes.
 
+> Tip ! Long strings
+> Do you work with datasets with long strings? Stata has a special string variable type called `strL` (pronounced `sturl`). This variable type can be more frugal than a standard string variable, and it can hold large strings, up to 2-billion bytes.
+
+### 6.5 Recoding
+
+Sometimes you want to recode the values of an existing variable to make a new variable, mapping the existing values for the existing variable to new values for new variable. For example consider the variable `occupation` from `ww2lab.dta`.
+
+```
+use ww2lab
+codebook occupaton, tabulate(20)
+```
+
+![codebook](./img/codebook_occupation.png)
+
+Let's recode `occupation` into three categories: white collar, blue collar and other. Say that we decide that occupations 1-3 will be whilte collar, 5-8 will be blue collar, and 4 and 9-13 will be other. We recode the variable below, creating a new variable called `occ3`.
+
+```
+recode occupation (1/3=1) (5/8=2) (4 9/13=3), generate(occ3)
+//Expected output: (1918 differences between occupation and occ3)
+```
+
+We use the `table` command to double check that the variable `occ` was properly recoded into `occ3`
+
+```
+table occupation occ3
+```
+
+![After recode](./img/recode_occ3.png)
+
+This is pretty handy, but it would be nice if the values of `occ3` were labelled. Although we could use the `label define` and `label values` commands to label the values of `occ3` ( as illustrated in section 5.4), the example below shows a shortcut that labels the valus as part of the recoding process. Value labels are given after the new values in the `recode` command. (Continuation comments are used to make this long command more readable; see section A.4 for more information)
+
+```
+drop occ3
+recode occupation (1/3=1 "White Collar") (5/8=2 "Blue Collar") (4 9/13=3 "Other"), generate(occ3)
+labe variable occ3 "Occupation in 3 groups"
+table occupation occ3
+
+```
+
+The `recode` command can also be useful when applied to continuous variable. Say that we wanted to recode the woman's hourly (wage) into four categories using the following rules: `0 up to 10` would be coded 1, `over 10 to 20` would be coded 2, `over 20 to 30` would be coded 3, and `over 30` would be coded 4. We can do this as shown below. When you specify `recode #1/#2`, all values between `#1 and #2`, including the boundaries `#1 and #2` are included. So when we specify `recode wage (0/10=1) (10/20=2)`, 10 is included in both of these rules. In such cases, the first rule encountered takes precedence, so 10 is recoded to having a value of 1
+
+```
+recode wage (0/10=1 "0 t0 10") (10/20=2 ">10 to 20") (20/30=3 ">20 t0 30") (30/max= 4 ">30 and up"), generate(wage4)
+```
+
+We can check this using `tabstat` command below (see section 4.5). The result confirm that `wage4` was created correctly.
+
+For example, for category 2 (over 10 up to 20), minimum is slightly larger than 10 and the maximu is 20
+
+```
+tabstat wage, by(wage4) stat(min max)
+```
+
+![tabstat_wage](./img/tabstat_wage.png)
