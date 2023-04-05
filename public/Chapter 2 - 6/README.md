@@ -2875,3 +2875,57 @@ tabstat wage, by(wage4) stat(min max)
 ```
 
 ![tabstat_wage](./img/tabstat_wage.png)
+
+We might want to use a rule that 0 up to (but not including) 10 would be coded 1, 10 up to (but not including) 20 would be coded 2, 20 up to (but not including) 30 would be coded 3, and 30 up and over would be coded 4. By switching the order of the rules, for example, we can move 10 to belong to category 2 because that rule appears first.
+
+```
+recode wage (30/max=4 "30 and up") (20/30 = 3 "20 to <30") (10/20 =2 "10 to <20") (0/10 =1 "0 t0 <10"), generate(wage4a)
+```
+The results of the `tabstat` command below confirm that `wage4a` was recoded properly.
+
+tabstat wage, by(wage4a) stat(min max)
+![Tabstat](./img/tabstat_wage_by_wage4a.png)
+
+The `recode` command is not the only way to recode variables. Stata has several functions that we can also use for recoding. We can use the `irecode()` function to recode the continuous variable into groups based on a series of cutpoints that you supply. For example, below the wages are cut into four groups based on the cutpoints 10, 20, and 30. Those with wages up to 10 are coded 0, over 10 up 20 are coded 1, over 20 up to 30 are coded 2, and over 30 are coded 3.
+
+```
+generate mywage1 = irecode(wage,10,20,30)
+```
+
+The `tabstat` command confirms the recoding of this variable:
+
+```
+tabstat wage, by(mywage1) stat(min max)
+```
+![irecode](./img/irecode.png)
+
+The `autocode()` function recodes continuous variable into equally spaced groups. Below, we recode wage to form three equally spaced groups that span from 0 t0 42. The groups are numbered according to the highest value in the group, so 14 represents 0 to 14, then 28 represents over 14 t0 28, and finally 42 represents over 28 up to 42. The `tabstat` command confirms the recoding.
+
+```
+generate mywage2 = autocode(wage,3,0,42)
+tabstat wage, by(mywage2) stat(min max n)
+```
+![autocode](./img/autocode.png)
+
+Although the `autocode()` function seeks to equalize the spacing of the groups, the `group()` option of the `egen` command seeks to equalize the number of observation in each group. Below, we create `mywage3` using `group() option to create three equally sized groups.
+
+```
+egen mywage3 = cut(wage), group(3)
+```
+The value of `mywage3` are numbered 0,1 and 2. The lower and upper limit of wage for each group are selected to attempt to equalize the size of the groups, so the values choosen are not round number. The `tabstat` command below shows the lower and upper limits of wages for each of three groups. The first group ranges from 0 to `4.904`, the second group ranges from `4.911` to `8.068` and the third group ranges from `8.075` to `40.747`.
+
+```
+tabstat wage, by(mywage3) stat (min max n)
+```
+![cut](./img/cut.png)
+
+> For more
+```
+help recode
+help irecode
+help autocode
+```
+
+> Tip
+
+It is also possible to use the `xtile` command to create equally sized groupings. For example, the command `xtile wage 3 = wage, nq(3)` creates equally sized grouping of the variable `wage` storing those groupoing as `wage3`.

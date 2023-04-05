@@ -816,3 +816,22 @@ list fname mname lname fullname
 list name fullname
 
 
+/**
+* 6.5 Recoding
+*/
+
+use wws2lab
+codebook occupation, tabulate(20)
+
+recode occupation (1/3=1) (5/8=2) (4 9/13=3), generate(occ3)
+
+table occupation occ3
+
+drop occ3
+recode occupation (1/3=1 "White Collar")  (5/8=2 "Blue Collar") (4 9/13=3 "Other"),generate(occ3)
+labe variable occ3 "Occupation in 3 groups"
+table occupation occ3
+
+recode wage (0/10=1 "0 t0 10") (10/20=2 ">10 to 20") (20/30=3 ">20 t0 30") (30/max= 4 ">30 and up"), generate(wage4)
+
+tabstat wage, by(wage4) stat(min max)
