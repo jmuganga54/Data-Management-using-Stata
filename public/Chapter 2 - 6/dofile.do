@@ -835,3 +835,21 @@ table occupation occ3
 recode wage (0/10=1 "0 t0 10") (10/20=2 ">10 to 20") (20/30=3 ">20 t0 30") (30/max= 4 ">30 and up"), generate(wage4)
 
 tabstat wage, by(wage4) stat(min max)
+
+
+recode wage (30/max=4 "30 and up") (20/30 = 3 "20 to <30") (10/20 =2 "10 to <20") (0/10 =1 "0 t0 <10"), generate(wage4a)
+
+tabstat wage, by(wage4a) stat(min max)
+
+
+generate mywage1 = irecode(wage,10,20,30)
+
+tabstat wage, by(mywage1) stat(min max)
+
+generate mywage2 = autocode(wage,3,0,42)
+
+tabstat wage, by(mywage2) stat(min max n)
+
+egen mywage3 = cut(wage), group(3)
+
+tabstat wage, by(mywage3) stat (min max n)

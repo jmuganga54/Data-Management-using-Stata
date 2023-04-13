@@ -2929,3 +2929,63 @@ help autocode
 > Tip
 
 It is also possible to use the `xtile` command to create equally sized groupings. For example, the command `xtile wage 3 = wage, nq(3)` creates equally sized grouping of the variable `wage` storing those groupoing as `wage3`.
+
+### Coding missing values
+As described in section `A.10` Stata supports 27 missing-value codes, including `.,.a,.b,..., .z`. This section illustrates how you can assign such missing-value codes in your data. Consider this example dataset with missing values
+
+```
+use cardo2miss
+list
+```
+![Missing values](./img/missing_values.png)
+
+Note how this dataset has some missing values and uses different missing values to indicates different reasons for missing values. Here the value of `.a` is used to signify a missing value because of a recording error and `.b` is used to signigy a missing value because the subject dropped out. But how did these values get assigned? Lets start with the original raw data.
+
+```
+infile id age p11-p15 bp1-bp5 using cardio2miss.txt
+list
+```
+![Withoug missing value assigned](./img/without_missing_values.png)
+
+The value of `-1` indicates missing values because of recoding erros, and `-2` indicates missing values because the subject dropped out of the study. The `recode` command can be used to convert these values into the appropriate missing values codes, as shown below. (Note that `bp*` stands for any variable that begins with `bp`; )
+
+```
+recode bp* p1* (-1=.a) (-2=.b)
+list
+```
+![Assigning missing values](./img/assign_missing_values.png)
+
+Another way to convert the values of missing-values codes would be to use the `mvdecode` command, which convert regular numbers into missing value. as the example below shows, the `mv()` option specifies that the values of `-1` should be converted to `.a` and the values of `-2` should be converted to `.b`.
+
+```
+mvdecode bp* p1*, mv(-1=.a \ -2=.b)
+list
+```
+
+If you just wanted values of `-1` and `-2` to be assigned to the general missing-value code `(.)`, then you can do so as shown below:
+
+```
+mvdecode bp* p1*, mv(-1 -2)
+```
+The `mvdecode` command has a companion command called `mvencode`, which converts missing values into regular number. In the example below, we convert the missing values for all the blood pressure and pulse scored to be `-1`
+
+```
+use cardio2miss
+mvencode bp* p1*, mv(-1)
+list
+```
+
+Or as shown below, the values of `.a` are converted to `-1`, and the value of `.b` are converted to `-2`
+
+```
+use cardio2miss
+mvencode bp* p1*, mv(.a=-1 \ .b=-2)
+list
+```
+
+This concludes this section, which illustrated how to code missing value in Stata. For information.
+
+```
+help mvdecode
+help mvencode
+```
