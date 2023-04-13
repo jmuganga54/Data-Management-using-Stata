@@ -2989,3 +2989,18 @@ This concludes this section, which illustrated how to code missing value in Stat
 help mvdecode
 help mvencode
 ```
+
+### Dummy Variable
+When you have a categorical variable, you can easily incorporate such variable in your analysis by specifying the `i.` prefix. By applying the `i.` prefix, the variable is treated as a `factor variable`. Consider the variable `grade4`, which represents education level with four levels.
+
+```
+use wws2lab
+codebook grade4
+```
+![Codebook grade4](./img/codebook_grade4.png)
+
+The variable `grade4` is a categorical variabe, and by specifying `i.grade4` in regression analysis below, `grade4` will be treated as a factor variable.
+
+```
+regress wage i.grade4
+```
