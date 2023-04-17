@@ -853,3 +853,38 @@ tabstat wage, by(mywage2) stat(min max n)
 egen mywage3 = cut(wage), group(3)
 
 tabstat wage, by(mywage3) stat (min max n)
+
+/**
+* 6.6 Coding missing value
+*/
+
+clear
+use cardio2miss
+list
+
+clear
+
+infile id age p11-p15 bp1-bp5 using cardio2miss.txt
+list
+
+// recode bp* p1* (-1=.a) (-2=.b)
+// list
+
+// mvdecode bp* p1*, mv(-1=.a \ -2=.b)
+// list
+
+// mvdecode bp* p1*, mv(-1 -2)
+// list
+
+// mvencode bp* p1*, mv(-1)
+// list
+
+mvencode bp* p1*, mv(.a=-1 \ .b=-2)
+list
+
+/**
+*6.7 Dummy variable
+*/
+
+use wws2lab, clear
+codebook grade4

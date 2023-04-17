@@ -2930,7 +2930,7 @@ help autocode
 
 It is also possible to use the `xtile` command to create equally sized groupings. For example, the command `xtile wage 3 = wage, nq(3)` creates equally sized grouping of the variable `wage` storing those groupoing as `wage3`.
 
-### Coding missing values
+### 6.6 Coding missing values
 As described in section `A.10` Stata supports 27 missing-value codes, including `.,.a,.b,..., .z`. This section illustrates how you can assign such missing-value codes in your data. Consider this example dataset with missing values
 
 ```
@@ -2990,7 +2990,7 @@ help mvdecode
 help mvencode
 ```
 
-### Dummy Variable
+### 6.7 Dummy Variable
 When you have a categorical variable, you can easily incorporate such variable in your analysis by specifying the `i.` prefix. By applying the `i.` prefix, the variable is treated as a `factor variable`. Consider the variable `grade4`, which represents education level with four levels.
 
 ```
@@ -3004,3 +3004,62 @@ The variable `grade4` is a categorical variabe, and by specifying `i.grade4` in 
 ```
 regress wage i.grade4
 ```
+
+Stata intrinsically understands that applying the `.i` prefix to `grade4` means to convert it into `k-1` dummy variable (where `k` is the nubmer of lever of `grade4`). By default, the first group is the omitted(base) group
+
+The `regress` command is not the only command that understands how to work with factor variables. In fact, most Stata commands understand how to work with factor variables, including data management command like `list` and `generate`
+
+For example, `i.grade4` (The `nolabel` option shows the numeric value of `grade4` instead of the labeled values.)
+
+```
+list wage grade 4 i.grade4 in 1/5, nolabel
+```
+When the typed `i.grade4`, this was expanded into the names of virtual dummy variables, the last three of which were used when the regression analysis was run. The dummy variable `i.grade4` is a dummy variable taht is 1 if the value of `grade4` is 1 and 0 otherwise. Likewise, 2.grade4 is a dummy variable that is 1 if the value of grade 4 is 2 and is 0 otherwise, and so forth up to `4.grade4`
+
+Although `#.grade4` is not added to your dataset (typing `describe` will confirm this), you can refer to `#.grade4` just as you would any other variable your dataset.
+
+The `generate` command below create our own dummy variable corresponding to the levels of `grade4`.
+
+```
+generate noths = 1.grade4
+generate hs = 2.grade4
+generate smc1 = 3.grade4
+generate clgr = 4.grade4
+
+list grade4 noths hs smc1 clgr in 1/5, nolabel
+```
+![Dummy variables](./img/dummy_variable.png)
+
+The above example illustrates taht the virual variable 1.grade4 refers to dummy variable associated with the value of 1 for `grade4` and `2.grade4` refers to dummy variable associate with the value of 2 for `grade4` and so forth.
+
+As you can see, the value of generated variable `noths` takes on a value of 1 if `grade4` is 1 and a value of 0 if it is not 1 (except if `grade4` is missing, and then `1.grade4` is also missing)
+
+You can change which group is considered the base(omitted) group using the `i.prefix`. In the previous examples, where we specified `i.grade4` with the `regress` command, the first group was used as the ommited group; this is the default. If instead we specify `ib2.grade4`, the group where `grade4` equals 2 will be the omitted group, as shown below.
+
+```
+regress wage ib2.grade4
+```
+
+You could specify `ib(first).grade4` to make the first group the omitted group or `ib(last).grade4` to make the last group the omitted group.
+
+For more information about using factor variable, see `help factor variables`.
+
+> Tip! Interaction temrms
+Stata simplifies the inclusiong of interaction terms in your model. For example, you can include the main effects and interactions of two categorical variable (for example `grade4` and `married`), as shown below.
+
+```
+regress wage i.grade4##i.married
+```
+
+You can include an interaction of a categorical variable (like grade4) and continuos variable (like age), as shown below. Note that the continuous variable is prefixed with c...
+```
+regress weage i.grade4##c.age
+```
+
+You can even include the c.age##C.age, which specifies the linear and quadratic effect of age.
+
+```
+regress wage c.age##c.age
+```
+
+Knowing these tricks for your analysis can save you the effeort of creating these variable as part of your data management.
