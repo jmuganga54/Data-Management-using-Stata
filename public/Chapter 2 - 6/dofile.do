@@ -888,3 +888,10 @@ list
 
 use wws2lab, clear
 codebook grade4
+
+generate noths = 1.grade4
+generate hs = 2.grade4
+generate smc1 = 3.grade4
+generate clgr = 4.grade4
+
+list grade4 noths hs smc1 clgr in 1/5, nolabel

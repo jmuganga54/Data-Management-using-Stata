@@ -3063,3 +3063,84 @@ regress wage c.age##c.age
 ```
 
 Knowing these tricks for your analysis can save you the effeort of creating these variable as part of your data management.
+
+### 6.8 Date Variables
+Stata supports both date variables (such as a birthdate) and date-and -time variables ( such as date and time of birth). This section covers date variables, while the following covers date-and-time variables. This section covers how to read raw datasets with date information, how to create and format dates, how to perform computations with date variable, and how to perform comparisons on dates. Let's use as an example a file named `monkid1.csv`, which contains information about four mons, their birthdays, and the birthday of each mons first kid.
+
+```
+type momkid1.csv
+```
+![Date data](./img/date_data.png)
+
+This illustrates two common formats that can be use for storing dates in raw data files. The second, third and fourth variable in the file are the month, day and year, respectively, of the mom's birthday as three seperate variables. The fifth variable contain the month, day and year of kid's birthday as one variable. when we read these variables into Stata using the `import delimited` command (shown below), the month, day and year of the mom's birthday are stored as three separate numberic variables, and the kid's birthday is stored as one string variable.
+
+```
+import delimited using momkid1.csv
+list
+```
+![Import data](./img/import_data.png)
+
+Once we have the variable into Stata, we can convert them into date variables. We can use the `mdy()` function to create a date variable containing the mom's birthday. The month, day, and year are then converted into the date variable `mombdate`. Including after(momy) position the new variable, `momdate`, after `momy` in the dateset
+
+```
+generate mombdate = mdy(momm, momd, momy), after(momy)
+list
+```
+![mombdate](./img/momdate.png)
+
+The kidy's birthday was read into the string variable `kidbday`. Below, we convert this string variable into a date variable named `kiddate` by using the `date()` function. We told the `date()` function that the date was in `MDY` format, meaning that first comes the month, then the day, and finally the year. I also included the `after(kidbday)` option to positon the new variable after `kidbday` in the dataset.
+
+```
+generate kidbdate = date(kidbday, "MDY"), after(kidbday)
+list
+```
+![Kidbdate](./img/kidbdate.png)
+
+The `momdate` and `kidbdate` variables seem like they are stored as a strange number that does not make any sense. Looking at the fourth mom, we notice that her value for `mombdate` is 4 and her birthday is `Jan 5, 1960`. This help illustrates that Stata stores each date as the number of days from `Jan 1, 1960` ( a completely abitary value). Imagine taht all dates are on a number line where a date of 0 is `Jan 1, 1960`, 1 is `Jan 2, 1960` 4 is `Jan 5, 1960` for example `Dec 31, 1959` would be `-1` and `Dec 30, 1959`, would be `-2`
+
+To make the dates easier to read, we can use the `format` command, which requests that `mombdate` and `kidbdate` be displayed using the `%td` format. The underlying contens of these variables remain unchanged, but they are displayed showing the two-digit day, three-letter month, and four-digit year.
+
+```
+format mombdate kidbdate %td
+list mom momd momy mombdate kidday kidbdate
+```
+![After change format](./img/date_after_format.png)
+
+Stata support an elaborate mixture of formatting codes that you can add to the `%td` format to customize the display of date varaible. Below, the mom's birthdays are displayed using the numeric month(nn), the day (dd) and two-digit year (YY).
+
+```
+format mombdate %tdnn/dd/YY
+list momm momd momy mombdate
+```
+
+The kid's birthdays are shown below using the name of the day (`Dayname`), the name of the month (`Month`), the day of the month (`dd`) and the two-digit century combined with the two-digit year (ccYY). After the 
+
+```
+format kidbdate %tdDayname_Month_dd,_ccYY
+list kidbday kidbdate
+```
+![Date](./img/date.png)
+
+No matter how you change the display format of a date, this does no change the the way the dates are stored internally. This internal representation of dates facilitates calculations of the amount of time that has elpased between the two dates. For examples we can copute the mother's age (in days) when she had her first kid by subtracting the mother's age (in days) when she had her first kid by substracting `momdate` from `kidbdate` to create a variable called `momagefb`, as shown below.
+
+```
+generate momagefb = kidbdate - mombdate
+list mombdate kidbdate momagefb
+```
+![Mom and kid](./img/momKid.png)
+
+We normally think of ages in terms of years rather than days. We can divide the age in days by `365.25` to create `momagefbyr`, which is the age of the mom in years when she had her first kid.
+
+```
+generate momagefbyr = momagefb/365.25
+list momid momagefb momagefbyr, abb(20)
+```
+![Years Difference](./img/year_age.png)
+
+We might want to know how  old the mom is as of a particular date, say, April 3, 1994. We can substract mombdate from mdy(4,3,1994) and divide that by `365.25` to obtain the age of the mom in years as of April 3, 1994. Not that `mdy(4,3,1994)` is an example of the way that you can specify a particular date to Stata. We see the results of these computation below
+
+```
+generate momage = (mdy(4,3,1994) - mombdate)/365.25
+list momid mombdate momage
+```
+![mom_age](./img/mom_age.png)
