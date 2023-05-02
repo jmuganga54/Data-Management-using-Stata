@@ -895,3 +895,46 @@ generate smc1 = 3.grade4
 generate clgr = 4.grade4
 
 list grade4 noths hs smc1 clgr in 1/5, nolabel
+
+
+/**
+*6.8 Date Variables
+*/
+
+type momkid1.csv
+import delimited using momkid1.csv, clear
+list
+
+generate mombdate = mdy(momm, momd, momy), after(momy)
+
+generate kidbdate = date(kidbday, "MDY"), after(kidbday)
+list
+
+format mombdate kidbdate %td
+list momm momd momy mombdate kidbday kidbdate
+
+format mombdate %tddd/nn/ccYY
+list momm momd momy mombdate
+
+format kidbdate %tdDayname_Month_dd,_ccYY
+list kidbday kidbdate
+
+generate momagefb = kidbdate - mombdate
+list mombdate kidbdate momagefb
+
+generate momagefbyr = momagefb/365.25
+list momid momagefb momagefbyr, abb(20)
+
+generate momage = (mdy(4,3,1994) - mombdate)/365.25
+list momid mombdate momage
+
+generate momday = day(mombdate)
+generate mommonth = month(mombdate)
+generate momyear = year(mombdate)
+list momid mombdate momday mommonth momyear
+
+generate momdow = dow(mombdate)
+generate momdoy = doy(mombdate)
+generate momweek = week(mombdate)
+generate momqtr = quarter(mombdate)
+list momid mombdate momdow momdoy momweek momqtr

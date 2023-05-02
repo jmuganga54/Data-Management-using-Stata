@@ -3121,7 +3121,7 @@ list kidbday kidbdate
 ```
 ![Date](./img/date.png)
 
-No matter how you change the display format of a date, this does no change the the way the dates are stored internally. This internal representation of dates facilitates calculations of the amount of time that has elpased between the two dates. For examples we can copute the mother's age (in days) when she had her first kid by subtracting the mother's age (in days) when she had her first kid by substracting `momdate` from `kidbdate` to create a variable called `momagefb`, as shown below.
+No matter how you change the display format of a date, this does no change the the way the dates are stored internally. This internal representation of dates facilitates calculations of the amount of time that has elpased between the two dates. For examples we can compute the mother's age (in days) when she had her first kid by subtracting the mother's age (in days) when she had her first kid by substracting `momdate` from `kidbdate` to create a variable called `momagefb`, as shown below.
 
 ```
 generate momagefb = kidbdate - mombdate
@@ -3144,3 +3144,35 @@ generate momage = (mdy(4,3,1994) - mombdate)/365.25
 list momid mombdate momage
 ```
 ![mom_age](./img/mom_age.png)
+
+> Tip! Exact ages
+The `generate` command above shows a convenient, but not exactly precise, way of computing a person's age in years. For instance, consider the mom with an id value of 2. She was born on 4/3/1973, and her 21st birthday was on 4/3/94. However, because of leap year, the value of `momage` computed with the `generate` command is `20.999`. 
+>
+For most research purposes, this approximation would suffice. However, if you research involed underage drinking, mom number 2would be considered an underage drinker on 4/3/1994 via the `momage` varaible, yet we know she turned 21 on that day. In such instances, you can use the community-contributed program named `personage`. You can download this program by typing `ssc install personage`. After you download, you can type `help personage` for details on how to use it.
+
+Say that we wanted to list the mothers who were born on or after January 20, 1970. We can do this by listing the cases where the mom's birthdate is at least mdy(1,20,1970) ash shown below.
+(Note the handling of the missing values)
+
+```
+list momid mombdate if (mombdate >= mdy(1,20,1970)) & !missing(mombdate)
+```
+![momid](./img/momid.png)
+
+You might want to extract the month, day or year from a date. The day(), month(), and year() functions make this easy, as shown below.
+
+```
+generate momday = day(mombdate)
+generate mommonth = month(mombdate)
+generate momyear = year(mombdate)
+list momid mombdate momday mommonth momyear
+```
+
+There are many other date functions we can use with date variables. For example, the `dow()` function identifies the day of week (coded as 0 = Sunday, 1 = Monday, 2 = Tuesday, .. 6= Saturday). The `doy()` functions returns the day of the year. The `week()` and `quarter()` functions return the week and quarter (respectively) of the year. Using these functions, we see that the first mom was born on a Tuesday that was the 333rd day of the 48th week in the 4th quarter of the year.
+
+```
+generate momdow = dow(mombdate)
+generate momdoy = doy(mombdate)
+generate momweek = week(mombdate)
+generate momqtr = quarter(mombdate)
+list momid mombdate momdow momdoy momweek momqtr
+```
