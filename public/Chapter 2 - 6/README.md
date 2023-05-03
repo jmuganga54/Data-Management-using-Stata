@@ -3176,3 +3176,44 @@ generate momweek = week(mombdate)
 generate momqtr = quarter(mombdate)
 list momid mombdate momdow momdoy momweek momqtr
 ```
+
+Let's conclude this section by considering issues that arise when dates are stored using two digit years instead of four digit year. Consider the file `momkid2.csv` as shown below. Note how the years for both the `kids` and `moms` birthdays are stored using two-digit years.
+
+```
+type momkid2.csv
+```
+![momkid2](./img/momkid2.png)
+
+Let's read this file and try to convert the birthdays for the moms and kids into date variables.
+
+```
+import delimited using momkid2.csv
+gen mombdate = mdy(momm,momd,momy)
+gen kidbdate = date(kidbday, "MDY")
+```
+This does not look promising. Each `generate` command gave the message `(4 missing value generated)`, suggesting that all values were missing. Neverthless, let's apply the date format to the date variables and list the variables.
+
+```
+format mombdate kidbdate %td
+list
+```
+![ChangeFormat](./img/list_all.png)
+
+As we expected, all the dates are missing. Let's see why this is so by considering the birthdates for the moms. When we told Stata `mdy(momm, momd, momy)`, the values for `momy` were values like `72,68, or 60`. Stata takes this to littelly mean the year `72,68 or 60`; howevever, Stata can only handle dates from `January 1, 100, to December 31, 9999`, so the year 72 is outside of the limits that Stata understands, leading to a missing value. The `mdy` function expects the year to be a full four-digit year. Because all the moms were born in the 1900s, we can simply add 1900 to al their years of birth, as shown below.
+
+```
+gen mombdate = mdy(momm, momd, momy+1900)
+format mombdate %td
+list
+```
+
+For the kids' birthdates, we had the same problem. We could instruct Stata to treat all the birth years as though they came from the 1900s, as shown below.
+
+```
+generate kidbdate = date(kidbday, "MD19Y")
+format kidbdate %td
+list
+```
+This would have worked fine if all the kids were born in the 1900s (and if they had all been born in the 2000s, we could have specified "MD20Y"). What we need is a method for telling Stata when to treat the two-digit year as being from the 1900s versus being from the 2000s.
+
+The date() function allows you to do just this by giving cutoff year that distingu
