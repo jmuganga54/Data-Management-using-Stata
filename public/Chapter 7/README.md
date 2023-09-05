@@ -52,4 +52,49 @@ list
 > Tip! Appending jargon
 > In this last example, we call `moms.dta` the master dataset because it is the dataset in memory when the append is initiated. `dads.dta` is called the using dataset because it is specified after the `using` keyword.
 
+However we `append` these datasets, the combined file does not identify the source of the data. We cannot tell whether an observation originated from `moms.dta` or from `dads.dta`. To solve this, we can add the `generate()` option, which will create a new variable that tell us which dataset each observation came. 
+
+You can name this varibla anything you like; I called `datasrc`
+
+```
+clear
+append using moms dads, generate(datasrc)
+list, sepby(datasrc)
+```
+![Append src](./img/src.png)
+
+Let's use the `append` command to combine all three datasets together. In doing so, we will use the generate() option to create a variable named `rev` that indicates the source of the data(that is, the reviewer)
+
+```
+clear 
+append using br_clarence br_isaac br_sally, generate(rev)
+list,sebby(rev)
+```
+
+The value of `rev` is 1,2 or 3 for the observations that came from br_clarence, br_isaac, or br_sally, respectively.
+
+## 7.3 Appending Problems
+This section describes five problems that can arise when appending datasets: differing variable names across datasets, conflicting variable labels, conflicting value labels, inconsistent variable coding, and mixing variable types across datasets. I discuss these one at a time below
+
+### Differing variable names across datasets.
+Consider `moms1.dta` and `dads.dta` shown below. Even through the two datasets contain variables measuring the same idea(age, race and whether one graduated high school), they are named differently in the two datasets.
+
+```
+use moms1
+list
+```
+![moms](./img/moms1.png)
+
+
+```
+use dads1
+list
+```
+![dads](./img/dads.png)
+
+Because the variables with the `mons` information are named diffently from the variable with the dads information. Stata cannot knonw how to put similar variables together when appending the datasets.
+
+If we append these two datasets together with the `append` command, the resulting datasets contains different variables for the moms and for the dads, as shown below
+
+![combine issue 1](./img/different_variables.png)
 ## Summary
