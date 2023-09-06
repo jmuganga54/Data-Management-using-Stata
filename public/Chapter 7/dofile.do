@@ -4,9 +4,9 @@
 
 */
 
-net from https://www.stata-press.com/data/dmu2
-net get dmus1
-net get dmus2
+// net from https://www.stata-press.com/data/dmu2
+// net get dmus1
+// net get dmus2
 
 global pathData  "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/Chapter 7/data"
 
@@ -21,7 +21,26 @@ use dads
 list
 
 
+// clear
+// append using moms dads
+// list
+
 
 clear
-append using moms dads
+append using moms dads, generate(datasrc)
+list, sepby(datasrc)
+
+// 7.3 Appending Probblems
+clear
+use moms1
+list
+
+clear
+use dads1
+list
+
+
+clear
+use moms1
+append using dads1
 list
