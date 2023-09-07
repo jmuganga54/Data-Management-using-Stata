@@ -111,6 +111,7 @@ rename mrace race
 rename mhs hs
 save moms1temp
 ```
+
 We then do the same remaining for `dads1.dta` and save it as `dads1temp.dta`
 
 ```
@@ -124,7 +125,7 @@ save dads1temp
 Becase `moms1temp.dta` shares the same variable names with `dads1temp` we can successfully append these datasets
 
 ```
-clear 
+clear
 append using moms1temp dads1temp
 list
 ```
@@ -132,6 +133,7 @@ list
 ![Append Moms and Dads](./img/append_moms_dads.png)
 
 ### Conflicting variable labels
+
 Consider `momslab.dta` and `dadslab.dta`. These datasets are described below.
 
 Let say `momslab.dta` variable labels reflects mom while `dadslab.dta` variable labels reflects Dads. This means their variable labels are different from each other.
@@ -139,18 +141,114 @@ Let say `momslab.dta` variable labels reflects mom while `dadslab.dta` variable 
 if you append this two datasets
 
 ```
-clear 
+clear
 append using momslab dadslab
 ```
 
-The output of append datasets,  the variable labels are based on the labels specified in `momslab.dta` (master). The labels from `momslab.dta` were used because that file was specified earlier on the `append` command. The labels that made so much sense when labelling the moms no longer make as much sense when applied to the combined file.
+The output of append datasets, the variable labels are based on the labels specified in `momslab.dta` (master). The labels from `momslab.dta` were used because that file was specified earlier on the `append` command. The labels that made so much sense when labelling the moms no longer make as much sense when applied to the combined file.
 
 The solution is either to select more neutral labels in the original datasets or use the `variable label` command to change the labels after appending the datasets.
 
 ### Conflicting value labels
-When you combine datasets with different value labels, variables are labelled using the value labels from the master datasets. This also applied to the definition of the value label. 
+
+When you combine datasets with different value labels, variables are labelled using the value labels from the master datasets. This also applied to the definition of the value label.
 
 This would not be such a problem if the labels from the master are written in a general way that could apply to both datasets. But as written, the labels are misleading. They imply that all of the observation come from the master (mom)
 
-We can either go back and chang the labels in master before merging the datasets or simply change the labels afterward. It is probably just as easy to change the labels afterward. 
+We can either go back and chang the labels in master before merging the datasets or simply change the labels afterward. It is probably just as easy to change the labels afterward.
+
+### Inconsistent variable coding
+
+Suppose that you append two datasets, each of which uses different coding for the same variable. This can be hard to detect becauce each dataset is internally consistent but the coding is not consistent between the datasets.
+
+Let's illustrate this by appending a variable of `moms.dta`, named `momshs.dta` with the dads dataset named `dads.dta`
+
+```
+use momshs
+list
+```
+
+![momshs](./img/momshs.png)
+
+Then, let's look at `dads.dta`
+
+```
+use dads
+list
+```
+
+![dadsnew](./img/dadsnew.png)
+
+Note the difference in the coding of `hs` in these two dataset. In `momshs.dta` is coded using a `1=no` and `2=yes` coding scheme, pretend we did not yet notice this problem and observer the consequence of appending these two file together, as shown below.
+
+```
+use momshs
+append using dads
+list
+```
+
+The `append` command was succesful and did not produce any errors. We can list the observations from the combined file and there are no obvious errors.
+![Combined momshs dads](./img/append_momshs_dads.png)
+
+Let's look at a tabulation of the variable `hs`. This is a yes or no variable indicating whether the person graduated high school, so it should only have two level. But as we see below, this variable has three levels. This is often the first clue when you have appended two datasets that use a different coding scheme for the same variable.
+
+```
+tabulate hs
+```
+
+![tab hs](./img/tab_hs.png)
+
+`The solution`, of course, is to ensure that the `hs` variable uses the same coding before appending the two datasets. Below, we repeat the appending process, but we first recode `hs` in `momshs.dta` to use dummy coding (thus making it commensurate with the coding of hs in `dads.dta`)
+
+```
+use momshs
+recode hs (1=0) (2=1)
+append using dads
+```
+
+With `hs` coded the same way in both datasets, the `hs` variable now has two levels. We can see in the combined dataset that three parents did not graduate high school and five parents did graduate high school.
+
+```
+tabulate hs
+```
+
+![tab hs](./img/tab_hs_tab.png)
+
+### Mixing variable types across datasets
+
+Let's see what happend when you append datasets in which the variables have different data types.
+
+Stata variables fall into two general data types: string and numeric. Let's start by examining what happens if we try to append two datasets in which one of the variable is stored as a numeric type and the other is stored as a string type.
+
+In `moms.dta`, the variable `hs` is stored as a numeric (float) variable, but in `dadstr.dta`, `hs` is stored as a string(`str3`) variable.
+
+Below, we can see what happens when we try to append these two datasets.
+
+```
+use moms
+append using dadstr
+```
+
+![Different datatypes](./img/df_datatype.png)
+
+As the error message indicates, the variable `hs` is stored as a `str3` (a string with lengh 3) in the using dataset. Stata cannot reconcile this with `hs` in `moms.dta` because here is a numeric (`float`), So `merge` reports an error message. We need to make `hs` either numeric in both datasets or string in both dataset. Let's convert `hs` to numeric in `dadstr.dta` and then append that with `moms.dta` as shown below.
+
+```
+use dadstr
+destring hs, replace
+append using moms
+```
+
+![Resolved](./img/resolved.png)
+
+As we can see below, the combined dataset reflects the values for `hs` from each dataset and is stored as a numeric (float) data type.
+
+![List](./img/list.png)
+
+```
+describe hs
+```
+![Describe hs](./img/des_hs.png)
+
+
 ## Summary

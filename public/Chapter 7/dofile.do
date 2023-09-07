@@ -14,11 +14,11 @@ global pathData  "/Users/macbook/Documents/Learning_center/DataScience/[statisti
 cd "${pathData}"
 
 //7.1 Appending: Appending datasets
-use moms
-list
-
-use dads
-list
+// use moms
+// list
+//
+// use dads
+// list
 
 
 // clear
@@ -26,21 +26,41 @@ list
 // list
 
 
-clear
-append using moms dads, generate(datasrc)
-list, sepby(datasrc)
-
+// clear
+// append using moms dads, generate(datasrc)
+// list, sepby(datasrc)
+//
 // 7.3 Appending Probblems
-clear
-use moms1
-list
+// clear
+// use moms1
+// list
+//
+// clear
+// use dads1
+// list
+//
+//
+// clear
+// use moms1
+// append using dads1
+// list
+
+
+// use momshs
+// list
+
+// use dads
+// list
+
+// use momshs
+// append using dads
+// list
+
+// tabulate hs
 
 clear
-use dads1
-list
+use momshs
+recode hs (1=0) (2=1)
+append using dads
 
-
-clear
-use moms1
-append using dads1
-list
+tabulate hs
