@@ -303,6 +303,52 @@ use kids1
 merge 1:1 famid kidid using kiname
 ```
 > Tip! A Cautionary Tale
->When you have 
+>When you have unmatched observations, sometimes it pays to dig deep into your data to understand why you have unmatched observations. This is illustrated in the Stata Blog entry titled "Merging data, part 2: Multiple-key merges". You can read all about it by typing `search multiple key merges`
+
+## 7.5 Merging: One-to-many match merging
+Section `7.4` showed a `1.1` merge that merged moms with dads. This was called `1:1` merge because the key variable or variable uniquely identified each observation within each dataset. By contrast, when matching moms to kids, a moms could match with more than one kid ( a one to many merge).
+
+The moms dataset is the 1 dataset and the kids dataset is the `m` dataset. Despite this difference, the process of performing a `1:m` merge is virtually identical to the process of performing a `1:1` merge. This is illustrated by merging `moms1.dta` with `kids1.dta`. These two datasets are shown below.
+
+```
+use moms1
+list
+```
+![moms](./img/moms1.png)
+
+```
+use kids
+list
+```
+![kids](./img/kids1.png)
+
+The variable `famid` links the mons with the kids. You can see that the mom in family 1 will match to one child, but the mom in family 4 will match to three children. You can also see that for every mom, there is at least one matched child, and every child has a matching mom. We merge these two dataset below.
+
+```
+use moms1
+merge 1:m famid using kids1
+```
+![moms1 and kids1 merged](./img/moms1_kids1_merged.png)
+
+
+## 7.6 Merging: Merging multiple datasets
+This section illustrates how you can merge multiple dataset with a series of pairwise merges.
+
+Let's consider an example where we want to merge four datasets. We have seen two of the dataset before in this chapter: `moms2.dta`, which describes the moms' best friends, and a dataset named `dadsbest2.dta` which describes the dads' best friends.
+
+Let's approach this by merging the moms dataset with the dataset containing moms' best friends and saving the resulting dataset. 
+
+```
+use moms2
+merge 1:1 famid using momsbest2, nogenerate
+```
+
+Then, let's merge the dads dataset with the dataset containing the dads' best friends and save that dataset. We can then merge the two combined datasets. Below, we start the process by merging the moms with their best friends.
+
+```
+use moms2
+merge 1:1 famid using momsbest2, nogenerate
+```
+
 
 ## Summary
