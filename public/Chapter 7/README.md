@@ -248,7 +248,61 @@ As we can see below, the combined dataset reflects the values for `hs` from each
 ```
 describe hs
 ```
+
 ![Describe hs](./img/des_hs.png)
 
+## 7.4 Merging: One to one match merging
+
+A match merge combine two datasets using one (or more) key variables to link observations between the two datasets.
+
+In a one-to-one match merge, the key variable or variable `uniquely identify each observation in each dataset`. Consider the `moms1.dta` and `dads1.dta` datasets, shown below. The key variable, `famid`, uniquely identifies each observation in each dataset and can be used to link the observations from `moms.dta` with the observations from `dads.dta` based on `famid`
+
+```
+use moms1
+list
+```
+
+![famid](./img/famid.png)
+
+```
+use dads1
+list
+```
+
+![dads](./img/dads1.png)
+
+```
+use moms1
+merge 1:1 famid using dads1
+```
+
+![merge moms1 and dads1](./img/merge_moms_dads1.png)
+
+The output from the `merge` commands confirms our expectations that each observation from `moms.dta` has a matched observation in `dads.dta` (and vice versa). We can see this for ourselves by listing the merged dataset.
+
+![output merged](./img/output_merge.png)
+
+The listing shows the `famid` variable followed by the variables from `moms.dta` and then variable from `dads.dta`. The last variable, `_merge`, was created by the `merge` command to show the matching status for each observation. In this example, every observation shows `matched(3)`, indication that a match was found between the master and using dataset for every observation.
+
+> Tip! Merging jargon
+> In this example, `moms1.dta` is the master dataset because it is the dataset in memory when the `merge` command is issued. `dads1.dta` is called the using dataset because it is specified after the `using` keyword. The variable `famid` is called the key variable because it hold the key to linking the master and using files.
+
+If you want to merge two dataset with the unique variable that uniquely identify all this two variables, but there is no corresponding observation in the other variable. These observation will not be matched. When we merge these files, Stata will tell us about these nonmatched observations and help us track them.
+
+You can also merge two dataset using two variable which uniquely identify this two dataset.
+
+For example, below
+```
+use kids1
+sort famid kidid
+
+Use kidname
+sort famid kidid
+
+use kids1
+merge 1:1 famid kidid using kiname
+```
+> Tip! A Cautionary Tale
+>When you have 
 
 ## Summary
