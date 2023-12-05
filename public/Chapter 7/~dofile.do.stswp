@@ -8,7 +8,7 @@
 // net get dmus1
 // net get dmus2
 
-global pathData  "/Users/macbook/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/Chapter 7/data"
+global pathData  "/Users/joseph_muganga/Documents/Learning_center/DataScience/[statistics_and_stata_epidemiology]/Mitchell M. Data Management Using Stata...Handbook 2ed 2021/public/data"
 
 
 cd "${pathData}"
@@ -82,3 +82,7 @@ cd "${pathData}"
 clear
 use moms2
 merge 1:1 famid using momsbest2, nogenerate
+
+
+sort famid
+list, abb(20)
