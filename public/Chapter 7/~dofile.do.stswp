@@ -86,3 +86,9 @@ merge 1:1 famid using momsbest2, nogenerate
 
 sort famid
 list, abb(20)
+
+
+save momsandbest
+
+
+dmtablist fr*

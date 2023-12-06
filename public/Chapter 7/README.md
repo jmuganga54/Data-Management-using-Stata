@@ -342,13 +342,19 @@ Let's approach this by merging the moms dataset with the dataset containing moms
 use moms2
 merge 1:1 famid using momsbest2, nogenerate
 ```
+![mom_momsbest2](./img/merge_mom_momsbest.png)
 
-Then, let's merge the dads dataset with the dataset containing the dads' best friends and save that dataset. We can then merge the two combined datasets. Below, we start the process by merging the moms with their best friends.
+The table shows us that thee were two matched observation and three nonmatched observation. Normally, we could inspect the `_merge` variable in the merged dataset to identify the umatched observations, but I added the `nongenerate` option to suppress the creation of the `_merge` variable.
+
+
+I prefer this because when I merge multiple datasets, I prefer to track the origin of the data using variables that I create in each dataset.
+
+The `moms2` dataset has a variable named `fr_mom2` (which contain a 1 for all observations), and `momsbest2` has a variable named `fr_momsbest2` ( which contains a 1 for all observation). Let's look at the listing of all the variables below (after sorting on `famid` to make the listing easier to follow)
 
 ```
-use moms2
-merge 1:1 famid using momsbest2, nogenerate
+sort famid
+list, abb(20)
 ```
 
 
-## Summary
+
