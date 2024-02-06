@@ -356,5 +356,19 @@ sort famid
 list, abb(20)
 ```
 
+![mom_momsbest](./img/output_mom_best.png)
+
+Looking at these `fr_` variables, we can see that a families 1 and t, there was an observation for the mom but not her best friend. 
+
+And in family 2, there was an observation for the mom's best friend but not one for the mom herself. Let's save this file, naming it `momsandbest.dta`
+
+```
+save momsandbest
+```
 
 
+## 7.7 Merging: Update merges
+
+## 7.8 Merging: Additional options when merging datasets
+
+## 7.9 Merging: Problems merging datasets
