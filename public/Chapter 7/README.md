@@ -372,3 +372,17 @@ save momsandbest
 ## 7.8 Merging: Additional options when merging datasets
 
 ## 7.9 Merging: Problems merging datasets
+
+
+## 7.10 Joining datasets
+
+```
+use parname
+joinby famid using kidname
+```
+
+Unlike the `merge command`, the `joinby` command default to keeping just the matched observations. But you can control this with the `umatched()` option. Specifying `umatched(both)` retains observations from both the master and the using datasets.
+
+Specifying `umatched(master)` retains observations from only the master dataset, and specifying `umatched(using)` retains observation form only the using dataset
+
+Like the `merge` command, `joinby` permits the `update` and `replace` options, allowing `joinby` to update the master dataset from data contained in the using dataset.
