@@ -386,3 +386,19 @@ Unlike the `merge command`, the `joinby` command default to keeping just the mat
 Specifying `umatched(master)` retains observations from only the master dataset, and specifying `umatched(using)` retains observation form only the using dataset
 
 Like the `merge` command, `joinby` permits the `update` and `replace` options, allowing `joinby` to update the master dataset from data contained in the using dataset.
+
+## 7.11 Crossing datasets
+
+```
+use moms1
+list
+
+use dads1
+list
+
+
+use moms1
+cross using dads1
+
+
+```
