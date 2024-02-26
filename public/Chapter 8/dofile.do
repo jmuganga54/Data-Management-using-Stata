@@ -12,3 +12,17 @@ global pathData  "/Users/joseph_muganga/Documents/Learning_center/DataScience/[s
 
 
 cd "${pathData}"
+
+use wws2
+
+tab married, summarize(wage)
+
+bysort married: summarize wage
+
+bys married: summarize wage
+
+correlate wage age if married == 0
+
+correlate wage age if married == 1
+
+bysort married: correlate wage age
